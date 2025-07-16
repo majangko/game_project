@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/SampleScene.unity
+    guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/Core/Main.unity
+    guid: d987ead3b9c7a6945a74d9fc4213268c
+  - enabled: 1
+    path: Assets/Scenes/Core/StoryIntro.unity
+    guid: 3db0cca9ad3be674bbdf1a253257ab5e
+  - enabled: 1
+    path: Assets/Scenes/GameFlow/GameClear.unity
+    guid: 40acf2f332a45004eb1683e1e0155382
+  - enabled: 1
+    path: Assets/Scenes/GameFlow/GameOver.unity
+    guid: 62a898abc61d77248840d7397653f98f
+  - enabled: 1
+    path: Assets/Scenes/GameFlow/GameOverResult.unity
+    guid: 0700018abf0536b4e90eafc8c1d14904
+  - enabled: 1
+    path: Assets/Scenes/Island/StartIsland.unity
+    guid: 0e044614725d9874785b21088805e383
+  - enabled: 1
+    path: Assets/Scenes/Stages/Boss01.unity
+    guid: 1c0ff20d7898ecb4dbb21c13278ff2db
+  - enabled: 1
+    path: Assets/Scenes/Stages/Boss02.unity
+    guid: e18b4d622e49a1446bd127e121980e34
+  - enabled: 1
+    path: Assets/Scenes/Stages/Boss03.unity
+    guid: 1a0d20126ea02554eaa1679bd2e9541f
+  - enabled: 1
+    path: Assets/Scenes/Stages/Boss04.unity
+    guid: 22f3770776b5aec40822ae14ec4e91e1
+  - enabled: 1
+    path: Assets/Scenes/Stages/LastBoss.unity
+    guid: 87fa8aeb6e4c21c4689af7e2529339b8
+  - enabled: 1
+    path: Assets/Scenes/Stages/Stage01.unity
+    guid: 563e4944a05de0348abc0f74af1ea20a
+  - enabled: 1
+    path: Assets/Scenes/Stages/Stage02.unity
+    guid: 26cf413275e327d49be4f2fa29b74fc3
+  - enabled: 1
+    path: Assets/Scenes/Stages/Stage03.unity
+    guid: a646bb94aa0c50e4190e268a39b760ed
+  - enabled: 1
+    path: Assets/Scenes/Stages/Stage04.unity
+    guid: 937cf5ca730ff9a41a0af861b9655554
+  - enabled: 1
+    path: Assets/Scenes/Stages/Stage05.unity
+    guid: 67fb01c52f09457469ae1ab0e9fd1b22
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  m_UseUCBPForAssetBundles: 0
