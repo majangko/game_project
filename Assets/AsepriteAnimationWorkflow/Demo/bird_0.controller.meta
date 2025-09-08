@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1ba35b3388fb1a94fb17251270463313
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 167316
+  packageName: Aseprite Animation Workflow
+  packageVersion: 1.2
+  assetPath: Assets/AsepriteAnimationWorkflow/Demo/bird_0.controller
+  uploadId: 381819

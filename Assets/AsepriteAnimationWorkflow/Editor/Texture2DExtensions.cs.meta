@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 17bbdb0059878f6419c6ed037b277eed
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 167316
+  packageName: Aseprite Animation Workflow
+  packageVersion: 1.2
+  assetPath: Assets/AsepriteAnimationWorkflow/Editor/Texture2DExtensions.cs
+  uploadId: 381819

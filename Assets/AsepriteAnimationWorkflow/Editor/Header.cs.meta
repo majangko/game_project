@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 2d09fda8df2d1164bb3970210c05dc29
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 167316
+  packageName: Aseprite Animation Workflow
+  packageVersion: 1.2
+  assetPath: Assets/AsepriteAnimationWorkflow/Editor/Header.cs
+  uploadId: 381819
