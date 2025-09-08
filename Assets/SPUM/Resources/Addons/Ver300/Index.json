@@ -2,7 +2,7 @@
     "Name": "Ver300",
     "Path": "Assets/SPUM/Resources/Addons",
     "Version": "",
-    "CreationDate": "2025-09-07 16:41:43",
+    "CreationDate": "2025-09-05 15:44:24",
     "SpumAnimationData": [
         {
             "index": 0,
@@ -679,7 +679,7 @@
             "Name": "New_Pant_08",
             "UnitType": "Unit",
             "PartType": "Pant",
-            "SubType": "Right",
+            "SubType": "Left",
             "PartSubType": "",
             "Path": "Addons/Ver300/0_Unit/0_Sprite/5_Pant/New_Pant_08"
         },
@@ -687,7 +687,7 @@
             "Name": "New_Pant_08",
             "UnitType": "Unit",
             "PartType": "Pant",
-            "SubType": "Left",
+            "SubType": "Right",
             "PartSubType": "",
             "Path": "Addons/Ver300/0_Unit/0_Sprite/5_Pant/New_Pant_08"
         },
