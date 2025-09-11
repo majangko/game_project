@@ -41,11 +41,23 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Effect
-    uniqueID: 2256518303
-    locked: 0
   - name: BackGround
     uniqueID: 1406053769
+    locked: 0
+  - name: Ground
+    uniqueID: 893454849
+    locked: 0
+  - name: Platforms
+    uniqueID: 2549314239
+    locked: 0
+  - name: Player
+    uniqueID: 3247973403
+    locked: 0
+  - name: Decor
+    uniqueID: 156913125
+    locked: 0
+  - name: Effect
+    uniqueID: 2256518303
     locked: 0
   m_RenderingLayers:
   - Default

@@ -1,5 +1,6 @@
+// Assets/Scripts/GameFlow/GameOverLoader.cs
 using UnityEngine;
-using UI; // FadeTransition
+using UI;
 
 public static class GameOverLoader
 {
@@ -7,9 +8,13 @@ public static class GameOverLoader
 
     public static void ShowGameOver()
     {
-        // 1) 현재 화면 캡처 (간단/빠름)
         lastShot = ScreenCapture.CaptureScreenshotAsTexture();
-        // 2) 전환
+        if (lastShot)
+        {
+            // ★ 런타임 텍스처가 씬/프리팹에 저장되지 않도록
+            lastShot.hideFlags = HideFlags.HideAndDontSave;
+        }
+
         var fade = FadeTransition.Instance;
         if (fade) fade.FadeToScene("GameOver");
         else UnityEngine.SceneManagement.SceneManager.LoadScene("GameOver");

@@ -1527,8 +1527,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 0, y: 150}
+  m_SizeDelta: {x: 800, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1638545112
 MonoBehaviour:
@@ -1832,11 +1832,18 @@ MonoBehaviour:
   sfxSource: {fileID: 140998597}
   sfxFlipForward: {fileID: 8300000, guid: 7a23f85d0da11c34191925840be90487, type: 3}
   sfxFlipBackward: {fileID: 8300000, guid: 7a23f85d0da11c34191925840be90487, type: 3}
-  sfxVolume: 0.9
+  sfxVolume: 0.7
   pages:
   - background: {fileID: 8829544752358863146, guid: b22b4ac566bdeb948b046ff03a06501f, type: 3}
-    text: "\uD0DC\uCD08\uC758 \uC138\uACC4\uC5D0\uB294 \uB450 \uAC00\uC9C0\uC758
-      \uBB34\uB9AC\uAC00 \uC788\uC5C8\uB2E4.\n\uC11C\uB85C \uB3C4\uC640\uAC00\uBA70 "
+    text: "\uD0DC\uCD08\uC758 \uC138\uACC4\uC5D0\uB294 \uB450 \uBB34\uB9AC\uC758
+      \uC2F8\uC6C0\uC774 \uC788\uC5C8\uB2E4.\n\uC11C\uB85C \uB3C4\uC640\uAC00\uBA70
+      \uC0B4\uC544\uAC00\uB294 \uC778\uAC04\uB4E4\uC744 \uBAB0\uC0B4\uC2DC\uCF1C
+      \uBCF8\uC778\uB4E4\uC774 \uC138\uC0C1\uC744 \uB9CC\uB4DC\uB824\uACE0 \uD558\uB294
+      \uC545\uB9C8\uB4E4\uACFC\n\uADF8\uB4E4\uC5D0\uC11C\uBD80\uD130 \uC778\uAC04\uB4E4\uC744
+      \uC9C0\uCF1C\uC8FC\uACE0 \uBCF8\uC778\uB4E4\uC758 \uC138\uC0C1\uC744 \uC9C0\uD0A4\uAE30
+      \uC704\uD574 \uC2F8\uC6B0\uB294 \uC6A9\uC0AC\uB4E4.\n\uADF8\uB4E4\uC740 \uC11C\uB85C\uC758
+      \uC0AC\uBA85\uC744 \uC704\uD574 \uBC24\uB0AE\uC5C6\uC774 \uC804\uD22C\uB97C
+      \uBC8C\uC600\uB2E4."
   - background: {fileID: -4439135384316030189, guid: add4e299c15d8724ab9038db612142b2, type: 3}
     text: 
   - background: {fileID: 3679383000362825510, guid: e54f3e407b71b4647a386f3f6b6951c6, type: 3}
