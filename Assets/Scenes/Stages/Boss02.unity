@@ -67955,18 +67955,6 @@ PrefabInstance:
       value: twirl_01_0 (1)
       objectReference: {fileID: 0}
     - target: {fileID: 9180464216442344952, guid: 083c9a9e6aa41c6438f81fe9ff60f6a4, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 9180464216442344952, guid: 083c9a9e6aa41c6438f81fe9ff60f6a4, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 9180464216442344952, guid: 083c9a9e6aa41c6438f81fe9ff60f6a4, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 9180464216442344952, guid: 083c9a9e6aa41c6438f81fe9ff60f6a4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -68027,10 +68015,6 @@ PrefabInstance:
       propertyPath: slashEffectPrefab
       value: 
       objectReference: {fileID: 955878896}
-    - target: {fileID: 5079191817297556802, guid: 1fdad167f9429ae4291ba0596cc58d87, type: 3}
-      propertyPath: useAnimEventForBuff
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5079191817297556802, guid: 1fdad167f9429ae4291ba0596cc58d87, type: 3}
       propertyPath: buffCastEffectPrefab
       value: 
@@ -68156,18 +68140,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2079865508549966315, guid: edd43423b1f33494e9533ca6a896c8cc, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079865508549966315, guid: edd43423b1f33494e9533ca6a896c8cc, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079865508549966315, guid: edd43423b1f33494e9533ca6a896c8cc, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079865508549966315, guid: edd43423b1f33494e9533ca6a896c8cc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -68206,10 +68178,6 @@ PrefabInstance:
     - target: {fileID: 2079865508549966315, guid: edd43423b1f33494e9533ca6a896c8cc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079865508549966315, guid: edd43423b1f33494e9533ca6a896c8cc, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2988177005237504537, guid: edd43423b1f33494e9533ca6a896c8cc, type: 3}
       propertyPath: m_Name
@@ -68232,22 +68200,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: 586_52
       objectReference: {fileID: 0}
-    - target: {fileID: 3359641881126064458, guid: f223c78e1b724f5458bf187ca46bd3ac, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8508800068551058560, guid: f223c78e1b724f5458bf187ca46bd3ac, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8508800068551058560, guid: f223c78e1b724f5458bf187ca46bd3ac, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8508800068551058560, guid: f223c78e1b724f5458bf187ca46bd3ac, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 8508800068551058560, guid: f223c78e1b724f5458bf187ca46bd3ac, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -68287,18 +68239,6 @@ PrefabInstance:
     - target: {fileID: 8508800068551058560, guid: f223c78e1b724f5458bf187ca46bd3ac, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9133965334837510791, guid: f223c78e1b724f5458bf187ca46bd3ac, type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9133965334837510791, guid: f223c78e1b724f5458bf187ca46bd3ac, type: 3}
-      propertyPath: m_SortingOrder
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 9133965334837510791, guid: f223c78e1b724f5458bf187ca46bd3ac, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -2038448993
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

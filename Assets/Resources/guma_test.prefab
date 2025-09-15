@@ -9722,11 +9722,11 @@ MonoBehaviour:
   buffDuration: 6
   buffCooldown: 12
   useAnimEventForBuff: 0
-  slashEffectPrefab: {fileID: 0}
+  slashEffectPrefab: {fileID: 6652841106039991386, guid: 2aed59b3fed7fe749bc0fcefe5a00824, type: 3}
   effectSpawnPoint: {fileID: 4347084822246320790}
   hitEffectPrefab: {fileID: 0}
-  buffEffectPrefab: {fileID: 0}
-  buffCastEffectPrefab: {fileID: 0}
+  buffEffectPrefab: {fileID: 3359641881126064458, guid: f223c78e1b724f5458bf187ca46bd3ac, type: 3}
+  buffCastEffectPrefab: {fileID: 2988177005237504537, guid: edd43423b1f33494e9533ca6a896c8cc, type: 3}
   buffEffectOffset: {x: 0, y: 1, z: 0}
   buffCastEffectOffset: {x: 0, y: 0.7, z: 0}
 --- !u!1 &7794949226138391295
