@@ -14,10 +14,8 @@ public class guma_skill : MonoBehaviour
     public LayerMask enemyMask;
 
     [Header("Animator Param Names (자동 탐색 지원)")]
-    [Tooltip("배기 스킬용 파라미터(Trigger/Bool/Int/Float 상관없음). 비워두면 자동 탐색합니다.")]
-    public string slashParam = "";  // ex) "1_Skill_Normal"
-    [Tooltip("버프 스킬용 파라미터(Trigger/Bool/Int/Float 상관없음). 비워두면 자동 탐색합니다.")]
-    public string buffParam = "";   // ex) "0_Buff"
+    public string slashParam = "";
+    public string buffParam = "";
 
     [Header("Crescent Slash (배기형) - Key: X")]
     public KeyCode slashKey = KeyCode.X;
@@ -27,11 +25,8 @@ public class guma_skill : MonoBehaviour
     public float slashKnockback = 8f;
     public float slashCooldown = 1.2f;
 
-    [Tooltip("애니메이션 이벤트 AnimEvent_SlashHit를 사용할지")]
     public bool useAnimEventForSlash = true;
-    [Tooltip("이벤트가 없거나 누락되었을 때 대체 대기 시간")]
     public float slashWindupFallback = 0.08f;
-    [Tooltip("히트 후 짧은 경직")]
     public float slashFreeze = 0.10f;
 
     float lastSlashTime = -999f;
@@ -44,11 +39,23 @@ public class guma_skill : MonoBehaviour
     public float buffDuration = 6f;
     public float buffCooldown = 12f;
 
-    [Tooltip("버프 적용을 애니메이션 이벤트 AnimEvent_BuffOn 타이밍에 할지")]
     public bool useAnimEventForBuff = false;
 
     float lastBuffTime = -999f;
     Coroutine buffCo;
+
+    [Header("Effects (투명 PNG 버전 사용 권장)")]
+    public GameObject slashEffectPrefab;
+    public Transform effectSpawnPoint;
+    public GameObject hitEffectPrefab;
+    public GameObject buffEffectPrefab;       // 버프 오라 FX
+    public GameObject buffCastEffectPrefab;   // 버프 캐스트 FX
+
+    [Header("Effect Offsets")]
+    public Vector3 buffEffectOffset = new Vector3(0, 0.5f, 0);      // 버프 오라 위치
+    public Vector3 buffCastEffectOffset = new Vector3(0, 0.2f, 0);  // 캐스트 FX 위치
+
+    GameObject activeBuffFx;
 
     void Awake()
     {
@@ -57,7 +64,7 @@ public class guma_skill : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         if (!hitOrigin) hitOrigin = transform;
 
-        // --- 파라미터 자동 탐색 (SPUM 네이밍 우선 후보 반영) ---
+        // --- 파라미터 자동 탐색 ---
         if (anim)
         {
             if (string.IsNullOrEmpty(slashParam))
@@ -80,7 +87,7 @@ public class guma_skill : MonoBehaviour
         HandleBuff();
     }
 
-    // ===== 배기 스킬 =====
+    // ===== Slash =====
     void HandleSlash()
     {
         if (!Input.GetKeyDown(slashKey)) return;
@@ -89,7 +96,6 @@ public class guma_skill : MonoBehaviour
         lastSlashTime = Time.time;
         slashEventFired = false;
 
-        // 애니메이션 호출(파라미터 타입에 상관없이 유연 처리)
         FlexibleSetParam(anim, slashParam);
 
         StartCoroutine(CoSlash());
@@ -102,7 +108,7 @@ public class guma_skill : MonoBehaviour
             float timeout = Mathf.Max(0.02f, slashWindupFallback + 0.25f);
             float t = 0f;
             while (t < timeout && !slashEventFired) { t += Time.deltaTime; yield return null; }
-            if (!slashEventFired) DoSlashHit(); // 폴백
+            if (!slashEventFired) DoSlashHit();
         }
         else
         {
@@ -113,7 +119,6 @@ public class guma_skill : MonoBehaviour
         if (slashFreeze > 0f) yield return new WaitForSeconds(slashFreeze);
     }
 
-    // 애니메이션 이벤트에서 호출
     public void AnimEvent_SlashHit()
     {
         if (slashEventFired) return;
@@ -126,6 +131,14 @@ public class guma_skill : MonoBehaviour
         int dir = ctrl.FacingDir;
         Vector2 center = (Vector2)(hitOrigin ? hitOrigin.position : transform.position)
                          + new Vector2(slashBoxOffset.x * dir, slashBoxOffset.y);
+
+        // Slash FX
+        if (slashEffectPrefab && effectSpawnPoint)
+        {
+            var fx = Instantiate(slashEffectPrefab, effectSpawnPoint.position, Quaternion.identity);
+            fx.transform.localScale = new Vector3(dir, 1, 1);
+            Destroy(fx, 0.5f);
+        }
 
         var hits = Physics2D.OverlapBoxAll(center, slashBoxSize, 0f, enemyMask);
         float finalDamage = slashDamage * Mathf.Max(0.1f, ctrl.attackPowerMul);
@@ -141,11 +154,17 @@ public class guma_skill : MonoBehaviour
                 var rb2 = h.attachedRigidbody;
                 if (rb2 != null)
                     rb2.AddForce(new Vector2(dir * slashKnockback, slashKnockback * 0.25f), ForceMode2D.Impulse);
+
+                if (hitEffectPrefab)
+                {
+                    var hitFx = Instantiate(hitEffectPrefab, h.transform.position, Quaternion.identity);
+                    Destroy(hitFx, 0.3f);
+                }
             }
         }
     }
 
-    // ===== 버프 스킬 =====
+    // ===== Buff =====
     void HandleBuff()
     {
         if (!Input.GetKeyDown(buffKey)) return;
@@ -162,7 +181,6 @@ public class guma_skill : MonoBehaviour
         }
     }
 
-    // 애니메이션 이벤트에서 호출
     public void AnimEvent_BuffOn()
     {
         if (!useAnimEventForBuff) return;
@@ -175,11 +193,30 @@ public class guma_skill : MonoBehaviour
         ctrl.moveSpeedMul *= moveSpeedMul;
         ctrl.attackPowerMul *= attackPowerMul;
 
+        // 1) 버프 캐스트 FX 먼저 실행
+        if (buffCastEffectPrefab)
+        {
+            var castFx = Instantiate(buffCastEffectPrefab, transform.position + buffCastEffectOffset, Quaternion.identity);
+            Destroy(castFx, 0.7f);
+            yield return new WaitForSeconds(0.7f); // 캐스트 FX 끝날 때까지 대기
+        }
+
+        // 2) 버프 오라 FX 실행
+        if (buffEffectPrefab)
+        {
+            activeBuffFx = Instantiate(buffEffectPrefab, transform.position + buffEffectOffset, Quaternion.identity);
+            activeBuffFx.transform.SetParent(transform);
+        }
+
+        // 3) 버프 유지
         float end = Time.time + buffDuration;
         while (Time.time < end) yield return null;
 
+        // 4) 버프 해제
         ctrl.moveSpeedMul /= moveSpeedMul;
         ctrl.attackPowerMul /= attackPowerMul;
+
+        if (activeBuffFx) Destroy(activeBuffFx);
         buffCo = null;
     }
 
@@ -209,10 +246,9 @@ public class guma_skill : MonoBehaviour
             foreach (var p in a.parameters)
                 if (p.name == name) return name;
         }
-        return ""; // 못 찾으면 빈 문자열
+        return "";
     }
 
-    // 파라미터 타입에 상관없이 한 번 재생/트리거
     static void FlexibleSetParam(Animator a, string name)
     {
         if (!a || string.IsNullOrEmpty(name)) return;
@@ -227,19 +263,16 @@ public class guma_skill : MonoBehaviour
                     a.SetTrigger(name);
                     return;
                 case AnimatorControllerParameterType.Bool:
-                    // 한 프레임 true로 쏘고 다음 프레임에 false로 복귀
                     a.SetBool(name, true);
-                    a.Update(0f); // 즉시 반영
+                    a.Update(0f);
                     a.SetBool(name, false);
                     return;
                 case AnimatorControllerParameterType.Int:
-                    // 0→1 펄스
                     a.SetInteger(name, 1);
                     a.Update(0f);
                     a.SetInteger(name, 0);
                     return;
                 case AnimatorControllerParameterType.Float:
-                    // 0→1 펄스
                     a.SetFloat(name, 1f);
                     a.Update(0f);
                     a.SetFloat(name, 0f);
@@ -247,7 +280,6 @@ public class guma_skill : MonoBehaviour
             }
         }
 
-        // 못 찾았으면 안전하게 시도 중단
         Debug.LogWarning($"Animator parameter '{name}' not found.");
     }
 }
