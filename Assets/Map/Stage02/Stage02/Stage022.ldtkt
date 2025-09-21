@@ -1,0 +1,33 @@
+{
+  "Rects": null,
+  "Def": {
+    "__cHei": 8,
+    "__cWid": 8,
+    "cachedPixelData": {
+      "opaqueTiles": "1011000001110000000000110000001110110000011100001011000001110000",
+      "averageColors": "ffb57fb6fea4ffb4ffb5ffb5d432b4207fb6ffb3fb71ffb4efb5efb5817100008eb58eb58d858d8489738973f210ffb58eb58eb58d858d8589738973fd95f652fd957da6fd84fd95fd95fd95d432b4107da6fd93fa52fd94ed95ed9572618261f6527652f641f652f652f652d110b1107652f641f530f652e652e65270300000"
+    },
+    "customData": [
+
+    ],
+    "embedAtlas": null,
+    "enumTags": [
+
+    ],
+    "identifier": "Stage022",
+    "padding": 0,
+    "pxHei": 256,
+    "pxWid": 256,
+    "relPath": "Stage02.png",
+    "savedSelections": [
+
+    ],
+    "spacing": 0,
+    "tags": [
+
+    ],
+    "tagsSourceEnumUid": null,
+    "tileGridSize": 32,
+    "uid": 3
+  }
+}

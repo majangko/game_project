@@ -4,46 +4,46 @@ using UnityEngine.UI;
 public class KeySettingConfirm : MonoBehaviour
 {
     [Header("Panels")]
-    [SerializeField] private GameObject keySettingPanel;   // ÀüÃ¼ ¼³Á¤ ÆÐ³Î (´ÝÀ» ¶§ ¼û±è)
-    [SerializeField] private GameObject confirmPanel;      // È®ÀÎÃ¢ ÆÐ³Î (¸ð´Þ)
+    [SerializeField] private GameObject keySettingPanel;   // ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½Ð³ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+    [SerializeField] private GameObject confirmPanel;      // È®ï¿½ï¿½Ã¢ ï¿½Ð³ï¿½ (ï¿½ï¿½ï¿½)
 
     [Header("Buttons")]
-    [SerializeField] private Button saveButton;            // »ó´Ü Save ¹öÆ°
-    [SerializeField] private Button yesButton;             // È®ÀÎÃ¢ Yes
-    [SerializeField] private Button noButton;              // È®ÀÎÃ¢ No
+    [SerializeField] private Button saveButton;            // ï¿½ï¿½ï¿½ Save ï¿½ï¿½Æ°
+    [SerializeField] private Button yesButton;             // È®ï¿½ï¿½Ã¢ Yes
+    [SerializeField] private Button noButton;              // È®ï¿½ï¿½Ã¢ No
 
     private void Awake()
     {
-        // ½ÃÀÛ ½Ã È®ÀÎÃ¢Àº ¼û±è
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È®ï¿½ï¿½Ã¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (confirmPanel != null) confirmPanel.SetActive(false);
 
-        // ¹öÆ° ÀÌº¥Æ® ¿¬°á
+        // ï¿½ï¿½Æ° ï¿½Ìºï¿½Æ® ï¿½ï¿½ï¿½ï¿½
         if (saveButton != null) saveButton.onClick.AddListener(OpenConfirm);
         if (yesButton != null) yesButton.onClick.AddListener(ConfirmYes);
         if (noButton != null) noButton.onClick.AddListener(ConfirmNo);
     }
 
-    // Save Å¬¸¯ ¡æ È®ÀÎÃ¢ ¿­±â
+    // Save Å¬ï¿½ï¿½ ï¿½ï¿½ È®ï¿½ï¿½Ã¢ ï¿½ï¿½ï¿½ï¿½
     private void OpenConfirm()
     {
         if (confirmPanel != null) confirmPanel.SetActive(true);
     }
 
-    // ¿¹(Yes) ¡æ ÀúÀå ·ÎÁ÷ ½ÇÇà ÈÄ È®ÀÎÃ¢ ´Ý°í ¼³Á¤Ã¢µµ ´Ý±â
+    // ï¿½ï¿½(Yes) ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È®ï¿½ï¿½Ã¢ ï¿½Ý°ï¿½ ï¿½ï¿½ï¿½ï¿½Ã¢ï¿½ï¿½ ï¿½Ý±ï¿½
     private void ConfirmYes()
     {
-        // TODO: ½ÇÁ¦ Å°¹ÙÀÎµù ÀúÀå ·ÎÁ÷À» ¿©±â¼­ È£Ãâ
-        // ¿¹½Ã) PlayerPrefs.Save();  ¶Ç´Â KeyBindingManager.Instance.Save();
-        Debug.Log("[KeySetting] ÀúÀå ¿Ï·á");
+        // TODO: ï¿½ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½â¼­ È£ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½) PlayerPrefs.Save();  ï¿½Ç´ï¿½ KeyBindingManager.Instance.Save();
+        Debug.Log("[KeySetting] ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½");
 
         if (confirmPanel != null) confirmPanel.SetActive(false);
 
-        // ¼³Á¤ UI±îÁö ´Ý°í °ÔÀÓ È­¸éÀ¸·Î º¹±Í
+        // ï¿½ï¿½ï¿½ï¿½ UIï¿½ï¿½ï¿½ï¿½ ï¿½Ý°ï¿½ ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (keySettingPanel != null) keySettingPanel.SetActive(false);
-        // ÇÊ¿äÇÏ¸é ´Ù¸¥ Canvas/°ÔÀÓ HUD¸¦ SetActive(true) ÇØµµ µÊ
+        // ï¿½Ê¿ï¿½ï¿½Ï¸ï¿½ ï¿½Ù¸ï¿½ Canvas/ï¿½ï¿½ï¿½ï¿½ HUDï¿½ï¿½ SetActive(true) ï¿½Øµï¿½ ï¿½ï¿½
     }
 
-    // ¾Æ´Ï¿À(No) ¡æ È®ÀÎÃ¢¸¸ ´Ý±â
+    // ï¿½Æ´Ï¿ï¿½(No) ï¿½ï¿½ È®ï¿½ï¿½Ã¢ï¿½ï¿½ ï¿½Ý±ï¿½
     private void ConfirmNo()
     {
         if (confirmPanel != null) confirmPanel.SetActive(false);
