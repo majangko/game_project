@@ -4343,6 +4343,7 @@ RectTransform:
   m_Children:
   - {fileID: 2416764869137981134}
   - {fileID: 3368619744163359864}
+  - {fileID: 6736406760757572060}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -9687,6 +9688,15 @@ MonoBehaviour:
   visualRoot: {fileID: 2483169576309380535}
   spriteFacesRight: 0
   attackMoveLock: 0.12
+  attackOrigin: {fileID: 6736406760757572060}
+  attackBoxSize: {x: 1.2, y: 0.8}
+  attackBoxOffset: {x: 1, y: 0.1}
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  hitEffectPrefab: {fileID: 0}
+  attackDamage: 10
+  attackKnockback: 5
   moveSpeedMul: 1
   attackPowerMul: 1
 --- !u!114 &5079191817297556802
@@ -9701,10 +9711,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8d6a7318f8050343bbb8cc3929ae390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitOrigin: {fileID: 0}
+  hitOrigin: {fileID: 6736406760757572060}
   enemyMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
   slashParam: 7_Skill
   buffParam: 6_Other
   slashKey: 120
@@ -9722,11 +9732,11 @@ MonoBehaviour:
   buffDuration: 6
   buffCooldown: 12
   useAnimEventForBuff: 0
-  slashEffectPrefab: {fileID: 6652841106039991386, guid: 2aed59b3fed7fe749bc0fcefe5a00824, type: 3}
+  slashEffectPrefab: {fileID: 0}
   effectSpawnPoint: {fileID: 4347084822246320790}
   hitEffectPrefab: {fileID: 0}
-  buffEffectPrefab: {fileID: 3359641881126064458, guid: f223c78e1b724f5458bf187ca46bd3ac, type: 3}
-  buffCastEffectPrefab: {fileID: 2988177005237504537, guid: edd43423b1f33494e9533ca6a896c8cc, type: 3}
+  buffEffectPrefab: {fileID: 0}
+  buffCastEffectPrefab: {fileID: 0}
   buffEffectOffset: {x: 0, y: 1, z: 0}
   buffCastEffectOffset: {x: 0, y: 0.7, z: 0}
 --- !u!1 &7794949226138391295
@@ -10268,6 +10278,37 @@ Transform:
   m_Children:
   - {fileID: 6325657857179378970}
   m_Father: {fileID: 7948008813834292201}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9110793135025779694
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6736406760757572060}
+  m_Layer: 0
+  m_Name: AttackOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6736406760757572060
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9110793135025779694}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.602, y: 0.296, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7019338798386418676}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9211331719053723481
 GameObject:
