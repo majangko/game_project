@@ -33,9 +33,15 @@ public class EnemyAI : MonoBehaviour
     public string hitTrig = "3_Damage";
     public string dieTrig = "4_Death";
 
+    // --- 내부 상태 ---
     Transform target;
     float cooldownTimer;
     float baseScaleX = 1f;
+    float lastDir = 1f;           // 마지막 이동 방향 기억
+    float lastFlipTime = -999f;   // 마지막 Flip 시각
+
+    [Header("Flip Settings")]
+    public float flipCooldown = 0.3f; // 너무 빠른 좌우 전환 방지
 
     void Reset()
     {
@@ -69,7 +75,6 @@ public class EnemyAI : MonoBehaviour
 
     void AcquireTarget()
     {
-        // 태그로 찾으면 가장 단순하고 확실함
         var playerGO = GameObject.FindGameObjectWithTag("Player");
         if (playerGO)
         {
@@ -82,19 +87,17 @@ public class EnemyAI : MonoBehaviour
 
     void Patrol()
     {
-        float dir = 1f;
+        float dir = lastDir;
 
-        // 경계 안에서만 움직이기
         if (rightBound && leftBound)
         {
             if (transform.position.x > rightBound.position.x) dir = -1f;
             else if (transform.position.x < leftBound.position.x) dir = 1f;
-            else dir = Mathf.Sign(rb.linearVelocity.x == 0 ? 1f : rb.linearVelocity.x);
         }
 
-        // 낭떠러지/벽 체크로 튕김 방지
         if (!IsGroundAhead(dir) || IsWallAhead(dir)) dir *= -1f;
 
+        lastDir = dir; // 방향 기억
         rb.linearVelocity = new Vector2(dir * patrolSpeed, rb.linearVelocity.y);
         Face(dir);
     }
@@ -103,9 +106,9 @@ public class EnemyAI : MonoBehaviour
     {
         float dir = Mathf.Sign(target.position.x - transform.position.x);
 
-        // 떨어질/박을 상황이면 멈춤
         if (!IsGroundAhead(dir) || IsWallAhead(dir)) { StopX(); return; }
 
+        lastDir = dir; // 추적 시 방향 기억
         rb.linearVelocity = new Vector2(dir * chaseSpeed, rb.linearVelocity.y);
         Face(dir);
     }
@@ -132,7 +135,17 @@ public class EnemyAI : MonoBehaviour
     void Face(float dir)
     {
         if (!visualRoot) return;
+
         float sign = dir >= 0 ? 1f : -1f;
+
+        // 이미 같은 방향이면 무시
+        if (Mathf.Sign(visualRoot.localScale.x) == sign) return;
+
+        // 쿨타임 체크
+        if (Time.time - lastFlipTime < flipCooldown) return;
+
+        lastFlipTime = Time.time;
+
         var s = visualRoot.localScale;
         s.x = baseScaleX * sign;
         visualRoot.localScale = s;
@@ -143,11 +156,10 @@ public class EnemyAI : MonoBehaviour
         if (cooldownTimer > 0f) return;
 
         animator?.SetTrigger(attackTrig);
-        if (attackHitbox) attackHitbox.EnableOnce(0.12f);   // << 없던 메서드
+        if (attackHitbox) attackHitbox.EnableOnce(0.12f);
         cooldownTimer = attackCooldown;
     }
 
-    // Damageable이 호출
     public void OnHurt()
     {
         if (!string.IsNullOrEmpty(hitTrig))
@@ -160,7 +172,6 @@ public class EnemyAI : MonoBehaviour
         if (!string.IsNullOrEmpty(dieTrig))
             animator?.SetTrigger(dieTrig);
 
-        // 더 이상 움직이지 않게
         enabled = false;
     }
 }

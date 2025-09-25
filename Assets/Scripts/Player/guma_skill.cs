@@ -1,4 +1,3 @@
-// guma_skill.cs
 using UnityEngine;
 using System.Collections;
 
@@ -21,7 +20,7 @@ public class guma_skill : MonoBehaviour
     public KeyCode slashKey = KeyCode.X;
     public float slashDamage = 30f;
     public Vector2 slashBoxSize = new Vector2(2.8f, 1.2f);
-    public Vector2 slashBoxOffset = new Vector2(1.6f, 0.2f);
+    public Vector2 slashBoxOffset = new Vector2(1.6f, 0.2f); // 항상 오른쪽 기준으로만 입력
     public float slashKnockback = 8f;
     public float slashCooldown = 1.2f;
 
@@ -129,8 +128,11 @@ public class guma_skill : MonoBehaviour
     void DoSlashHit()
     {
         int dir = ctrl.FacingDir;
+
+        // --- 수정된 부분: 항상 baseOffset 기준으로 dir만 곱해줌 ---
+        Vector2 baseOffset = slashBoxOffset; // 오른쪽 기준 값
         Vector2 center = (Vector2)(hitOrigin ? hitOrigin.position : transform.position)
-                         + new Vector2(slashBoxOffset.x * dir, slashBoxOffset.y);
+                         + new Vector2(baseOffset.x * dir, baseOffset.y);
 
         // Slash FX
         if (slashEffectPrefab && effectSpawnPoint)
@@ -147,13 +149,12 @@ public class guma_skill : MonoBehaviour
         {
             if (h.attachedRigidbody && h.attachedRigidbody.gameObject == this.gameObject) continue;
 
-            var dmg = h.GetComponentInParent<IDamageable>();
+            var dmg = h.GetComponentInParent<Damageable>();
             if (dmg != null)
             {
-                dmg.TakeDamage(finalDamage);
-                var rb2 = h.attachedRigidbody;
-                if (rb2 != null)
-                    rb2.AddForce(new Vector2(dir * slashKnockback, slashKnockback * 0.25f), ForceMode2D.Impulse);
+                Vector2 knock = new Vector2(dir * slashKnockback, slashKnockback * 0.25f);
+
+                dmg.TakeHit(Mathf.RoundToInt(finalDamage), knock, h.transform.position);
 
                 if (hitEffectPrefab)
                 {
@@ -193,26 +194,26 @@ public class guma_skill : MonoBehaviour
         ctrl.moveSpeedMul *= moveSpeedMul;
         ctrl.attackPowerMul *= attackPowerMul;
 
-        // 1) 버프 캐스트 FX 먼저 실행
+        // 1) 버프 캐스트 FX
         if (buffCastEffectPrefab)
         {
             var castFx = Instantiate(buffCastEffectPrefab, transform.position + buffCastEffectOffset, Quaternion.identity);
             Destroy(castFx, 0.7f);
-            yield return new WaitForSeconds(0.7f); // 캐스트 FX 끝날 때까지 대기
+            yield return new WaitForSeconds(0.7f);
         }
 
-        // 2) 버프 오라 FX 실행
+        // 2) 버프 오라 FX
         if (buffEffectPrefab)
         {
             activeBuffFx = Instantiate(buffEffectPrefab, transform.position + buffEffectOffset, Quaternion.identity);
             activeBuffFx.transform.SetParent(transform);
         }
 
-        // 3) 버프 유지
+        // 3) 유지
         float end = Time.time + buffDuration;
         while (Time.time < end) yield return null;
 
-        // 4) 버프 해제
+        // 4) 해제
         ctrl.moveSpeedMul /= moveSpeedMul;
         ctrl.attackPowerMul /= attackPowerMul;
 
@@ -228,8 +229,10 @@ public class guma_skill : MonoBehaviour
         var c = GetComponent<SpumPlatformerController>();
         if (c) dir = c.FacingDir;
 
+        // --- 수정된 부분 ---
+        Vector2 baseOffset = slashBoxOffset;
         Vector2 center = (Vector2)(hitOrigin ? hitOrigin.position : transform.position)
-                         + new Vector2(slashBoxOffset.x * dir, slashBoxOffset.y);
+                         + new Vector2(baseOffset.x * dir, baseOffset.y);
 
         Gizmos.color = new Color(1f, 0.6f, 0.2f, 0.35f);
         Gizmos.DrawCube(center, slashBoxSize);

@@ -1,5 +1,4 @@
-﻿// SpumPlatformerController.cs
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
@@ -23,9 +22,18 @@ public class SpumPlatformerController : MonoBehaviour
     [Tooltip("원본 리소스가 기본적으로 오른쪽을 보고 있으면 체크. (SPUM 기본은 왼쪽, 그러므로 보통 해제)")]
     public bool spriteFacesRight = false;
 
-    [Header("Attack (basic anim trigger only)")]
+    [Header("Attack (basic)")]
     public float attackMoveLock = 0.12f;
     string attackTriggerName = null;
+
+    [Header("Attack Settings (히트 이펙트 추가)")]
+    public Transform attackOrigin;
+    public Vector2 attackBoxSize = new Vector2(1.2f, 0.8f);
+    public Vector2 attackBoxOffset = new Vector2(1f, 0.1f); // 👉 오른쪽 기준 값만 입력
+    public LayerMask enemyMask;
+    public GameObject hitEffectPrefab;
+    public float attackDamage = 10f;
+    public float attackKnockback = 5f;
 
     // ---- Buff multipliers (스킬이 조정) ----
     [HideInInspector] public float moveSpeedMul = 1f;
@@ -49,7 +57,6 @@ public class SpumPlatformerController : MonoBehaviour
         {
             if (!flipRoot) return desiredDir == 0 ? 1 : desiredDir;
             bool scaleRight = flipRoot.localScale.x >= 0f;
-            // 스케일의 부호와 '원본이 오른쪽을 보는가'를 대조해 세계 기준 방향 산출
             return (scaleRight == spriteFacesRight) ? +1 : -1;
         }
     }
@@ -103,7 +110,7 @@ public class SpumPlatformerController : MonoBehaviour
 
         if (Mathf.Abs(x) > 0.01f) desiredDir = x > 0 ? +1 : -1;
 
-        // 접지
+        // 접지 체크
         bool grounded = false;
         if (groundCheck)
             grounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, groundMask);
@@ -115,11 +122,14 @@ public class SpumPlatformerController : MonoBehaviour
             if (HasParam(anim, P_IS_GROUNDED, AnimatorControllerParameterType.Bool)) anim.SetBool(P_IS_GROUNDED, grounded);
             if (HasParam(anim, P_VERT_SPEED, AnimatorControllerParameterType.Float)) anim.SetFloat(P_VERT_SPEED, rb.linearVelocity.y);
 
-            // (선택) 기본 공격 애니 트리거
+            // 기본 공격
             if (Input.GetKeyDown(KeyCode.Z) && !string.IsNullOrEmpty(attackTriggerName))
             {
                 anim.SetTrigger(attackTriggerName);
                 lockUntil = Time.time + attackMoveLock;
+
+                // --- 공격 판정 실행 ---
+                DoBasicAttack();
             }
         }
 
@@ -147,6 +157,37 @@ public class SpumPlatformerController : MonoBehaviour
         flipRoot.localScale = new Vector3(baseFlipAbsX * sign, s.y, s.z);
     }
 
+    void DoBasicAttack()
+    {
+        int dir = FacingDir;
+
+        // 👉 baseOffset 기준으로 dir 곱 (guma_skill과 동일)
+        Vector2 baseOffset = attackBoxOffset;
+        Vector2 center = (Vector2)(attackOrigin ? attackOrigin.position : transform.position)
+                         + new Vector2(baseOffset.x * dir, baseOffset.y);
+
+        var hits = Physics2D.OverlapBoxAll(center, attackBoxSize, 0f, enemyMask);
+        float finalDamage = attackDamage * Mathf.Max(0.1f, attackPowerMul);
+
+        foreach (var h in hits)
+        {
+            if (h.attachedRigidbody && h.attachedRigidbody.gameObject == this.gameObject) continue;
+
+            var dmg = h.GetComponentInParent<Damageable>();
+            if (dmg != null)
+            {
+                Vector2 knock = new Vector2(dir * attackKnockback, attackKnockback * 0.25f);
+                dmg.TakeHit(Mathf.RoundToInt(finalDamage), knock, h.transform.position);
+
+                if (hitEffectPrefab)
+                {
+                    var hitFx = Instantiate(hitEffectPrefab, h.transform.position, Quaternion.identity);
+                    Destroy(hitFx, 0.3f);
+                }
+            }
+        }
+    }
+
     static bool HasParam(Animator a, string name, AnimatorControllerParameterType type)
     {
         foreach (var p in a.parameters) if (p.name == name && p.type == type) return true;
@@ -158,5 +199,16 @@ public class SpumPlatformerController : MonoBehaviour
         if (!groundCheck) return;
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(groundCheck.position, groundCheckSize);
+
+        // --- 공격 범위 시각화 ---
+        int dir = Application.isPlaying ? FacingDir : 1;
+        Vector2 baseOffset = attackBoxOffset;
+        Vector2 center = (Vector2)(attackOrigin ? attackOrigin.position : transform.position)
+                         + new Vector2(baseOffset.x * dir, baseOffset.y);
+
+        Gizmos.color = new Color(1f, 0.2f, 0.2f, 0.35f);
+        Gizmos.DrawCube(center, attackBoxSize);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(center, attackBoxSize);
     }
 }
