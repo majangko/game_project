@@ -2,7 +2,7 @@
     "Name": "ModernPackVer1",
     "Path": "Assets/SPUM/Resources/Addons",
     "Version": "",
-    "CreationDate": "2025-09-05 15:44:24",
+    "CreationDate": "2025-09-22 18:30:51",
     "SpumAnimationData": [
         {
             "index": 0,
@@ -1687,7 +1687,7 @@
             "Name": "tee_2",
             "UnitType": "Unit",
             "PartType": "Cloth",
-            "SubType": "Body_b",
+            "SubType": "tee_2",
             "PartSubType": "",
             "Path": "Addons/ModernPackVer1/0_Unit/0_Sprite/2_Cloth/tee_2"
         },
@@ -1703,7 +1703,7 @@
             "Name": "tee_2_c1",
             "UnitType": "Unit",
             "PartType": "Cloth",
-            "SubType": "Body_b",
+            "SubType": "tee_2_c1",
             "PartSubType": "",
             "Path": "Addons/ModernPackVer1/0_Unit/0_Sprite/2_Cloth/tee_2_c1"
         },
@@ -1719,7 +1719,7 @@
             "Name": "tee_2_c2",
             "UnitType": "Unit",
             "PartType": "Cloth",
-            "SubType": "Body_b",
+            "SubType": "tee_2_c2",
             "PartSubType": "",
             "Path": "Addons/ModernPackVer1/0_Unit/0_Sprite/2_Cloth/tee_2_c2"
         },
@@ -1735,7 +1735,7 @@
             "Name": "tee_2_g",
             "UnitType": "Unit",
             "PartType": "Cloth",
-            "SubType": "Body_b",
+            "SubType": "tee_2_g",
             "PartSubType": "",
             "Path": "Addons/ModernPackVer1/0_Unit/0_Sprite/2_Cloth/tee_2_g"
         },

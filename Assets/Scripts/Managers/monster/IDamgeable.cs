@@ -1,5 +1,4 @@
-// IDamageable.cs
-public interface IDamageable
+﻿public interface IDamageable
 {
-    void TakeDamage(float amount);
+    void TakeHit(int damage, UnityEngine.Vector2 knockback);
 }
