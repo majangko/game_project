@@ -5,51 +5,50 @@
 public class SpumPlatformerController : MonoBehaviour
 {
     [Header("Move / Jump")]
-    public float moveSpeed = 6f;
-    public float jumpForce = 12f;
+    [SerializeField] private float moveSpeed = 6f;
+    [SerializeField] private float jumpForce = 12f;
 
     [Header("Ground Check")]
-    public Transform groundCheck;
-    public Vector2 groundCheckSize = new Vector2(0.8f, 0.18f);
-    public LayerMask groundMask;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private Vector2 groundCheckSize = new Vector2(0.8f, 0.18f);
+    [SerializeField] private LayerMask groundMask;
 
     [Header("Flip Roots")]
-    [Tooltip("좌우 반전을 적용할 '빈 부모' Transform (FlipRoot). 없어도 런타임에 자동 생성됩니다.")]
-    public Transform flipRoot;
-    [Tooltip("실제 애니메이션 본의 루트(보통 UnitRoot/Root). 미지정 시 Animator의 transform 사용.")]
-    public Transform visualRoot;
-
-    [Tooltip("원본 리소스가 기본적으로 오른쪽을 보고 있으면 체크. (SPUM 기본은 왼쪽, 그러므로 보통 해제)")]
-    public bool spriteFacesRight = false;
+    [Tooltip("좌우 반전을 적용할 빈 부모 Transform")]
+    [SerializeField] private Transform flipRoot;
+    [Tooltip("애니메이션 본 루트(보통 UnitRoot/Root)")]
+    [SerializeField] private Transform visualRoot;
+    [Tooltip("원본 리소스가 오른쪽을 보고 있으면 체크")]
+    [SerializeField] private bool spriteFacesRight = false;
 
     [Header("Attack (basic)")]
-    public float attackMoveLock = 0.12f;
-    string attackTriggerName = null;
+    [SerializeField] private float attackMoveLock = 0.12f;
 
     [Header("Attack Settings (히트 이펙트 추가)")]
-    public Transform attackOrigin;
-    public Vector2 attackBoxSize = new Vector2(1.2f, 0.8f);
-    public Vector2 attackBoxOffset = new Vector2(1f, 0.1f); // 👉 오른쪽 기준 값만 입력
-    public LayerMask enemyMask;
-    public GameObject hitEffectPrefab;
-    public float attackDamage = 10f;
-    public float attackKnockback = 5f;
+    [SerializeField] private Transform attackOrigin;
+    [SerializeField] private Vector2 attackBoxSize = new Vector2(1.2f, 0.8f);
+    [SerializeField] private Vector2 attackBoxOffset = new Vector2(1f, 0.1f);
+    [SerializeField] private LayerMask enemyMask;
+    [SerializeField] private GameObject hitEffectPrefab;
+    [SerializeField] private float attackDamage = 10f;
+    [SerializeField] private float attackKnockback = 5f;
 
-    // ---- Buff multipliers (스킬이 조정) ----
+    // Buff multipliers
     [HideInInspector] public float moveSpeedMul = 1f;
     [HideInInspector] public float attackPowerMul = 1f;
 
     // Animator params
-    const string P_MOVE_BOOL = "1_Move";
-    const string P_IS_GROUNDED = "IsGrounded";
-    const string P_VERT_SPEED = "VerticalSpeed";
+    private const string P_MOVE_BOOL = "1_Move";
+    private const string P_IS_GROUNDED = "IsGrounded";
+    private const string P_VERT_SPEED = "VerticalSpeed";
 
-    Rigidbody2D rb;
-    Animator anim;
+    private Rigidbody2D rb;
+    private Animator anim;
 
-    float lockUntil;
-    int desiredDir = 0; // -1,0,+1
-    float baseFlipAbsX = 1f;
+    private float lockUntil;
+    private int desiredDir = 0;
+    private float baseFlipAbsX = 1f;
+    private string attackTriggerName = null;
 
     public int FacingDir
     {
@@ -77,7 +76,6 @@ public class SpumPlatformerController : MonoBehaviour
             else go.transform.SetParent(transform.parent, true);
 
             go.transform.position = transform.position;
-            go.transform.rotation = Quaternion.identity;
             go.transform.localScale = Vector3.one;
 
             if (visualRoot) visualRoot.SetParent(go.transform, true);
@@ -87,18 +85,18 @@ public class SpumPlatformerController : MonoBehaviour
         baseFlipAbsX = Mathf.Abs(flipRoot.localScale.x);
         if (baseFlipAbsX < 0.0001f) baseFlipAbsX = 1f;
 
-        // --- 기본 공격 트리거 자동 탐색(없어도 OK) ---
         if (anim)
         {
             string[] candidates = { "Attack", "1_Attack", "2_Attack", "Attack_Trigger", "ATTACK" };
             foreach (var c in candidates)
-                if (HasParam(anim, c, AnimatorControllerParameterType.Trigger)) { attackTriggerName = c; break; }
+                if (HasParam(anim, c, AnimatorControllerParameterType.Trigger))
+                { attackTriggerName = c; break; }
         }
     }
 
     void Update()
     {
-        // 좌우 입력
+        // 이동
         float x = 0f;
         if (Input.GetKey(KeyCode.LeftArrow)) x = -1f;
         else if (Input.GetKey(KeyCode.RightArrow)) x = 1f;
@@ -115,20 +113,20 @@ public class SpumPlatformerController : MonoBehaviour
         if (groundCheck)
             grounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, groundMask);
 
-        // 애니메이터 파라미터
+        // Animator 파라미터
         if (anim)
         {
             anim.SetBool(P_MOVE_BOOL, Mathf.Abs(x) > 0.01f);
-            if (HasParam(anim, P_IS_GROUNDED, AnimatorControllerParameterType.Bool)) anim.SetBool(P_IS_GROUNDED, grounded);
-            if (HasParam(anim, P_VERT_SPEED, AnimatorControllerParameterType.Float)) anim.SetFloat(P_VERT_SPEED, rb.linearVelocity.y);
+            if (HasParam(anim, P_IS_GROUNDED, AnimatorControllerParameterType.Bool))
+                anim.SetBool(P_IS_GROUNDED, grounded);
+            if (HasParam(anim, P_VERT_SPEED, AnimatorControllerParameterType.Float))
+                anim.SetFloat(P_VERT_SPEED, rb.linearVelocity.y);
 
-            // 기본 공격
-            if (Input.GetKeyDown(KeyCode.Z) && !string.IsNullOrEmpty(attackTriggerName))
+            // 공격
+            if (Input.GetKeyDown(KeyCode.Z) && !string.IsNullOrEmpty(attackTriggerName) && Time.time >= lockUntil)
             {
                 anim.SetTrigger(attackTriggerName);
                 lockUntil = Time.time + attackMoveLock;
-
-                // --- 공격 판정 실행 ---
                 DoBasicAttack();
             }
         }
@@ -160,11 +158,8 @@ public class SpumPlatformerController : MonoBehaviour
     void DoBasicAttack()
     {
         int dir = FacingDir;
-
-        // 👉 baseOffset 기준으로 dir 곱 (guma_skill과 동일)
-        Vector2 baseOffset = attackBoxOffset;
         Vector2 center = (Vector2)(attackOrigin ? attackOrigin.position : transform.position)
-                         + new Vector2(baseOffset.x * dir, baseOffset.y);
+                         + new Vector2(attackBoxOffset.x * dir, attackBoxOffset.y);
 
         var hits = Physics2D.OverlapBoxAll(center, attackBoxSize, 0f, enemyMask);
         float finalDamage = attackDamage * Mathf.Max(0.1f, attackPowerMul);
@@ -190,7 +185,8 @@ public class SpumPlatformerController : MonoBehaviour
 
     static bool HasParam(Animator a, string name, AnimatorControllerParameterType type)
     {
-        foreach (var p in a.parameters) if (p.name == name && p.type == type) return true;
+        foreach (var p in a.parameters)
+            if (p.name == name && p.type == type) return true;
         return false;
     }
 
@@ -200,11 +196,9 @@ public class SpumPlatformerController : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(groundCheck.position, groundCheckSize);
 
-        // --- 공격 범위 시각화 ---
         int dir = Application.isPlaying ? FacingDir : 1;
-        Vector2 baseOffset = attackBoxOffset;
         Vector2 center = (Vector2)(attackOrigin ? attackOrigin.position : transform.position)
-                         + new Vector2(baseOffset.x * dir, baseOffset.y);
+                         + new Vector2(attackBoxOffset.x * dir, attackBoxOffset.y);
 
         Gizmos.color = new Color(1f, 0.2f, 0.2f, 0.35f);
         Gizmos.DrawCube(center, attackBoxSize);
