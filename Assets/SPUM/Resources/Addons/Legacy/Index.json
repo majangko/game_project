@@ -2,7 +2,7 @@
     "Name": "Legacy",
     "Path": "Assets/SPUM/Resources/Addons",
     "Version": "",
-    "CreationDate": "2025-09-05 15:44:24",
+    "CreationDate": "2025-09-22 18:30:50",
     "SpumAnimationData": [
         {
             "index": 0,
@@ -465,6 +465,14 @@
             "Path": "Addons/Legacy/0_Unit/0_Sprite/0_Eye/Eye16"
         },
         {
+            "Name": "Eye17",
+            "UnitType": "Unit",
+            "PartType": "Eye",
+            "SubType": "Eye_001_0",
+            "PartSubType": "",
+            "Path": "Addons/Legacy/0_Unit/0_Sprite/0_Eye/Eye17"
+        },
+        {
             "Name": "Eye_Close",
             "UnitType": "Unit",
             "PartType": "Eye",
@@ -553,6 +561,14 @@
             "Path": "Addons/Legacy/0_Unit/0_Sprite/0_Hair/Hair_9"
         },
         {
+            "Name": "Body_001",
+            "UnitType": "Unit",
+            "PartType": "Body",
+            "SubType": "Body_001_0",
+            "PartSubType": "",
+            "Path": "Addons/Legacy/0_Unit/0_Sprite/1_Body/Body_001"
+        },
+        {
             "Name": "Devil_1",
             "UnitType": "Unit",
             "PartType": "Body",
@@ -935,6 +951,14 @@
             "SubType": "Head",
             "PartSubType": "",
             "Path": "Addons/Legacy/0_Unit/0_Sprite/1_Body/Human_5"
+        },
+        {
+            "Name": "mummy_1",
+            "UnitType": "Unit",
+            "PartType": "Body",
+            "SubType": "mummy_1",
+            "PartSubType": "",
+            "Path": "Addons/Legacy/0_Unit/0_Sprite/1_Body/mummy_1"
         },
         {
             "Name": "Orc_1",
