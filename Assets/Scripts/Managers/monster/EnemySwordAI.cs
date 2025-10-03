@@ -1,21 +1,28 @@
 using UnityEngine;
+using System.Collections;
 
-public class EnemyAI : MonoBehaviour
+public class EnemySwordAI : MonoBehaviour, IEnemyAIEvents
 {
     [Header("References")]
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Animator animator;
     [SerializeField] Transform visualRoot;
-    [SerializeField] Transform player; // ì¶”ì í•  í”Œë ˆì´ì–´
+    [SerializeField] Transform player;
+    [SerializeField] AttackHitbox attackHitbox;
 
     [Header("Detect/Attack")]
-    [SerializeField] float detectRadius = 6f;
-    [SerializeField] float attackRange = 1.6f;
-    [SerializeField] float attackCooldown = 1f;
+    [SerializeField] float detectRadius = 6f;      // ÇÃ·¹ÀÌ¾î ÀÎ½Ä ¹üÀ§
+    [SerializeField] float attackRange = 1.5f;     // °ËÀº ÂªÀº »ç°Å¸®
+    [SerializeField] float attackCooldown = 2f;    // ÄŞº¸ ÄğÅ¸ÀÓ
     float lastAttackTime;
 
+    [Header("Combo Attack")]
+    [SerializeField] int maxCombo = 2;             // ¿¬¼Ó °ø°İ È½¼ö (2~3 ÃßÃµ)
+    [SerializeField] float comboDelay = 0.4f;      // ¿¬¼Ó °ø°İ »çÀÌ µô·¹ÀÌ
+    int currentCombo = 0;
+
     [Header("Move")]
-    [SerializeField] float moveSpeed = 2f;
+    [SerializeField] float moveSpeed = 3.5f;       // ºü¸¥ ÀÌµ¿ ¼Óµµ
 
     [Header("Animator Params")]
     [SerializeField] string moveBool = "1_Move";
@@ -72,8 +79,28 @@ public class EnemyAI : MonoBehaviour
     {
         if (Time.time - lastAttackTime < attackCooldown) return;
 
-        animator.SetTrigger(attackTrig);
+        // ÄŞº¸ ½ÃÀÛ
+        currentCombo = 0;
+        StartCoroutine(ComboAttackRoutine());
         lastAttackTime = Time.time;
+    }
+
+    IEnumerator ComboAttackRoutine()
+    {
+        while (currentCombo < maxCombo)
+        {
+            animator.SetTrigger(attackTrig);
+
+            // ½ÇÁ¦ °ø°İ ÆÇÁ¤ (¾Ö´Ï¸ŞÀÌ¼Ç ÀÌº¥Æ®¿¡¼­ È£Ãâ)
+            yield return new WaitForSeconds(comboDelay);
+            currentCombo++;
+        }
+    }
+
+    // Animation Event¿¡¼­ È£ÃâµÊ
+    public void DoAttack()
+    {
+        attackHitbox?.DoAttack();
     }
 
     void FlipToPlayer()
@@ -83,26 +110,39 @@ public class EnemyAI : MonoBehaviour
         Vector3 scale = visualRoot.localScale;
 
         if (player.position.x > transform.position.x)
-            scale.x = -Mathf.Abs(scale.x); // ì˜¤ë¥¸ìª½
+            scale.x = -Mathf.Abs(scale.x);
         else
-            scale.x = Mathf.Abs(scale.x);  // ì™¼ìª½
+            scale.x = Mathf.Abs(scale.x);
 
         visualRoot.localScale = scale;
+
+        // È÷Æ®¹Ú½º ¹æÇâ ¹İÀü
+        if (attackHitbox)
+        {
+            Vector3 hbScale = attackHitbox.transform.localScale;
+            hbScale.x = Mathf.Sign(scale.x) * Mathf.Abs(hbScale.x);
+            attackHitbox.transform.localScale = hbScale;
+        }
     }
 
+    // ÀÎÅÍÆäÀÌ½º ±¸Çö
     public void OnHurt()
     {
-        animator.SetTrigger(hitTrig);
+        if (!isDead && animator) animator.SetTrigger(hitTrig);
     }
 
     public void OnDie()
     {
+        if (isDead) return;
         isDead = true;
+
         animator.SetTrigger(dieTrig);
         rb.linearVelocity = Vector2.zero;
-        rb.isKinematic = true;
+        rb.bodyType = RigidbodyType2D.Kinematic;
+
         foreach (var c in GetComponentsInChildren<Collider2D>())
             c.enabled = false;
+
         this.enabled = false;
     }
 }

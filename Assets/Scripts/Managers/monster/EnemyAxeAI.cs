@@ -1,21 +1,24 @@
 using UnityEngine;
+using System.Collections;
 
-public class EnemyAI : MonoBehaviour
+public class EnemyAxeAI : MonoBehaviour, IEnemyAIEvents
 {
     [Header("References")]
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Animator animator;
     [SerializeField] Transform visualRoot;
-    [SerializeField] Transform player; // ì¶”ì í•  í”Œë ˆì´ì–´
+    [SerializeField] Transform player;
+    [SerializeField] AttackHitbox attackHitbox;
 
     [Header("Detect/Attack")]
-    [SerializeField] float detectRadius = 6f;
-    [SerializeField] float attackRange = 1.6f;
-    [SerializeField] float attackCooldown = 1f;
+    [SerializeField] float detectRadius = 6f;    // ÇÃ·¹ÀÌ¾î ÀÎ½Ä ¹üÀ§
+    [SerializeField] float attackRange = 1.8f;   // µµ³¢´Â ¾à°£ ±ä ±ÙÁ¢ ¹üÀ§
+    [SerializeField] float attackCooldown = 3f;  // °ø°İ ÄğÅ¸ÀÓ ±æ°Ô
+    [SerializeField] float chargeTime = 0.6f;    // ³»·ÁÂï±â Àü¿¡ Â÷Â¡ ½Ã°£
     float lastAttackTime;
 
     [Header("Move")]
-    [SerializeField] float moveSpeed = 2f;
+    [SerializeField] float moveSpeed = 2.2f;     // °Ëº´º¸´Ù ´À¸®°Ô
 
     [Header("Animator Params")]
     [SerializeField] string moveBool = "1_Move";
@@ -72,8 +75,32 @@ public class EnemyAI : MonoBehaviour
     {
         if (Time.time - lastAttackTime < attackCooldown) return;
 
-        animator.SetTrigger(attackTrig);
         lastAttackTime = Time.time;
+        StartCoroutine(ChargeAndAttack());
+    }
+
+    IEnumerator ChargeAndAttack()
+    {
+        // Â÷Â¡ ¸ğ¼Ç (±×³É ´ë±â, ¾Ö´Ï¸ŞÀÌ¼Çµµ ´ë±â µ¿ÀÛ °¡´É)
+        animator.SetBool(moveBool, false);
+
+        // Â÷Â¡ ½Ã°£ ´ë±â
+        yield return new WaitForSeconds(chargeTime);
+
+        // °ø°İ ¸ğ¼Ç ¹ßµ¿
+        animator.SetTrigger(attackTrig);
+
+        // DoAttack()Àº ¾Ö´Ï¸ŞÀÌ¼Ç ÀÌº¥Æ®¿¡¼­ È£ÃâµÊ
+    }
+
+    // Animation Event¿¡¼­ È£Ãâ
+    public void DoAttack()
+    {
+        if (attackHitbox != null)
+        {
+            // ³Ë¹é °ªÀº AttackHitbox Inspector¿¡¼­ Á÷Á¢ ¼³Á¤
+            attackHitbox.DoAttack();
+        }
     }
 
     void FlipToPlayer()
@@ -83,26 +110,39 @@ public class EnemyAI : MonoBehaviour
         Vector3 scale = visualRoot.localScale;
 
         if (player.position.x > transform.position.x)
-            scale.x = -Mathf.Abs(scale.x); // ì˜¤ë¥¸ìª½
+            scale.x = -Mathf.Abs(scale.x);
         else
-            scale.x = Mathf.Abs(scale.x);  // ì™¼ìª½
+            scale.x = Mathf.Abs(scale.x);
 
         visualRoot.localScale = scale;
+
+        // È÷Æ®¹Ú½º ¹æÇâ ¹İÀü
+        if (attackHitbox)
+        {
+            Vector3 hbScale = attackHitbox.transform.localScale;
+            hbScale.x = Mathf.Sign(scale.x) * Mathf.Abs(hbScale.x);
+            attackHitbox.transform.localScale = hbScale;
+        }
     }
 
+    // ÀÎÅÍÆäÀÌ½º ±¸Çö
     public void OnHurt()
     {
-        animator.SetTrigger(hitTrig);
+        if (!isDead && animator) animator.SetTrigger(hitTrig);
     }
 
     public void OnDie()
     {
+        if (isDead) return;
         isDead = true;
+
         animator.SetTrigger(dieTrig);
         rb.linearVelocity = Vector2.zero;
-        rb.isKinematic = true;
+        rb.bodyType = RigidbodyType2D.Kinematic;
+
         foreach (var c in GetComponentsInChildren<Collider2D>())
             c.enabled = false;
+
         this.enabled = false;
     }
 }
