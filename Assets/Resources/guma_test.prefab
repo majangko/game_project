@@ -9696,7 +9696,7 @@ MonoBehaviour:
   enemyMask:
     serializedVersion: 2
     m_Bits: 1024
-  hitEffectPrefab: {fileID: 0}
+  hitEffectPrefab: {fileID: 3061540847762355810, guid: 0179a93036229b24e85c390c158ae912, type: 3}
   attackDamage: 10
   attackKnockback: 5
   moveSpeedMul: 1
