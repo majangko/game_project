@@ -3,29 +3,30 @@
 public class DarkSlash : SkillBase
 {
     [Header("Slash Settings")]
-    public Transform hitOrigin;
-    public LayerMask enemyMask;
-    public float baseDamage = 40;
-    public float knockback = 6f;
-    public float range = 2.5f;
+    public Transform hitOrigin;           // 공격 판정 기준점
+    public LayerMask enemyMask;           // 적 판정 레이어
+    public float baseDamage = 40f;        // 기본 피해량
+    public float knockback = 6f;          // 넉백 힘
+    public float range = 2.5f;            // 공격 범위
 
     [Header("Effects")]
-    public GameObject slashEffectPrefab;
+    public GameObject slashEffectPrefab;  // 베기 이펙트 프리팹
 
-    private DamageableExtended dmg;
+    private DamageableExtended dmg;       // 체력 비례 강화용
 
-    void Start()
+    // 부모 SkillBase의 Start()와 충돌 방지 → override + base.Start() 호출
+    protected override void Start()
     {
+        base.Start();
         dmg = GetComponent<DamageableExtended>();
     }
 
     protected override void OnActivate()
     {
-        int dir = ctrl.FacingDir;
+        int dir = ctrl != null ? ctrl.FacingDir : 1;
 
         // ✅ 애니메이션 실행
-        if (anim != null && !string.IsNullOrEmpty(animTrigger))
-            anim.SetTrigger(animTrigger);
+        TriggerAnimation();
 
         // HP 낮을수록 데미지 강화 (최대 2배)
         float hpFactor = 1f;
@@ -34,11 +35,11 @@ public class DarkSlash : SkillBase
 
         int damage = Mathf.RoundToInt(baseDamage * hpFactor);
 
-        // 판정 위치
+        // 판정 위치 계산
         Vector2 pos = hitOrigin ? hitOrigin.position : transform.position;
         pos += new Vector2(dir * range, 0);
 
-        // 적 판정
+        // 적 탐색 및 타격
         Collider2D[] hits = Physics2D.OverlapCircleAll(pos, range, enemyMask);
         foreach (var h in hits)
         {
@@ -62,6 +63,7 @@ public class DarkSlash : SkillBase
     private void OnDrawGizmosSelected()
     {
         if (!hitOrigin) return;
+
         int dir = Application.isPlaying && ctrl ? ctrl.FacingDir : 1;
         Vector2 pos = (Vector2)hitOrigin.position + new Vector2(dir * range, 0);
 

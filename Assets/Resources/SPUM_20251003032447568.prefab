@@ -1080,6 +1080,8 @@ GameObject:
   - component: {fileID: -2764371242832732362}
   - component: {fileID: 6323887759441023322}
   - component: {fileID: 2569561386469089794}
+  - component: {fileID: 206145624637932839}
+  - component: {fileID: 1375900118556349043}
   m_Layer: 3
   m_Name: SPUM_20251003032447568
   m_TagString: Player
@@ -1094,7 +1096,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2579712906687728336}
-  m_LocalRotation: {x: -0, y: 0.008726557, z: -0, w: 0.9999619}
+  m_LocalRotation: {x: 0, y: 0.008726558, z: 0, w: 0.999962}
   m_LocalPosition: {x: 0, y: 0, z: 0.001}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
@@ -6425,9 +6427,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8d6a7318f8050343bbb8cc3929ae390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skills: []
-  slashKey: 120
-  buffKey: 99
+  skill1Key: 120
+  skill2Key: 99
+  skills:
+  - {fileID: 1375900118556349043}
+  - {fileID: 206145624637932839}
 --- !u!50 &6323887759441023322
 Rigidbody2D:
   serializedVersion: 5
@@ -6487,12 +6491,65 @@ MonoBehaviour:
   attackBoxSize: {x: 1.8, y: 1}
   attackBoxOffset: {x: 1.2, y: 0.1}
   hitEffectPrefab: {fileID: 3061540847762355810, guid: 0179a93036229b24e85c390c158ae912, type: 3}
-  isRanged: 0
-  projectilePrefab: {fileID: 0}
+  isRanged: 1
+  projectilePrefab: {fileID: 9010834814542384479, guid: 185819c42ac88c841b02e39abef34ca5, type: 3}
   projectileSpeed: 10
-  projectileSpawnPoint: {fileID: 0}
+  projectileSpawnPoint: {fileID: 4408637273250473827}
   moveSpeedMul: 1
   attackPowerMul: 1
+--- !u!114 &206145624637932839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2579712906687728336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82f427fc91514b84aa61831af74c6f3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Skill
+  cooldown: 7
+  duration: 0.5
+  animTrigger: 6_Other
+  effectPrefab: {fileID: 6427698387216386134, guid: b73d8c5ed96306446b53b35e6d024f72, type: 3}
+  enhancedCount: 3
+  explosionDamage: 20
+  explosionRadius: 2
+  explosionPrefab: {fileID: 1942003936801577953, guid: 04af7f0d43519cd4dbd0581ea03e1c10, type: 3}
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  effectOffset: {x: 0, y: 0.8, z: 0}
+--- !u!114 &1375900118556349043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2579712906687728336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5014099ba3996a54287326db1d3e305a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillName: Skill
+  cooldown: 10
+  duration: 3
+  animTrigger: 7_Skill
+  effectPrefab: {fileID: 0}
+  projectilePrefab: {fileID: 964729203910332814, guid: eb6caab1c78b3624d9e5d44e2f82a68f, type: 3}
+  projectileSpeed: 8
+  areaEffectPrefab: {fileID: 1942003936801577953, guid: 04af7f0d43519cd4dbd0581ea03e1c10, type: 3}
+  damagePerTick: 10
+  tickInterval: 1
+  radius: 2
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  throwOrigin: {fileID: 4408637273250473827}
+  throwOffset: {x: 0.5, y: 0}
 --- !u!1 &2581156933739852896
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,11 +14,8 @@ public class SpumPlatformerController : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
 
     [Header("Flip Roots")]
-    [Tooltip("좌우 반전을 적용할 빈 부모 Transform")]
     [SerializeField] private Transform flipRoot;
-    [Tooltip("애니메이션 본 루트(보통 UnitRoot/Root)")]
     [SerializeField] private Transform visualRoot;
-    [Tooltip("원본 리소스가 오른쪽을 보고 있으면 체크")]
     [SerializeField] private bool spriteFacesRight = false;
 
     [Header("Attack (Common Settings)")]
@@ -43,6 +40,13 @@ public class SpumPlatformerController : MonoBehaviour
     [HideInInspector] public float moveSpeedMul = 1f;
     [HideInInspector] public float attackPowerMul = 1f;
 
+    // 강화 평타 관련
+    private int enhancedRemaining = 0;
+    private GameObject enhancedExplosionPrefab;
+    private int enhancedExplosionDamage;
+    private float enhancedExplosionRadius;
+    private LayerMask enhancedMask;
+
     // Animator params
     private const string P_MOVE_BOOL = "1_Move";
     private const string P_IS_GROUNDED = "IsGrounded";
@@ -55,7 +59,6 @@ public class SpumPlatformerController : MonoBehaviour
     private int desiredDir = 0;
     private float baseFlipAbsX = 1f;
 
-    // 공격 트리거 이름 (무조건 attack_normal 사용)
     private string attackTriggerName = "2_Attack";
 
     public int FacingDir
@@ -125,7 +128,7 @@ public class SpumPlatformerController : MonoBehaviour
             // 공격
             if (Input.GetKeyDown(KeyCode.Z) && Time.time >= lockUntil)
             {
-                anim.SetTrigger(attackTriggerName); // ✅ 항상 attack_normal 실행
+                anim.SetTrigger(attackTriggerName);
                 lockUntil = Time.time + attackMoveLock;
                 DoBasicAttack();
             }
@@ -198,12 +201,36 @@ public class SpumPlatformerController : MonoBehaviour
         {
             GameObject proj = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
 
+            // ✅ 방향에 따라 스프라이트 반전
+            SpriteRenderer sr = proj.GetComponent<SpriteRenderer>();
+            if (sr != null)
+                sr.flipX = (dir == -1); // 왼쪽 보면 true
+
             Projectile p = proj.GetComponent<Projectile>();
             if (p != null)
             {
-                p.Init(Mathf.RoundToInt(finalDamage), dir, attackKnockback, enemyMask);
+                p.Init(Mathf.RoundToInt(finalDamage), dir, attackKnockback, enemyMask,
+                       enhancedRemaining, enhancedExplosionPrefab, enhancedExplosionDamage,
+                       enhancedExplosionRadius, enhancedMask, this);
             }
         }
+    }
+
+
+    // 강화 평타 설정
+    public void SetEnhancedAttack(int count, GameObject prefab, int dmg, float radius, LayerMask mask)
+    {
+        enhancedRemaining = count;
+        enhancedExplosionPrefab = prefab;
+        enhancedExplosionDamage = dmg;
+        enhancedExplosionRadius = radius;
+        enhancedMask = mask;
+    }
+
+    // Projectile에서 소모 처리
+    public void ConsumeEnhanced()
+    {
+        if (enhancedRemaining > 0) enhancedRemaining--;
     }
 
     static bool HasParam(Animator a, string name, AnimatorControllerParameterType type)
