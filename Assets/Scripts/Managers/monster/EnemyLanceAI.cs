@@ -1,21 +1,25 @@
 using UnityEngine;
+using System.Collections;
 
-public class EnemyAI : MonoBehaviour
+public class EnemyLanceAI : MonoBehaviour, IEnemyAIEvents
 {
     [Header("References")]
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Animator animator;
     [SerializeField] Transform visualRoot;
-    [SerializeField] Transform player; // Ï∂îÏ†ÅÌï† ÌîåÎ†àÏù¥Ïñ¥
+    [SerializeField] Transform player;
+    [SerializeField] AttackHitbox attackHitbox;
 
     [Header("Detect/Attack")]
     [SerializeField] float detectRadius = 6f;
-    [SerializeField] float attackRange = 1.6f;
-    [SerializeField] float attackCooldown = 1f;
+    [SerializeField] float attackRange = 2.5f; // √¢¿∫ ±‰ ªÁ∞≈∏Æ
+    [SerializeField] float attackCooldown = 2f;
     float lastAttackTime;
 
     [Header("Move")]
-    [SerializeField] float moveSpeed = 2f;
+    [SerializeField] float moveSpeed = 3f;
+    [SerializeField] float dashSpeed = 6f;
+    [SerializeField] float dashTime = 0.3f;
 
     [Header("Animator Params")]
     [SerializeField] string moveBool = "1_Move";
@@ -74,6 +78,26 @@ public class EnemyAI : MonoBehaviour
 
         animator.SetTrigger(attackTrig);
         lastAttackTime = Time.time;
+
+        // ¥ÎΩ√ µπ¡¯ »ƒ ∞¯∞› ∆«¡§
+        StartCoroutine(DashAttack());
+    }
+
+    IEnumerator DashAttack()
+    {
+        float start = Time.time;
+        Vector2 dir = (player.position - transform.position).normalized;
+
+        while (Time.time < start + dashTime)
+        {
+            rb.linearVelocity = new Vector2(dir.x * dashSpeed, rb.linearVelocity.y);
+            yield return null;
+        }
+
+        rb.linearVelocity = Vector2.zero;
+
+        // »˜∆Æπ⁄Ω∫ πﬂµø
+        attackHitbox?.DoAttack();
     }
 
     void FlipToPlayer()
@@ -83,26 +107,39 @@ public class EnemyAI : MonoBehaviour
         Vector3 scale = visualRoot.localScale;
 
         if (player.position.x > transform.position.x)
-            scale.x = -Mathf.Abs(scale.x); // Ïò§Î•∏Ï™Ω
+            scale.x = -Mathf.Abs(scale.x);
         else
-            scale.x = Mathf.Abs(scale.x);  // ÏôºÏ™Ω
+            scale.x = Mathf.Abs(scale.x);
 
         visualRoot.localScale = scale;
+
+        // ∞¯∞› »˜∆Æπ⁄Ω∫ πÊ«‚µµ ∞∞¿Ã π›¿¸
+        if (attackHitbox)
+        {
+            Vector3 hbScale = attackHitbox.transform.localScale;
+            hbScale.x = Mathf.Sign(scale.x) * Mathf.Abs(hbScale.x);
+            attackHitbox.transform.localScale = hbScale;
+        }
     }
 
+    // ¿Œ≈Õ∆‰¿ÃΩ∫ ±∏«ˆ∫Œ
     public void OnHurt()
     {
-        animator.SetTrigger(hitTrig);
+        if (!isDead && animator) animator.SetTrigger(hitTrig);
     }
 
     public void OnDie()
     {
+        if (isDead) return;
         isDead = true;
+
         animator.SetTrigger(dieTrig);
         rb.linearVelocity = Vector2.zero;
         rb.isKinematic = true;
+
         foreach (var c in GetComponentsInChildren<Collider2D>())
             c.enabled = false;
+
         this.enabled = false;
     }
 }
