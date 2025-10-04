@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 
 public class EnemySwordAI : MonoBehaviour, IEnemyAIEvents
@@ -11,18 +11,18 @@ public class EnemySwordAI : MonoBehaviour, IEnemyAIEvents
     [SerializeField] AttackHitbox attackHitbox;
 
     [Header("Detect/Attack")]
-    [SerializeField] float detectRadius = 6f;      // ÇÃ·¹ÀÌ¾î ÀÎ½Ä ¹üÀ§
-    [SerializeField] float attackRange = 1.5f;     // °ËÀº ÂªÀº »ç°Å¸®
-    [SerializeField] float attackCooldown = 2f;    // ÄŞº¸ ÄğÅ¸ÀÓ
+    [SerializeField] float detectRadius = 6f;      // í”Œë ˆì´ì–´ ì¸ì‹ ë²”ìœ„
+    [SerializeField] float attackRange = 1.5f;     // ê²€ì€ ì§§ì€ ì‚¬ê±°ë¦¬
+    [SerializeField] float attackCooldown = 2f;    // ì½¤ë³´ ì¿¨íƒ€ì„
     float lastAttackTime;
 
     [Header("Combo Attack")]
-    [SerializeField] int maxCombo = 2;             // ¿¬¼Ó °ø°İ È½¼ö (2~3 ÃßÃµ)
-    [SerializeField] float comboDelay = 0.4f;      // ¿¬¼Ó °ø°İ »çÀÌ µô·¹ÀÌ
+    [SerializeField] int maxCombo = 2;             // ì—°ì† ê³µê²© íšŸìˆ˜
+    [SerializeField] float comboDelay = 0.4f;      // ì—°ì† ê³µê²© ê°„ ë”œë ˆì´
     int currentCombo = 0;
 
     [Header("Move")]
-    [SerializeField] float moveSpeed = 3.5f;       // ºü¸¥ ÀÌµ¿ ¼Óµµ
+    [SerializeField] float moveSpeed = 3.5f;
 
     [Header("Animator Params")]
     [SerializeField] string moveBool = "1_Move";
@@ -37,6 +37,13 @@ public class EnemySwordAI : MonoBehaviour, IEnemyAIEvents
         if (!rb) rb = GetComponent<Rigidbody2D>();
         if (!animator) animator = GetComponentInChildren<Animator>();
         if (!visualRoot) visualRoot = transform;
+
+        // âœ… Player íƒœê·¸ ìë™ ì¸ì‹
+        if (!player)
+        {
+            GameObject found = GameObject.FindGameObjectWithTag("Player");
+            if (found) player = found.transform;
+        }
     }
 
     void Update()
@@ -79,7 +86,7 @@ public class EnemySwordAI : MonoBehaviour, IEnemyAIEvents
     {
         if (Time.time - lastAttackTime < attackCooldown) return;
 
-        // ÄŞº¸ ½ÃÀÛ
+        // ì½¤ë³´ ì‹œì‘
         currentCombo = 0;
         StartCoroutine(ComboAttackRoutine());
         lastAttackTime = Time.time;
@@ -90,14 +97,12 @@ public class EnemySwordAI : MonoBehaviour, IEnemyAIEvents
         while (currentCombo < maxCombo)
         {
             animator.SetTrigger(attackTrig);
-
-            // ½ÇÁ¦ °ø°İ ÆÇÁ¤ (¾Ö´Ï¸ŞÀÌ¼Ç ÀÌº¥Æ®¿¡¼­ È£Ãâ)
             yield return new WaitForSeconds(comboDelay);
             currentCombo++;
         }
     }
 
-    // Animation Event¿¡¼­ È£ÃâµÊ
+    // Animation Eventì—ì„œ í˜¸ì¶œë¨
     public void DoAttack()
     {
         attackHitbox?.DoAttack();
@@ -108,7 +113,6 @@ public class EnemySwordAI : MonoBehaviour, IEnemyAIEvents
         if (!player) return;
 
         Vector3 scale = visualRoot.localScale;
-
         if (player.position.x > transform.position.x)
             scale.x = -Mathf.Abs(scale.x);
         else
@@ -116,7 +120,7 @@ public class EnemySwordAI : MonoBehaviour, IEnemyAIEvents
 
         visualRoot.localScale = scale;
 
-        // È÷Æ®¹Ú½º ¹æÇâ ¹İÀü
+        // íˆíŠ¸ë°•ìŠ¤ ë°©í–¥ ë°˜ì „
         if (attackHitbox)
         {
             Vector3 hbScale = attackHitbox.transform.localScale;
@@ -125,7 +129,7 @@ public class EnemySwordAI : MonoBehaviour, IEnemyAIEvents
         }
     }
 
-    // ÀÎÅÍÆäÀÌ½º ±¸Çö
+    // ì¸í„°í˜ì´ìŠ¤ êµ¬í˜„
     public void OnHurt()
     {
         if (!isDead && animator) animator.SetTrigger(hitTrig);

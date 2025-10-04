@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 
 public class EnemyLanceAI : MonoBehaviour, IEnemyAIEvents
@@ -12,7 +12,7 @@ public class EnemyLanceAI : MonoBehaviour, IEnemyAIEvents
 
     [Header("Detect/Attack")]
     [SerializeField] float detectRadius = 6f;
-    [SerializeField] float attackRange = 2.5f; // Ã¢Àº ±ä »ç°Å¸®
+    [SerializeField] float attackRange = 2.5f; // ì°½ì€ ê¸´ ì‚¬ê±°ë¦¬
     [SerializeField] float attackCooldown = 2f;
     float lastAttackTime;
 
@@ -34,6 +34,17 @@ public class EnemyLanceAI : MonoBehaviour, IEnemyAIEvents
         if (!rb) rb = GetComponent<Rigidbody2D>();
         if (!animator) animator = GetComponentInChildren<Animator>();
         if (!visualRoot) visualRoot = transform;
+    }
+
+    void Start()
+    {
+        // âœ… í”Œë ˆì´ì–´ ìë™ íƒìƒ‰ (Player íƒœê·¸ ê¸°ë°˜)
+        if (player == null)
+        {
+            GameObject p = GameObject.FindGameObjectWithTag("Player");
+            if (p != null)
+                player = p.transform;
+        }
     }
 
     void Update()
@@ -79,7 +90,7 @@ public class EnemyLanceAI : MonoBehaviour, IEnemyAIEvents
         animator.SetTrigger(attackTrig);
         lastAttackTime = Time.time;
 
-        // ´ë½Ã µ¹Áø ÈÄ °ø°İ ÆÇÁ¤
+        // ëŒ€ì‹œ ëŒì§„ í›„ ê³µê²© íŒì •
         StartCoroutine(DashAttack());
     }
 
@@ -96,7 +107,7 @@ public class EnemyLanceAI : MonoBehaviour, IEnemyAIEvents
 
         rb.linearVelocity = Vector2.zero;
 
-        // È÷Æ®¹Ú½º ¹ßµ¿
+        // íˆíŠ¸ë°•ìŠ¤ ë°œë™
         attackHitbox?.DoAttack();
     }
 
@@ -113,7 +124,7 @@ public class EnemyLanceAI : MonoBehaviour, IEnemyAIEvents
 
         visualRoot.localScale = scale;
 
-        // °ø°İ È÷Æ®¹Ú½º ¹æÇâµµ °°ÀÌ ¹İÀü
+        // ê³µê²© íˆíŠ¸ë°•ìŠ¤ ë°©í–¥ë„ ê°™ì´ ë°˜ì „
         if (attackHitbox)
         {
             Vector3 hbScale = attackHitbox.transform.localScale;
@@ -122,7 +133,7 @@ public class EnemyLanceAI : MonoBehaviour, IEnemyAIEvents
         }
     }
 
-    // ÀÎÅÍÆäÀÌ½º ±¸ÇöºÎ
+    // ì¸í„°í˜ì´ìŠ¤ êµ¬í˜„ë¶€
     public void OnHurt()
     {
         if (!isDead && animator) animator.SetTrigger(hitTrig);
