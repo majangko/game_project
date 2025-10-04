@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 
 public class EnemyAxeAI : MonoBehaviour, IEnemyAIEvents
@@ -11,14 +11,14 @@ public class EnemyAxeAI : MonoBehaviour, IEnemyAIEvents
     [SerializeField] AttackHitbox attackHitbox;
 
     [Header("Detect/Attack")]
-    [SerializeField] float detectRadius = 6f;    // ÇÃ·¹ÀÌ¾î ÀÎ½Ä ¹üÀ§
-    [SerializeField] float attackRange = 1.8f;   // µµ³¢´Â ¾à°£ ±ä ±ÙÁ¢ ¹üÀ§
-    [SerializeField] float attackCooldown = 3f;  // °ø°İ ÄğÅ¸ÀÓ ±æ°Ô
-    [SerializeField] float chargeTime = 0.6f;    // ³»·ÁÂï±â Àü¿¡ Â÷Â¡ ½Ã°£
+    [SerializeField] float detectRadius = 6f;
+    [SerializeField] float attackRange = 1.8f;
+    [SerializeField] float attackCooldown = 3f;
+    [SerializeField] float chargeTime = 0.6f;
     float lastAttackTime;
 
     [Header("Move")]
-    [SerializeField] float moveSpeed = 2.2f;     // °Ëº´º¸´Ù ´À¸®°Ô
+    [SerializeField] float moveSpeed = 2.2f;
 
     [Header("Animator Params")]
     [SerializeField] string moveBool = "1_Move";
@@ -33,6 +33,19 @@ public class EnemyAxeAI : MonoBehaviour, IEnemyAIEvents
         if (!rb) rb = GetComponent<Rigidbody2D>();
         if (!animator) animator = GetComponentInChildren<Animator>();
         if (!visualRoot) visualRoot = transform;
+    }
+
+    void Start()
+    {
+        // ğŸŸ¢ "Player" íƒœê·¸ë¡œ ìë™ íƒìƒ‰
+        if (player == null)
+        {
+            GameObject foundPlayer = GameObject.FindGameObjectWithTag("Player");
+            if (foundPlayer != null)
+                player = foundPlayer.transform;
+            else
+                Debug.LogWarning("[EnemyAxeAI] No GameObject with tag 'Player' found!");
+        }
     }
 
     void Update()
@@ -81,26 +94,15 @@ public class EnemyAxeAI : MonoBehaviour, IEnemyAIEvents
 
     IEnumerator ChargeAndAttack()
     {
-        // Â÷Â¡ ¸ğ¼Ç (±×³É ´ë±â, ¾Ö´Ï¸ŞÀÌ¼Çµµ ´ë±â µ¿ÀÛ °¡´É)
         animator.SetBool(moveBool, false);
-
-        // Â÷Â¡ ½Ã°£ ´ë±â
         yield return new WaitForSeconds(chargeTime);
-
-        // °ø°İ ¸ğ¼Ç ¹ßµ¿
         animator.SetTrigger(attackTrig);
-
-        // DoAttack()Àº ¾Ö´Ï¸ŞÀÌ¼Ç ÀÌº¥Æ®¿¡¼­ È£ÃâµÊ
     }
 
-    // Animation Event¿¡¼­ È£Ãâ
     public void DoAttack()
     {
         if (attackHitbox != null)
-        {
-            // ³Ë¹é °ªÀº AttackHitbox Inspector¿¡¼­ Á÷Á¢ ¼³Á¤
             attackHitbox.DoAttack();
-        }
     }
 
     void FlipToPlayer()
@@ -116,7 +118,6 @@ public class EnemyAxeAI : MonoBehaviour, IEnemyAIEvents
 
         visualRoot.localScale = scale;
 
-        // È÷Æ®¹Ú½º ¹æÇâ ¹İÀü
         if (attackHitbox)
         {
             Vector3 hbScale = attackHitbox.transform.localScale;
@@ -125,7 +126,6 @@ public class EnemyAxeAI : MonoBehaviour, IEnemyAIEvents
         }
     }
 
-    // ÀÎÅÍÆäÀÌ½º ±¸Çö
     public void OnHurt()
     {
         if (!isDead && animator) animator.SetTrigger(hitTrig);

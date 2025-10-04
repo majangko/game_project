@@ -14,7 +14,7 @@ public class EnemyArcherAI : MonoBehaviour, IEnemyAIEvents
     [SerializeField] private float detectRadius = 8f;   // 인식 범위
     [SerializeField] private float attackRange = 6f;    // 사거리
     [SerializeField] private float attackCooldown = 2f; // 공격 쿨타임
-    [SerializeField] private float shootDelay = 0.3f;   // 🔹 화살 발사 딜레이 추가
+    [SerializeField] private float shootDelay = 0.3f;   // 화살 발사 딜레이
     private float lastAttackTime;
 
     [Header("Move")]
@@ -33,6 +33,19 @@ public class EnemyArcherAI : MonoBehaviour, IEnemyAIEvents
         if (!rb) rb = GetComponent<Rigidbody2D>();
         if (!animator) animator = GetComponentInChildren<Animator>();
         if (!visualRoot) visualRoot = transform;
+    }
+
+    void Start()
+    {
+        // ✅ Player 태그 기반 자동 탐색
+        if (!player)
+        {
+            GameObject foundPlayer = GameObject.FindGameObjectWithTag("Player");
+            if (foundPlayer != null)
+                player = foundPlayer.transform;
+            else
+                Debug.LogWarning("[EnemyArcherAI] No GameObject with tag 'Player' found!");
+        }
     }
 
     void Update()
@@ -75,10 +88,9 @@ public class EnemyArcherAI : MonoBehaviour, IEnemyAIEvents
     {
         if (Time.time - lastAttackTime < attackCooldown) return;
 
-        // 공격 애니메이션 실행
         animator.SetTrigger(attackTrig);
 
-        // 🔹 화살 발사에 딜레이 추가
+        // 🔹 화살 발사 딜레이 후 실행
         Invoke(nameof(ShootArrow), shootDelay);
 
         lastAttackTime = Time.time;
@@ -93,7 +105,7 @@ public class EnemyArcherAI : MonoBehaviour, IEnemyAIEvents
             // 방향 계산
             Vector2 dir = (player.position - arrowSpawnPoint.position).normalized;
 
-            // Arrow.cs의 SetDirection 호출
+            // Arrow.cs에 방향 전달
             Arrow arrowScript = arrow.GetComponent<Arrow>();
             if (arrowScript != null)
             {
