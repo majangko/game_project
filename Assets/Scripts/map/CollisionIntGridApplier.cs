@@ -1,167 +1,84 @@
-using System;
+using System.Linq;   // 문자열에서 숫자 추출용
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[ExecuteAlways]
 public class CollisionIntGridApplier : MonoBehaviour
 {
-    [Header("Source (LDtk IntGrid tilemap)")]
-    public Tilemap intGridMap;               // LDtk가 만든 Collision(IntGrid) 타일맵
+    [Header("LDtk IntGrid Tilemap")]
+    public Tilemap intGrid;   // LDtk IntGrid 레이어에서 연결
 
-    [Header("Targets (generated)")]
-    public Tilemap solidMap;                 // value==solidValue -> 여기에 타일을 찍어 콜라이더 생성
-    public Tilemap platformMap;              // value==platformValue -> 여기에 타일을 찍어 발판 생성
+    [Header("Collision Maps")]
+    public Tilemap solidMap;      // 벽/바닥
+    public Tilemap platformMap;   // 플랫폼
 
-    [Header("Values")]
-    public int solidValue = 1;               // 벽/바닥
-    public int platformValue = 2;            // 발판(One-way)
+    [Header("Collision Settings")]
+    public TileBase solidTile;    // 벽, 바닥에 쓸 더미 타일
+    public TileBase platformTile; // 플랫폼에 쓸 더미 타일
 
-    [Header("Tiles used for baking (ColliderType=Grid)")]
-    public TileBase solidTile;               // 비워두면 런타임 타일 자동 생성
-    public TileBase platformTile;
-
-    [ContextMenu("Bake From IntGrid")]
+    /// <summary>
+    /// IntGrid를 읽어서 충돌 타일로 변환하는 실행 함수
+    /// </summary>
+    [ContextMenu("Bake Collision From IntGrid")]
     public void Bake()
     {
-        if (!intGridMap)
+        if (intGrid == null)
         {
-            Debug.LogError("IntGrid tilemap is not assigned.", this);
+            Debug.LogError("IntGrid Tilemap이 연결되지 않았습니다!");
             return;
         }
 
-        AutoAssignTargetsIfMissing();
-
-        // 타일 준비(없으면 코드로 생성)
-        if (!solidTile)    solidTile    = CreateRuntimeTile("SolidTile");
-        if (!platformTile) platformTile = CreateRuntimeTile("PlatformTile");
-
-        // 타겟 초기화
+        // 기존 데이터 초기화
         solidMap.ClearAllTiles();
         platformMap.ClearAllTiles();
 
-        // IntGrid 순회
-        var bounds = intGridMap.cellBounds;
-        for (int x = bounds.xMin; x < bounds.xMax; x++)
-        for (int y = bounds.yMin; y < bounds.yMax; y++)
+        BoundsInt bounds = intGrid.cellBounds;
+        TileBase[] allTiles = intGrid.GetTilesBlock(bounds);
+
+        for (int x = 0; x < bounds.size.x; x++)
         {
-            var p = new Vector3Int(x, y, 0);
-            var t = intGridMap.GetTile(p);
-            if (!t) continue;
-
-            int v = ParseIntGridValue(t.name);
-            if (v == solidValue)
-                solidMap.SetTile(p, solidTile);
-            else if (v == platformValue)
-                platformMap.SetTile(p, platformTile);
-        }
-
-        SetupSolidColliders();
-        SetupPlatformColliders();
-
-        Debug.Log("Collision bake complete.", this);
-    }
-
-    // ===== Helpers =====
-    int ParseIntGridValue(string tileName)
-    {
-        // "1","2","3" 또는 "Value_1" 같은 이름을 숫자로 파싱
-        if (int.TryParse(tileName, out int v)) return v;
-
-        for (int i = tileName.Length - 1; i >= 0; i--)
-        {
-            if (!char.IsDigit(tileName[i]))
+            for (int y = 0; y < bounds.size.y; y++)
             {
-                if (i < tileName.Length - 1 && int.TryParse(tileName[(i + 1)..], out v))
-                    return v;
-                break;
+                int index = x + y * bounds.size.x;
+                TileBase tile = allTiles[index];
+                if (tile == null) continue;
+
+                // IntGrid에서 어떤 숫자인지 판별
+                string tileName = tile.name;
+                int value = ParseIntGridValue(tileName);
+
+                Vector3Int pos = new Vector3Int(x + bounds.x, y + bounds.y, 0);
+
+                switch (value)
+                {
+                    case 1: // 벽
+                    case 2: // 바닥
+                        solidMap.SetTile(pos, solidTile);
+                        break;
+
+                    case 3: // 플랫폼
+                        platformMap.SetTile(pos, platformTile);
+                        break;
+
+                    case 4: // 시크릿 벽 (충돌 없음, 그림 전용)
+                        // 아무것도 두지 않음
+                        break;
+                }
             }
         }
+
+        Debug.Log("Collision Bake 완료!");
+    }
+
+    /// <summary>
+    /// LDtk IntGrid 값에서 숫자만 추출
+    /// "Collision 1", "Collision_2" → 1, 2
+    /// </summary>
+    private int ParseIntGridValue(string raw)
+    {
+        var digits = new string(raw.Where(char.IsDigit).ToArray());
+        if (int.TryParse(digits, out int result))
+            return result;
+
         return -1;
-    }
-
-    TileBase CreateRuntimeTile(string name)
-    {
-        var t = ScriptableObject.CreateInstance<Tile>();
-        t.name = name;
-        ((Tile)t).colliderType = Tile.ColliderType.Grid; // 셀 전체 충돌
-        return t;
-    }
-
-    void AutoAssignTargetsIfMissing()
-    {
-        if (!solidMap)
-        {
-            var go = FindOrCreateChild("SolidMap");
-            solidMap = EnsureTilemap(go);
-        }
-        if (!platformMap)
-        {
-            var go = FindOrCreateChild("PlatformMap");
-            platformMap = EnsureTilemap(go);
-        }
-    }
-
-    GameObject FindOrCreateChild(string name)
-    {
-        var t = transform.Find(name);
-        if (t) return t.gameObject;
-        var go = new GameObject(name);
-        go.transform.SetParent(transform, false);
-        return go;
-    }
-
-    Tilemap EnsureTilemap(GameObject go)
-    {
-        // 보통 상위에 Grid가 이미 있음. 없으면 추가
-        if (!GetComponentInParent<Grid>())
-            gameObject.AddComponent<Grid>();
-
-        var tm = go.GetComponent<Tilemap>();
-        if (!tm) tm = go.AddComponent<Tilemap>();
-        var r = go.GetComponent<TilemapRenderer>();
-        if (!r) r = go.AddComponent<TilemapRenderer>();
-        r.sortingLayerName = "Default";
-        r.sortingOrder = 0;
-        return tm;
-    }
-
-    void SetupSolidColliders()
-    {
-        var rb = solidMap.GetComponent<Rigidbody2D>();
-        if (!rb) rb = solidMap.gameObject.AddComponent<Rigidbody2D>();
-        rb.bodyType = RigidbodyType2D.Static;
-
-        var col = solidMap.GetComponent<TilemapCollider2D>();
-        if (!col) col = solidMap.gameObject.AddComponent<TilemapCollider2D>();
-#if UNITY_2022_2_OR_NEWER
-        col.compositeOperation = Collider2D.CompositeOperation.Merge;
-#else
-        col.usedByComposite = true;
-#endif
-
-        var comp = solidMap.GetComponent<CompositeCollider2D>();
-        if (!comp) comp = solidMap.gameObject.AddComponent<CompositeCollider2D>();
-        comp.geometryType = CompositeCollider2D.GeometryType.Polygons;
-    }
-
-    void SetupPlatformColliders()
-    {
-        var rb = platformMap.GetComponent<Rigidbody2D>();
-        if (!rb) rb = platformMap.gameObject.AddComponent<Rigidbody2D>();
-        rb.bodyType = RigidbodyType2D.Static;
-
-        var col = platformMap.GetComponent<TilemapCollider2D>();
-        if (!col) col = platformMap.gameObject.AddComponent<TilemapCollider2D>();
-#if UNITY_2022_2_OR_NEWER
-        col.compositeOperation = Collider2D.CompositeOperation.None; // 개별 셀 유지
-#else
-        col.usedByComposite = false;
-#endif
-        col.usedByEffector = true;
-
-        var eff = platformMap.GetComponent<PlatformEffector2D>();
-        if (!eff) eff = platformMap.gameObject.AddComponent<PlatformEffector2D>();
-        eff.useOneWay = true;
-        eff.surfaceArc = 180f;
     }
 }
