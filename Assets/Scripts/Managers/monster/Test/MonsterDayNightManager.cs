@@ -16,10 +16,11 @@ public class DayNightMonsterManager : MonoBehaviour
     }
 
     [Header("Settings")]
-    [Tooltip("낮/밤 전환 주기 (초 단위)")]
+    [Tooltip("낮 → 밤 전환까지 걸리는 시간 (초 단위)")]
     public float switchInterval = 10f;
     private float timer = 0f;
-    private bool isDay = true; // true = 낮, false = 밤
+    private bool isDay = true;       // true = 낮, false = 밤
+    private bool hasSwitched = false; // 한 번만 전환할지 여부 제어
 
     [Header("Monster Pairs")]
     public List<MonsterPair> monsters = new List<MonsterPair>();
@@ -41,13 +42,17 @@ public class DayNightMonsterManager : MonoBehaviour
 
     void Update()
     {
+        // 이미 밤으로 전환이 끝났으면 더 이상 실행 안 함
+        if (hasSwitched) return;
+
         timer += Time.deltaTime;
         if (timer >= switchInterval)
         {
             timer = 0f;
-            isDay = !isDay;
+            isDay = false; // 낮 → 밤으로 전환 (한 번만)
+            hasSwitched = true; // 다시 전환 금지
             SwitchAllMonsters(isDay);
-            Debug.Log("낮/밤 전환됨 → " + (isDay ? "낮" : "밤"));
+            Debug.Log("낮/밤 전환 완료 → 밤 상태로 고정됨");
         }
     }
 
