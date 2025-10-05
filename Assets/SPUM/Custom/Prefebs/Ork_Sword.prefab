@@ -176,7 +176,7 @@ GameObject:
   - component: {fileID: 1520733219992918363}
   - component: {fileID: 6236702636997608444}
   m_Layer: 10
-  m_Name: Ork_Sword 1
+  m_Name: Ork_Sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
