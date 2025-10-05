@@ -1,5 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections;
+using UnityEngine;
 
 /// <summary>
 /// 모든 스킬의 기본 클래스.
@@ -33,6 +34,9 @@ public class SkillBase : MonoBehaviour
 
     // 쿨타임 남은 시간 추적용
     private float cooldownTimer = 0f;
+
+    // ✅ HUDController용 스킬 발동 이벤트 (모든 스킬 공용)
+    public static event Action<string, float> OnSkillUsed;
 
 
     // ============================================================
@@ -93,7 +97,7 @@ public class SkillBase : MonoBehaviour
 
     private IEnumerator ActivateRoutine()
     {
-        // 🔸 즉시 발동
+        // 🔸 실제 스킬 발동
         OnActivate();
 
         // 🔸 쿨타임 시작
@@ -101,6 +105,9 @@ public class SkillBase : MonoBehaviour
         {
             isCoolingDown = true;
             cooldownTimer = cooldown;
+
+            // ✅ HUD에 쿨타임 알림 보내기
+            OnSkillUsed?.Invoke(skillName, cooldown);
         }
 
         yield return null;
@@ -124,6 +131,12 @@ public class SkillBase : MonoBehaviour
         if (ctrl == null) return 1;
         return ctrl.FacingDir;
     }
+    // SkillBase.cs 안에 추가
+    protected void NotifySkillUsed()
+    {
+        OnSkillUsed?.Invoke(skillName, cooldown);
+    }
+
 
     /// <summary>
     /// 시전 애니메이션 트리거 실행 (안전하게)

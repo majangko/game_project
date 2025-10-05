@@ -12,6 +12,7 @@ public class SpumPlatformerController : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private Vector2 groundCheckSize = new Vector2(0.8f, 0.18f);
     [SerializeField] private LayerMask groundMask;
+    [SerializeField] private LayerMask tilemapMask; // ✅ 추가: 타일맵 인식용
 
     [Header("Flip Roots")]
     [SerializeField] private Transform flipRoot;
@@ -36,18 +37,15 @@ public class SpumPlatformerController : MonoBehaviour
     [SerializeField] private float projectileSpeed = 10f;
     [SerializeField] private Transform projectileSpawnPoint;
 
-    // Buff multipliers
     [HideInInspector] public float moveSpeedMul = 1f;
     [HideInInspector] public float attackPowerMul = 1f;
 
-    // 강화 평타 관련
     private int enhancedRemaining = 0;
     private GameObject enhancedExplosionPrefab;
     private int enhancedExplosionDamage;
     private float enhancedExplosionRadius;
     private LayerMask enhancedMask;
 
-    // Animator params
     private const string P_MOVE_BOOL = "1_Move";
     private const string P_IS_GROUNDED = "IsGrounded";
     private const string P_VERT_SPEED = "VerticalSpeed";
@@ -58,7 +56,6 @@ public class SpumPlatformerController : MonoBehaviour
     private float lockUntil;
     private int desiredDir = 0;
     private float baseFlipAbsX = 1f;
-
     private string attackTriggerName = "2_Attack";
 
     public int FacingDir
@@ -74,7 +71,12 @@ public class SpumPlatformerController : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        anim = GetComponentInChildren<Animator>();
+        var spum = GetComponent<SPUM_Prefabs>();
+        if (spum != null && spum.Anim)
+            anim = spum.Anim;
+        else
+            anim = GetComponentInChildren<Animator>();
+
         rb.freezeRotation = true;
 
         if (!visualRoot && anim) visualRoot = anim.transform;
@@ -111,10 +113,13 @@ public class SpumPlatformerController : MonoBehaviour
 
         if (Mathf.Abs(x) > 0.01f) desiredDir = x > 0 ? +1 : -1;
 
-        // 접지 체크
+        // ✅ Ground + Tilemap 체크
         bool grounded = false;
         if (groundCheck)
-            grounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, groundMask);
+        {
+            int combinedMask = groundMask | tilemapMask;
+            grounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, combinedMask);
+        }
 
         // Animator 파라미터
         if (anim)
@@ -201,10 +206,9 @@ public class SpumPlatformerController : MonoBehaviour
         {
             GameObject proj = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
 
-            // ✅ 방향에 따라 스프라이트 반전
             SpriteRenderer sr = proj.GetComponent<SpriteRenderer>();
             if (sr != null)
-                sr.flipX = (dir == -1); // 왼쪽 보면 true
+                sr.flipX = (dir == -1);
 
             Projectile p = proj.GetComponent<Projectile>();
             if (p != null)
@@ -216,8 +220,6 @@ public class SpumPlatformerController : MonoBehaviour
         }
     }
 
-
-    // 강화 평타 설정
     public void SetEnhancedAttack(int count, GameObject prefab, int dmg, float radius, LayerMask mask)
     {
         enhancedRemaining = count;
@@ -227,7 +229,6 @@ public class SpumPlatformerController : MonoBehaviour
         enhancedMask = mask;
     }
 
-    // Projectile에서 소모 처리
     public void ConsumeEnhanced()
     {
         if (enhancedRemaining > 0) enhancedRemaining--;

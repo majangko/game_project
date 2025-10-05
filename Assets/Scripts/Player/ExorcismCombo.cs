@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class ExorcismCombo : SkillBase
 {
@@ -10,21 +11,23 @@ public class ExorcismCombo : SkillBase
     public float knockback = 10f;
 
     [Header("Teleport Settings")]
-    public float dashDistance = 3f;       // 순간이동 거리
-    public float focusDuration = 0.15f;   // 집중 유지 시간
+    public float dashDistance = 3f;
+    public float focusDuration = 0.15f;
 
     [Header("Hitbox")]
     public Vector2 hitBoxSize = new Vector2(2.5f, 1.2f);
     public Vector2 hitBoxOffset = new Vector2(0.5f, 0.2f);
 
     [Header("Effects")]
-    public GameObject[] slashEffectPrefabs; // 3개 넣을 수 있음
+    public GameObject[] slashEffectPrefabs;
     public float effectLifetime = 0.6f;
-    public float effectDelay = 0.15f;       // 각 이펙트 간격
+    public float effectDelay = 0.15f;
+
+    // 쿨다운 HUD 이벤트 (SkillBase에서 지원하지 않는 경우 직접 알림)
+    public static event Action<string, float> OnSkillUsed;
 
     private Rigidbody2D rb;
 
-    // 부모 SkillBase의 Start()를 덮어씀 (Animator, ctrl 자동 연결)
     protected override void Start()
     {
         base.Start();
@@ -33,8 +36,14 @@ public class ExorcismCombo : SkillBase
 
     protected override void OnActivate()
     {
-        // ✅ 애니메이션 실행
-        TriggerAnimation(); // anim.SetTrigger(animTrigger) 자동 처리
+        // 애니메이션 트리거가 등록돼 있다면 실행, 없으면 무시
+        if (!string.IsNullOrEmpty(animTrigger))
+            TriggerAnimation();
+
+        // HUD 쿨다운 알림 (선택)
+        OnSkillUsed?.Invoke(skillName, cooldown);
+
+        // 실제 스킬 로직 실행
         StartCoroutine(DoCombo());
     }
 
@@ -42,14 +51,13 @@ public class ExorcismCombo : SkillBase
     {
         int dir = ctrl != null ? ctrl.FacingDir : 1;
 
-        // --- 1. 순간이동 시작 ---
+        // --- 1. 순간이동 ---
         Vector2 dashStart = transform.position;
         Vector2 dashEnd = dashStart + new Vector2(dashDistance * dir, 0f);
 
-        // Rigidbody를 사용해 즉시 이동
         if (rb != null)
         {
-            rb.bodyType = RigidbodyType2D.Kinematic; // 이동 중 물리 영향 방지
+            rb.bodyType = RigidbodyType2D.Kinematic;
             rb.position = dashEnd;
             rb.bodyType = RigidbodyType2D.Dynamic;
         }
@@ -58,10 +66,10 @@ public class ExorcismCombo : SkillBase
             transform.position = dashEnd;
         }
 
-        // --- 2. 집중 모션 유지 ---
+        // --- 2. 집중 시간 ---
         yield return new WaitForSeconds(focusDuration);
 
-        // --- 3. 경로를 따라 이펙트 및 타격 ---
+        // --- 3. 경로를 따라 이펙트 & 타격 ---
         for (int i = 0; i < slashEffectPrefabs.Length; i++)
         {
             GameObject prefab = slashEffectPrefabs[i];
@@ -72,7 +80,7 @@ public class ExorcismCombo : SkillBase
             {
                 GameObject fx = Instantiate(prefab, spawnPos, Quaternion.identity);
 
-                // 방향에 따라 반전
+                // 방향 반전 적용
                 Vector3 scale = fx.transform.localScale;
                 scale.x = Mathf.Abs(scale.x) * dir;
                 fx.transform.localScale = scale;
@@ -103,6 +111,7 @@ public class ExorcismCombo : SkillBase
         }
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
@@ -110,4 +119,5 @@ public class ExorcismCombo : SkillBase
         Vector2 center = (Vector2)transform.position + new Vector2(hitBoxOffset.x * dir, hitBoxOffset.y);
         Gizmos.DrawWireCube(center, hitBoxSize);
     }
+#endif
 }
