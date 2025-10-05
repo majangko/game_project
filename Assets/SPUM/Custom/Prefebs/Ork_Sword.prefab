@@ -103,7 +103,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7508527964012567059}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -159,6 +159,9 @@ MonoBehaviour:
     m_Bits: 8
   damage: 10
   knockback: {x: 2, y: 2}
+  activeTime: 0.1
+  boxSize: {x: 1.5, y: 1.5}
+  boxOffset: {x: -0.5, y: 0.2}
 --- !u!1 &8945424729404642476
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,6 +281,8 @@ MonoBehaviour:
   dieTrig: 4_Death
   rb: {fileID: 0}
   enemyAI: {fileID: 0}
+  invincibleTime: 0.6
+  hitEffect: {fileID: 0}
 --- !u!114 &6236702636997608444
 MonoBehaviour:
   m_ObjectHideFlags: 0

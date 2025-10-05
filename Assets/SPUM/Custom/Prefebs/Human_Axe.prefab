@@ -969,7 +969,7 @@ Transform:
   m_GameObject: {fileID: 2443696227069849498}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.107, y: 0.194, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -982,7 +982,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2443696227069849498}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -1038,6 +1038,9 @@ MonoBehaviour:
     m_Bits: 8
   damage: 10
   knockback: {x: 2, y: 2}
+  activeTime: 0.1
+  boxSize: {x: 1.5, y: 1.5}
+  boxOffset: {x: -0.5, y: 0.2}
 --- !u!1 &2631404633302055801
 GameObject:
   m_ObjectHideFlags: 0
@@ -1554,6 +1557,8 @@ MonoBehaviour:
   dieTrig: 4_Death
   rb: {fileID: 8195033932580274048}
   enemyAI: {fileID: 7761743663405870025}
+  invincibleTime: 0.6
+  hitEffect: {fileID: 0}
 --- !u!114 &7761743663405870025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1575,6 +1580,7 @@ MonoBehaviour:
   attackRange: 1.8
   attackCooldown: 2
   chargeTime: 0.3
+  swingDelay: 0.25
   moveSpeed: 3
   moveBool: 1_Move
   attackTrig: 2_Attack
@@ -2548,7 +2554,7 @@ Transform:
   m_GameObject: {fileID: 6119651855543099157}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.114, y: -0.021, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
