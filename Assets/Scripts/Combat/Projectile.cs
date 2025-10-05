@@ -5,15 +5,20 @@ public class Projectile : MonoBehaviour
     private int damage;
     private int direction;
     private float knockback;
+    private int enhancedRemaining;
+    private GameObject explosionPrefab;
+    private int explosionDamage;
+    private float explosionRadius;
+    private LayerMask explosionMask;
+    private SpumPlatformerController owner;
 
     [Header("Settings")]
-    public float speed = 10f;              // 투사체 이동 속도
-    public float lifetime = 3f;            // 자동 파괴 시간
-    public GameObject hitEffectPrefab;     // 충돌 시 이펙트
-    public bool destroyOnHit = true;       // 맞으면 바로 파괴할지 여부
+    public float speed = 10f;
+    public float lifetime = 3f;
+    public GameObject hitEffectPrefab;
+    public bool destroyOnHit = true;
 
-    [SerializeField] private LayerMask enemyMask;  // ✅ 인스펙터에서 설정 가능
-
+    [SerializeField] private LayerMask enemyMask;
     private Rigidbody2D rb;
 
     void Awake()
@@ -21,23 +26,28 @@ public class Projectile : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
-    public void Init(int dmg, int dir, float kb, LayerMask mask)
+    public void Init(int dmg, int dir, float kb, LayerMask mask,
+                     int enhancedCount = 0, GameObject explPrefab = null,
+                     int explDamage = 0, float explRadius = 0f, LayerMask explMask = default,
+                     SpumPlatformerController ctrl = null)
     {
         damage = dmg;
         direction = dir;
         knockback = kb;
+        if (mask != 0) enemyMask = mask;
 
-        // Inspector에서 설정한 값이 있으면 유지, Init에서 전달된 mask가 우선
-        if (mask != 0)
-            enemyMask = mask;
+        enhancedRemaining = enhancedCount;
+        explosionPrefab = explPrefab;
+        explosionDamage = explDamage;
+        explosionRadius = explRadius;
+        explosionMask = explMask;
+        owner = ctrl;
 
-        // 발사 방향으로 속도 적용
         rb.linearVelocity = new Vector2(speed * direction, 0f);
 
-        // 방향에 따라 스프라이트 반전
         Vector3 scale = transform.localScale;
         scale.x = Mathf.Abs(scale.x) * (direction > 0 ? 1 : -1);
-        transform.localScale = -scale;
+        transform.localScale = scale;
 
         Destroy(gameObject, lifetime);
     }
@@ -53,14 +63,31 @@ public class Projectile : MonoBehaviour
                 target.TakeHit(damage, knock, transform.position);
             }
 
+            // 일반 피격 이펙트
             if (hitEffectPrefab)
             {
                 GameObject fx = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
                 Destroy(fx, 0.5f);
             }
 
-            if (destroyOnHit)
-                Destroy(gameObject);
+            // 강화 폭발 처리
+            if (enhancedRemaining > 0 && explosionPrefab != null)
+            {
+                owner?.ConsumeEnhanced(); // 남은 횟수 차감
+
+                GameObject expl = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+                Destroy(expl, 0.5f);
+
+                Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position, explosionRadius, explosionMask);
+                foreach (var c in cols)
+                {
+                    Damageable d = c.GetComponent<Damageable>();
+                    if (d != null)
+                        d.TakeHit(explosionDamage, Vector2.zero, transform.position);
+                }
+            }
+
+            if (destroyOnHit) Destroy(gameObject);
         }
     }
 }

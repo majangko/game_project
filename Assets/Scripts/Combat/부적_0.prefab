@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2760745684693352031}
   - component: {fileID: 2934133403400304470}
   - component: {fileID: 5054046341685784259}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: "\uBD80\uC801_0"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -175,7 +175,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d0d11834296f5343865fb0727b55907, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 3
-  speed: 10
-  hitEffectPrefab: {fileID: 0}
+  speed: 15
+  lifetime: 0.5
+  hitEffectPrefab: {fileID: 7301643388249206853, guid: d2e0da08c97855f4fb07cc607958f24f, type: 3}
   destroyOnHit: 1
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 1024

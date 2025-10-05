@@ -36,7 +36,7 @@ public class TrapMap : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other) => TryHit(other);
-    private void OnTriggerStay2D(Collider2D other)  => TryHit(other);
+    private void OnTriggerStay2D(Collider2D other) => TryHit(other);
 
     private void TryHit(Collider2D other)
     {
@@ -51,7 +51,13 @@ public class TrapMap : MonoBehaviour
         // 데미지
         var dmg = other.GetComponent<ICanTakeDamage>();
         if (dmg != null)
+        {
             dmg.ApplyDamage(damage);
+
+            // ✅ 연출 추가 부분
+            CameraShake.Instance?.Shake(0.2f, 0.2f);
+            ScreenFlash.Instance?.Flash(0.25f);
+        }
 
         // 넉백
         var rb = other.attachedRigidbody;
@@ -61,8 +67,7 @@ public class TrapMap : MonoBehaviour
             if (dir.sqrMagnitude < 1e-4f) dir = Vector2.up;
             dir = (dir.normalized + Vector2.up * upwardBoost).normalized;
 
-            float impulse = knockbackTiles; // 1타일=1유닛 기준
-            // 아래로 떨어지는 중이면 Y속도 리셋해서 반응 업
+            float impulse = knockbackTiles;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Min(rb.linearVelocity.y, 0f));
             rb.AddForce(dir * impulse, ForceMode2D.Impulse);
         }
