@@ -4444,7 +4444,7 @@ GameObject:
   - component: {fileID: 8741199078394743690}
   m_Layer: 3
   m_Name: Guma_B
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9925,7 +9925,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62e251957668cd4469407835137eed1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 50
+  maxHP: 100
   animator: {fileID: 8416472740274908585}
   hitTrig: 3_Damage
   dieTrig: 4_Death

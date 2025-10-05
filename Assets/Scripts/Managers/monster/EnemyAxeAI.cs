@@ -15,6 +15,7 @@ public class EnemyAxeAI : MonoBehaviour, IEnemyAIEvents
     [SerializeField] float attackRange = 1.8f;
     [SerializeField] float attackCooldown = 3f;
     [SerializeField] float chargeTime = 0.6f;
+    [SerializeField] float swingDelay = 0.25f;   // ⚡ 공격 판정 나가는 시점 (애니메이션 타이밍용)
     float lastAttackTime;
 
     [Header("Move")]
@@ -37,7 +38,7 @@ public class EnemyAxeAI : MonoBehaviour, IEnemyAIEvents
 
     void Start()
     {
-        // 🟢 "Player" 태그로 자동 탐색
+        // 🟢 자동으로 플레이어 찾기
         if (player == null)
         {
             GameObject foundPlayer = GameObject.FindGameObjectWithTag("Player");
@@ -89,20 +90,25 @@ public class EnemyAxeAI : MonoBehaviour, IEnemyAIEvents
         if (Time.time - lastAttackTime < attackCooldown) return;
 
         lastAttackTime = Time.time;
-        StartCoroutine(ChargeAndAttack());
+        StartCoroutine(AttackRoutine());
     }
 
-    IEnumerator ChargeAndAttack()
+    IEnumerator AttackRoutine()
     {
         animator.SetBool(moveBool, false);
-        yield return new WaitForSeconds(chargeTime);
         animator.SetTrigger(attackTrig);
-    }
 
-    public void DoAttack()
-    {
+        // ⚡ 애니메이션 시작 후 약간의 준비시간 (chargeTime)
+        yield return new WaitForSeconds(chargeTime);
+
+        // ⚡ 휘두르는 순간 타이밍 (swingDelay)
+        yield return new WaitForSeconds(swingDelay);
+
         if (attackHitbox != null)
+        {
+            Debug.Log("[EnemyAxeAI] 자동 공격 발동!");
             attackHitbox.DoAttack();
+        }
     }
 
     void FlipToPlayer()

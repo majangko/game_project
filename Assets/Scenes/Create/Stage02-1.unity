@@ -14028,7 +14028,7 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!1001 &659836604
+--- !u!1001 &527732550
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -14036,6 +14036,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3004129061974999752, guid: 7d9549e728512c1439faa8f2c00225ab, type: 3}
+      propertyPath: tilemapMask.m_Bits
+      value: 2048
+      objectReference: {fileID: 0}
     - target: {fileID: 6966731262796120977, guid: 7d9549e728512c1439faa8f2c00225ab, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -14098,11 +14102,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6966731262796120977, guid: 7d9549e728512c1439faa8f2c00225ab, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 937.2045
+      value: 937.67816
       objectReference: {fileID: 0}
     - target: {fileID: 6966731262796120977, guid: 7d9549e728512c1439faa8f2c00225ab, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 172.54884
+      value: 172.67807
       objectReference: {fileID: 0}
     - target: {fileID: 6966731262796120977, guid: 7d9549e728512c1439faa8f2c00225ab, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -69743,11 +69747,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!224 &1378841923 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6966731262796120977, guid: 7d9549e728512c1439faa8f2c00225ab, type: 3}
-  m_PrefabInstance: {fileID: 659836604}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1474060491
 GameObject:
   m_ObjectHideFlags: 0
@@ -70225,6 +70224,14 @@ PrefabInstance:
     - target: {fileID: 1765599321011922007, guid: 166fe5187a4f37f458918713b2a7a7f3, type: 3}
       propertyPath: m_Name
       value: HUDRoot
+      objectReference: {fileID: 0}
+    - target: {fileID: 1989882915109678993, guid: 166fe5187a4f37f458918713b2a7a7f3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -5.94
+      objectReference: {fileID: 0}
+    - target: {fileID: 1989882915109678993, guid: 166fe5187a4f37f458918713b2a7a7f3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -6
       objectReference: {fileID: 0}
     - target: {fileID: 3351220247441073335, guid: 166fe5187a4f37f458918713b2a7a7f3, type: 3}
       propertyPath: durationMinutes
@@ -71443,7 +71450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bb80675a871e5743b63b40afa8df85c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1378841923}
+  target: {fileID: 0}
   offset: {x: 0, y: 1, z: -10}
   smoothSpeed: 5
 --- !u!114 &2078736370
@@ -71510,4 +71517,4 @@ SceneRoots:
   - {fileID: 1636919448}
   - {fileID: 1757340925}
   - {fileID: 674945761}
-  - {fileID: 659836604}
+  - {fileID: 527732550}
