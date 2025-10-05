@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class GhostBuff : SkillBase
@@ -17,6 +17,9 @@ public class GhostBuff : SkillBase
 
     protected override void OnActivate()
     {
+        // ✅ HUD 쿨타임 갱신
+        NotifySkillUsed();
+
         if (!useAnimEvent)
         {
             if (buffCo != null) StopCoroutine(buffCo);

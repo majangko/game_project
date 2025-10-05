@@ -20,10 +20,10 @@ public class Skill_JungHwaJin : SkillBase
 
     protected override void OnActivate()
     {
-        if (!string.IsNullOrEmpty(animTrigger))
-            anim.SetTrigger(animTrigger);
+        // 🔹 애니메이션 실행
+        TriggerAnimation();
 
-        int dir = ctrl != null ? ctrl.FacingDir : 1;
+        int dir = GetFacingDir();
 
         // ✅ 기준점 계산
         Vector2 basePos = throwOrigin != null ? (Vector2)throwOrigin.position : (Vector2)transform.position;
@@ -32,10 +32,11 @@ public class Skill_JungHwaJin : SkillBase
         // 🔹 Projectile 생성
         GameObject proj = Instantiate(projectilePrefab, spawnPos, Quaternion.identity);
 
+        // Rigidbody 설정
         Rigidbody2D rb = proj.GetComponent<Rigidbody2D>();
         if (rb == null) rb = proj.AddComponent<Rigidbody2D>();
         rb.gravityScale = 0;
-        rb.isKinematic = false;
+        rb.bodyType = RigidbodyType2D.Dynamic;
         rb.linearVelocity = new Vector2(projectileSpeed * dir, 0f);
 
         // Collider 설정
@@ -48,12 +49,16 @@ public class Skill_JungHwaJin : SkillBase
         if (sr != null)
             sr.flipX = (dir == -1);
 
-        // 충돌 이벤트 연결
+        // 🔹 충돌 이벤트 연결
         proj.AddComponent<MonoHelper>().Init((hitPos) =>
         {
+            // 결계 생성
             GameObject area = Instantiate(areaEffectPrefab, hitPos, Quaternion.identity);
             StartCoroutine(DoAreaEffect(area.transform));
             Destroy(area, duration);
+
+            // ✅ HUD 쿨타임 갱신 (실제 스킬 효과 발동 시점)
+            NotifySkillUsed();
         });
 
         Destroy(proj, 3f); // 투사체 3초 후 자동 제거
@@ -78,7 +83,7 @@ public class Skill_JungHwaJin : SkillBase
     }
 }
 
-/// 🔸 충돌 감지용 헬퍼
+/// 🔸 충돌 감지용 헬퍼 (Projectile용)
 public class MonoHelper : MonoBehaviour
 {
     private System.Action<Vector2> onHit;
@@ -90,6 +95,7 @@ public class MonoHelper : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        // 적 또는 지면에 닿았을 때 폭발 이펙트 실행
         if (other.gameObject.layer == LayerMask.NameToLayer("Enemy") ||
             other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {

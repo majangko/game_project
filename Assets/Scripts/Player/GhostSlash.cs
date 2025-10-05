@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class GhostSlash : SkillBase
@@ -15,16 +15,15 @@ public class GhostSlash : SkillBase
     public float freezeTime = 0.10f;
     public GameObject hitEffectPrefab;
     public Transform effectSpawnPoint;
+    public GameObject effectPrefab;
 
     private bool eventTriggered = false;
 
     protected override void OnActivate()
     {
         eventTriggered = false;
-
         if (anim && !string.IsNullOrEmpty(animTrigger))
             anim.SetTrigger(animTrigger);
-
         StartCoroutine(CoSlash());
     }
 
@@ -48,6 +47,9 @@ public class GhostSlash : SkillBase
         }
 
         if (freezeTime > 0f) yield return new WaitForSeconds(freezeTime);
+
+        // ✅ HUD 쿨타임 갱신
+        NotifySkillUsed();
     }
 
     public void AnimEvent_SlashHit()
@@ -95,7 +97,6 @@ public class GhostSlash : SkillBase
         int dir = (ctrl ? ctrl.FacingDir : 1);
         Vector2 center = (Vector2)(hitOrigin ? hitOrigin.position : transform.position)
                          + new Vector2(hitBoxOffset.x * dir, hitBoxOffset.y);
-
         Gizmos.color = new Color(1f, 0.6f, 0.2f, 0.35f);
         Gizmos.DrawCube(center, hitBoxSize);
         Gizmos.color = new Color(1f, 0.6f, 0.2f, 1f);

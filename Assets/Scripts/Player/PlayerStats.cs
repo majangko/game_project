@@ -99,4 +99,11 @@ public class PlayerStats : MonoBehaviour
         OnMPChanged?.Invoke(_mp, maxMP);
         if (_hp == 0) OnDied?.Invoke();
     }
+    public void SetHP(int hp)
+    {
+        _hp = Mathf.Clamp(hp, 0, maxHP);
+        OnHPChanged?.Invoke(_hp, maxHP);
+        if (_hp == 0) OnDied?.Invoke();
+    }
+
 }

@@ -1082,8 +1082,9 @@ GameObject:
   - component: {fileID: 2569561386469089794}
   - component: {fileID: 206145624637932839}
   - component: {fileID: 1375900118556349043}
+  - component: {fileID: 3808446299385147832}
   m_Layer: 3
-  m_Name: SPUM_20251003032447568
+  m_Name: Soryoung
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6478,6 +6479,9 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 256
+  tilemapMask:
+    serializedVersion: 2
+    m_Bits: 2048
   flipRoot: {fileID: 1207346368573137348}
   visualRoot: {fileID: 0}
   spriteFacesRight: 0
@@ -6509,7 +6513,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82f427fc91514b84aa61831af74c6f3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillName: Skill
+  skillName: DayandNightBujeok
   cooldown: 7
   duration: 0.5
   animTrigger: 6_Other
@@ -6534,7 +6538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5014099ba3996a54287326db1d3e305a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillName: Skill
+  skillName: FireBujeok
   cooldown: 10
   duration: 3
   animTrigger: 7_Skill
@@ -6550,6 +6554,29 @@ MonoBehaviour:
     m_Bits: 1024
   throwOrigin: {fileID: 4408637273250473827}
   throwOffset: {x: 0.5, y: 0}
+--- !u!114 &3808446299385147832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2579712906687728336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7406d83438e5aca4b85d3e768fe00581, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterName: Soryoung
+  portrait: {fileID: 198201473757730004, guid: b31532f219b16fd4dac5feb6aaf7df16, type: 3}
+  maxHP: 100
+  maxMP: 50
+  _hp: 0
+  _mp: 0
+  skillIcons:
+  - {fileID: 1126891265584629361, guid: 669f4056be438684488034020a896afc, type: 3}
+  - {fileID: -1225695337442736279, guid: c3d496295c9bcd94b952bd8da2f8f9f1, type: 3}
+  skillCooldownMax: []
+  skillCooldownRemain: []
 --- !u!1 &2581156933739852896
 GameObject:
   m_ObjectHideFlags: 0
