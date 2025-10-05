@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 4729015266278085859}
   - component: {fileID: 6573031145041780870}
   m_Layer: 10
-  m_Name: Ork_Axe 1
+  m_Name: Ork_Axe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
