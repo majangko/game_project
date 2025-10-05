@@ -1449,6 +1449,7 @@ GameObject:
   - component: {fileID: 7151112262269157877}
   - component: {fileID: 1672408692185099147}
   - component: {fileID: 3645299509452632070}
+  - component: {fileID: 2910368768538860517}
   m_Layer: 3
   m_Name: Guma_A
   m_TagString: Player
@@ -6728,7 +6729,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fb8e30c11ffb5b46808115aaafc8831, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillName: Taeguk Slash
+  skillName: TaegukSlash
   cooldown: 6
   duration: 0
   animTrigger: 
@@ -6760,7 +6761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d3d0fbd6afdbc64998c97d3968ef22e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillName: Exorcism Combo
+  skillName: ExorcismCombo
   cooldown: 0
   duration: 0
   animTrigger: 
@@ -6835,7 +6836,7 @@ CapsuleCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 6aef8f595f7921d499f28eb4729c581c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -6881,6 +6882,9 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 256
+  tilemapMask:
+    serializedVersion: 2
+    m_Bits: 2048
   flipRoot: {fileID: 5048334673813419507}
   visualRoot: {fileID: 0}
   spriteFacesRight: 0
@@ -6913,15 +6917,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: Default
-  portrait: {fileID: 0}
-  maxHP: 100
+  portrait: {fileID: -859494854233072998, guid: 5605d389ebb674340822d487ec911681, type: 3}
+  maxHP: 75
   maxMP: 50
-  _hp: 0
-  _mp: 0
+  _hp: 75
+  _mp: 50
   skillIcons:
-  - {fileID: 0}
+  - {fileID: 21300000, guid: 88dc609a175a06e4bac1b8f0cf9da4f4, type: 3}
+  - {fileID: 21300000, guid: 444cd832fc3bb634da6ddbdcd3a776a0, type: 3}
   skillCooldownMax: []
   skillCooldownRemain: []
+--- !u!114 &2910368768538860517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2735442335834798258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62e251957668cd4469407835137eed1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 50
+  animator: {fileID: 6294841255928898544}
+  hitTrig: 3_Damage
+  dieTrig: 4_Death
+  rb: {fileID: 0}
+  enemyAI: {fileID: 0}
+  invincibleTime: 0.6
+  hitEffect: {fileID: 0}
 --- !u!1 &3184209509068649334
 GameObject:
   m_ObjectHideFlags: 0
@@ -7893,7 +7918,7 @@ Animator:
   m_GameObject: {fileID: 5834078691598157420}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e9358c226bb09e24da9c5f7064768810, type: 2}
+  m_Controller: {fileID: 22100000, guid: 991b0e2eee723394cb56c8b81759e9f9, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

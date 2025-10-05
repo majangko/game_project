@@ -3313,7 +3313,7 @@ Animator:
   m_GameObject: {fileID: 7082497537668708399}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e9358c226bb09e24da9c5f7064768810, type: 2}
+  m_Controller: {fileID: 22100000, guid: 991b0e2eee723394cb56c8b81759e9f9, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -4324,6 +4324,8 @@ GameObject:
   - component: {fileID: 5079191817297556802}
   - component: {fileID: 271828021689212454}
   - component: {fileID: 3061366962399782745}
+  - component: {fileID: 1387524678326008393}
+  - component: {fileID: 9147329336623425407}
   m_Layer: 3
   m_Name: guma_test
   m_TagString: Player
@@ -9640,7 +9642,7 @@ CapsuleCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 6aef8f595f7921d499f28eb4729c581c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -9686,19 +9688,26 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 256
+  tilemapMask:
+    serializedVersion: 2
+    m_Bits: 0
   flipRoot: {fileID: 0}
   visualRoot: {fileID: 2483169576309380535}
   spriteFacesRight: 0
   attackMoveLock: 0.12
-  attackOrigin: {fileID: 6736406760757572060}
-  attackBoxSize: {x: 1.8, y: 1}
-  attackBoxOffset: {x: 1.2, y: 0.1}
+  attackDamage: 10
+  attackKnockback: 5
   enemyMask:
     serializedVersion: 2
     m_Bits: 1024
+  attackOrigin: {fileID: 6736406760757572060}
+  attackBoxSize: {x: 1.8, y: 1}
+  attackBoxOffset: {x: 1.2, y: 0.1}
   hitEffectPrefab: {fileID: 3061540847762355810, guid: 0179a93036229b24e85c390c158ae912, type: 3}
-  attackDamage: 10
-  attackKnockback: 5
+  isRanged: 0
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 10
+  projectileSpawnPoint: {fileID: 0}
   moveSpeedMul: 1
   attackPowerMul: 1
 --- !u!114 &5079191817297556802
@@ -9713,11 +9722,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8d6a7318f8050343bbb8cc3929ae390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skill1Key: 120
+  skill2Key: 99
   skills:
   - {fileID: 3061366962399782745}
   - {fileID: 271828021689212454}
-  slashKey: 120
-  buffKey: 99
 --- !u!114 &271828021689212454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9730,11 +9739,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbdc5ad696a749d4ca7a75d312640853, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillName: Skill
+  skillName: GhostBuff
   cooldown: 12
   duration: 6
-  effectPrefab: {fileID: 0}
   animTrigger: 6_Other
+  effectPrefab: {fileID: 0}
   moveSpeedMul: 1.3
   attackPowerMul: 1.4
   useAnimEvent: 0
@@ -9754,11 +9763,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b22f013c231c1e459dcaf1bfd1622c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillName: Skill
+  skillName: GhostSlash
   cooldown: 6
   duration: 0
-  effectPrefab: {fileID: 3884549794586822947, guid: 083c9a9e6aa41c6438f81fe9ff60f6a4, type: 3}
   animTrigger: 7_Skill
+  effectPrefab: {fileID: 3884549794586822947, guid: 083c9a9e6aa41c6438f81fe9ff60f6a4, type: 3}
   hitOrigin: {fileID: 6736406760757572060}
   enemyMask:
     serializedVersion: 2
@@ -9772,6 +9781,50 @@ MonoBehaviour:
   freezeTime: 0.1
   hitEffectPrefab: {fileID: 3061540847762355810, guid: 0179a93036229b24e85c390c158ae912, type: 3}
   effectSpawnPoint: {fileID: 2777826730372081889}
+  effectPrefab: {fileID: 3884549794586822947, guid: 083c9a9e6aa41c6438f81fe9ff60f6a4, type: 3}
+--- !u!114 &1387524678326008393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7582156980416342348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7406d83438e5aca4b85d3e768fe00581, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterName: Guma
+  portrait: {fileID: 21300000, guid: 769ea8a7d5fe115459b158ed47f6e71e, type: 3}
+  maxHP: 50
+  maxMP: 30
+  _hp: 50
+  _mp: 30
+  skillIcons:
+  - {fileID: -5000545500424060834, guid: 3c21255759719f64c8e679b218d9be45, type: 3}
+  - {fileID: 7853025445267311361, guid: 2aad857cfdd161549ba83f025c0d3c0b, type: 3}
+  skillCooldownMax: []
+  skillCooldownRemain: []
+--- !u!114 &9147329336623425407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7582156980416342348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62e251957668cd4469407835137eed1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 50
+  animator: {fileID: 8012865366963294634}
+  hitTrig: 3_Damage
+  dieTrig: 4_Death
+  rb: {fileID: 0}
+  enemyAI: {fileID: 0}
+  invincibleTime: 0.6
+  hitEffect: {fileID: 0}
 --- !u!1 &7794949226138391295
 GameObject:
   m_ObjectHideFlags: 0
