@@ -34,6 +34,7 @@ public class SPUM_Prefabs : MonoBehaviour
     public List<AnimationClip> DEBUFF_List = new();
     public List<AnimationClip> DEATH_List = new();
     public List<AnimationClip> OTHER_List = new();
+    public Animator Anim => _anim;
     public void OverrideControllerInit()
     {
         Animator animator = _anim;

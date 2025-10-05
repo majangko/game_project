@@ -1,76 +1,94 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class TaegukSlash : SkillBase
 {
     [Header("Charge Settings")]
-    public float minChargeTime = 0.3f;
-    public float maxChargeTime = 2f;
-    public string chargeAnim = "8_Charge";   // 차징 모션 Bool
-    public string slashAnim = "7_Skill";     // 발동 모션 Trigger
+    public float minChargeTime = 0.3f;        // 최소 차징 시간
+    public float maxChargeTime = 2f;          // 최대 차징 시간
+    public string chargeAnim = "8_Charge";    // 차징 애니메이션 Bool
+    public string slashAnim = "7_Skill";      // 발동 애니메이션 Trigger
 
     [Header("Slash Settings")]
     public Transform hitOrigin;
     public LayerMask enemyMask;
-    public float baseDamage = 30;
+    public float baseDamage = 30f;
     public float damagePerCharge = 10f;
     public Vector2 hitBoxSize = new Vector2(2.8f, 1.2f);
     public Vector2 hitBoxOffset = new Vector2(1.6f, 0.2f);
-    public float knockback = 8;
+    public float knockback = 8f;
 
     [Header("Effects")]
     public GameObject slashEffectPrefab;
     public GameObject hitEffectPrefab;
 
-    private float chargeTimer;
-    private bool isCharging;
+    private bool isCharging = false;
+    private float chargeTimer = 0f;
 
     protected override void OnActivate()
     {
-        if (!isCharging)  // 스킬 키 처음 눌렀을 때
-            StartCharge();
+        if (isCharging || isCoolingDown)
+            return;
+
+        StartCoroutine(ChargeRoutine());
     }
 
-    void Update()
-    {
-        if (isCharging)
-        {
-            chargeTimer += Time.deltaTime;
-            chargeTimer = Mathf.Clamp(chargeTimer, 0, maxChargeTime);
-
-            // 키에서 손 뗀 순간 → 발동
-            if (Input.GetKeyUp(KeyCode.X))
-                ReleaseSlash();
-        }
-    }
-
-    void StartCharge()
+    private IEnumerator ChargeRoutine()
     {
         isCharging = true;
         chargeTimer = 0f;
 
-        if (anim)
-            anim.SetBool(chargeAnim, true); // 차지 애니메이션 시작
-    }
+        // 🔹 차징 애니메이션 시작
+        if (anim) anim.SetBool(chargeAnim, true);
 
-    void ReleaseSlash()
-    {
-        isCharging = false;
-
-        if (anim)
+        // 🔹 키를 누르고 있는 동안 차징 (X 키 기준)
+        while (Input.GetKey(KeyCode.X))
         {
-            anim.SetBool(chargeAnim, false); // 차지 모션 종료
-            anim.SetTrigger(slashAnim);      // 베기 모션 발동
+            chargeTimer += Time.deltaTime;
+            chargeTimer = Mathf.Clamp(chargeTimer, 0, maxChargeTime);
+            yield return null;
         }
 
-        PerformSlash(); // 타격 판정 + 이펙트
+        // 🔹 키에서 손 뗀 순간 — 발동
+        if (anim)
+        {
+            anim.SetBool(chargeAnim, false);
+            anim.SetTrigger(slashAnim);
+        }
+
+        // 타격 처리
+        PerformSlash();
+
+        // 차징 종료
+        isCharging = false;
+
+        // ✅ SkillBase에서 자동 쿨타임 처리 + HUD 알림
+        if (cooldown > 0)
+        {
+            isCoolingDown = true;
+            StartCoroutine(CooldownRoutine());
+            NotifySkillUsed();
+        }
     }
 
-    public void PerformSlash()
+    private IEnumerator CooldownRoutine()
     {
-        float dmg = baseDamage + (chargeTimer * damagePerCharge);
-        int dir = ctrl != null ? ctrl.FacingDir : 1;
+        float timer = cooldown;
+        while (timer > 0)
+        {
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+        isCoolingDown = false;
+    }
 
-        // 히트박스 위치
+    private void PerformSlash()
+    {
+        // 🔹 차징 시간에 따른 데미지 계산
+        float dmg = baseDamage + (chargeTimer * damagePerCharge);
+        int dir = GetFacingDir();
+
+        // 🔹 공격 범위 계산
         Vector2 center = (Vector2)(hitOrigin ? hitOrigin.position : transform.position)
                          + new Vector2(hitBoxOffset.x * dir, hitBoxOffset.y);
 
@@ -82,10 +100,11 @@ public class TaegukSlash : SkillBase
             if (dmgComp != null)
             {
                 Vector2 knockDir = new Vector2(dir * knockback, knockback * 0.25f);
-                Vector2 hitPoint = hit.ClosestPoint(hitOrigin ? hitOrigin.position : transform.position);
+                Vector2 hitPoint = hit.ClosestPoint(center);
                 dmgComp.TakeHit(Mathf.RoundToInt(dmg), knockDir, hitPoint);
             }
 
+            // 🔹 히트 이펙트
             if (hitEffectPrefab)
             {
                 GameObject hitFx = Instantiate(hitEffectPrefab, hit.transform.position, Quaternion.identity);
@@ -93,29 +112,28 @@ public class TaegukSlash : SkillBase
             }
         }
 
-        // 🔥 Slash 이펙트 (히트박스 위치 기준, 좌우 반전 포함)
+        // 🔹 슬래시 이펙트 (좌우 반전 포함)
         if (slashEffectPrefab && hitOrigin)
         {
-            Vector3 boxCenter = (Vector2)hitOrigin.position + new Vector2(hitBoxOffset.x * dir, hitBoxOffset.y);
+            Vector3 spawnPos = hitOrigin.position + new Vector3(hitBoxOffset.x * dir, hitBoxOffset.y);
+            Quaternion rot = dir == -1 ? Quaternion.Euler(0, 180f, 0) : Quaternion.identity;
 
-            Quaternion spawnRot = Quaternion.identity;
-            if (dir == -1)
-                spawnRot *= Quaternion.Euler(0, 180f, 0);
-
-            GameObject fx = Instantiate(slashEffectPrefab, boxCenter, spawnRot);
+            GameObject fx = Instantiate(slashEffectPrefab, spawnPos, rot);
             Destroy(fx, 0.5f);
         }
     }
 
-    void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
     {
         if (!hitOrigin) return;
-        int dir = Application.isPlaying && ctrl ? ctrl.FacingDir : 1;
+        int dir = Application.isPlaying ? GetFacingDir() : 1;
         Vector2 center = (Vector2)hitOrigin.position + new Vector2(hitBoxOffset.x * dir, hitBoxOffset.y);
 
-        Gizmos.color = new Color(1f, 0.2f, 0.2f, 0.35f);
+        Gizmos.color = new Color(0.2f, 0.6f, 1f, 0.3f);
         Gizmos.DrawCube(center, hitBoxSize);
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.cyan;
         Gizmos.DrawWireCube(center, hitBoxSize);
     }
+#endif
 }
