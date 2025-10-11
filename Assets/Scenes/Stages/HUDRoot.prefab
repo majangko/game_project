@@ -1672,7 +1672,7 @@ MonoBehaviour:
   testMode: 0
   testDurationSeconds: 10
   forceActiveInTest: 0
-  onlyInStages: 0
+  onlyInStages: 1
   zeroIsUpOffset: 0
   OverrideStartAngle: 0
   startFromDeg: 0
