@@ -4368,7 +4368,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _version: 180
-  EditChk: 0
+  EditChk: 1
   _code: SPUM_20250906221004478
   _anim: {fileID: 8012865366963294634}
   OverrideController: {fileID: 0}
