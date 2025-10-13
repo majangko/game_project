@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 6854209923094111609}
   m_Layer: 10
   m_Name: Human_Archer(Stage2)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -149,6 +149,8 @@ MonoBehaviour:
   dieTrig: 4_Death
   rb: {fileID: 1769205411053192851}
   enemyAI: {fileID: 6854209923094111609}
+  invincibleTime: 0.6
+  hitEffect: {fileID: 0}
 --- !u!114 &6854209923094111609
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using Game.Player;
 
-public class Damageable : MonoBehaviour, ICanTakeDamage   // ✅ 인터페이스 추가
+public class Damageable : MonoBehaviour, ICanTakeDamage
 {
     [Header("Settings")]
     public int maxHP = 50;
@@ -19,15 +19,14 @@ public class Damageable : MonoBehaviour, ICanTakeDamage   // ✅ 인터페이스
     public MonoBehaviour enemyAI; // IEnemyAIEvents를 구현한 스크립트 연결
 
     [Header("Player Options")]
-    [SerializeField] private float invincibleTime = 0.6f; // 플레이어 무적시간
+    [SerializeField] private float invincibleTime = 0.6f; // 피격 무적 시간
     [SerializeField] private GameObject hitEffect;
     private bool isInvincible = false;
 
     private bool isDead;
+    private bool isPlayer; // 자동 인식용
 
     public Action OnDeath;
-
-    private bool isPlayer; // 자동 인식용
 
     void Start()
     {
@@ -35,7 +34,7 @@ public class Damageable : MonoBehaviour, ICanTakeDamage   // ✅ 인터페이스
         isPlayer = CompareTag("Player");
     }
 
-    // ✅ TrapMap이 호출할 수 있는 인터페이스 함수
+    // ✅ 외부(TrapMap, TagManager 등)가 호출할 수 있는 인터페이스 함수
     public void ApplyDamage(int amount)
     {
         TakeHit(amount);
@@ -54,7 +53,6 @@ public class Damageable : MonoBehaviour, ICanTakeDamage   // ✅ 인터페이스
 
         currentHP -= damage;
         currentHP = Mathf.Max(currentHP, 0);
-
 
         // 피격 연출
         if (animator)
@@ -151,6 +149,21 @@ public class Damageable : MonoBehaviour, ICanTakeDamage   // ✅ 인터페이스
             var stats = GetComponent<PlayerStats>();
             if (stats != null)
                 stats.SetHP(currentHP);
+        }
+    }
+
+    // ✅ 외부 제어용 무적 함수 (TagManager 등에서 호출)
+    public void SetInvincible(bool value)
+    {
+        isInvincible = value;
+
+        // 시각적 표시 (선택 사항)
+        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+        if (sr)
+        {
+            Color c = sr.color;
+            c.a = value ? 0.6f : 1f; // 무적일 때 반투명 처리
+            sr.color = c;
         }
     }
 

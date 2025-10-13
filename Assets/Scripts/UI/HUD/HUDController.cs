@@ -25,16 +25,14 @@ public class HUDController : MonoBehaviour
     private PlayerStats _stats;
     private Coroutine[] cooldownCoroutines;
 
-    // ✅ 자동 연결 및 즉시 바인딩
+    // ============================================================
+    // Unity Life Cycle
+    // ============================================================
     void Start()
     {
-        // 1️⃣ PlayerStats 자동 탐색
         if (_stats == null)
-        {
             _stats = FindObjectOfType<PlayerStats>();
-        }
 
-        // 2️⃣ Portrait 자동 탐색
         if (portrait == null)
         {
             portrait = transform.Find("HUD_Frame/Portrait")?.GetComponent<Image>();
@@ -42,22 +40,13 @@ public class HUDController : MonoBehaviour
                 portrait = GetComponentInChildren<Image>(true);
         }
 
-        // 3️⃣ PlayerStats가 있다면 즉시 바인딩
         if (_stats != null)
             BindToPlayer(_stats);
     }
 
-    void OnEnable()
-    {
-        // ✅ 모든 스킬 이벤트 통합 구독
-        SkillBase.OnSkillUsed += OnSkillUsed;
-        ExorcismCombo.OnSkillUsed += OnSkillUsed;  // 예전 호환 유지 (혹시 남아있는 스킬용)
-    }
-
     void OnDisable()
     {
-        SkillBase.OnSkillUsed -= OnSkillUsed;
-        ExorcismCombo.OnSkillUsed -= OnSkillUsed;
+        UnsubscribeSkillEvents();
 
         if (_stats != null)
         {
@@ -66,13 +55,17 @@ public class HUDController : MonoBehaviour
         }
     }
 
-    // 🔹 PlayerStats 연결
+    // ============================================================
+    // 플레이어 바인딩
+    // ============================================================
     public void BindToPlayer(PlayerStats newPlayer)
     {
+        // 기존 구독 해제
         if (_stats != null)
         {
             _stats.OnHPChanged -= OnHPChanged;
             _stats.OnMPChanged -= OnMPChanged;
+            UnsubscribeSkillEvents();
         }
 
         _stats = newPlayer;
@@ -85,18 +78,22 @@ public class HUDController : MonoBehaviour
         OnMPChanged(_stats.MP, _stats.maxMP);
 
         ApplyCharacterData();
+
+        // ✅ 쿨타임 즉시 리셋 (코루틴 포함)
+        ResetCooldowns();
+
+        // ✅ 새 캐릭터의 스킬 이벤트 등록
+        SubscribeSkillEvents(_stats);
+
+        Debug.Log($"[HUD] {_stats.name} 스킬 이벤트 구독 완료 및 HUD 초기화 완료");
     }
 
-    // 🔸 HUD 표시 데이터 적용
     void ApplyCharacterData()
     {
-        // ✅ 초상화 표시
         if (portrait && _stats.portrait)
             portrait.sprite = _stats.portrait;
 
-        // ✅ 스킬 아이콘 표시
         ApplySkillIcons(_stats.skillIcons);
-
         cooldownCoroutines = new Coroutine[skillIcons.Length];
     }
 
@@ -111,7 +108,30 @@ public class HUDController : MonoBehaviour
         }
     }
 
-    // 🔹 HP / MP 갱신
+    // ============================================================
+    // 스킬 이벤트 연결 / 해제
+    // ============================================================
+    private void SubscribeSkillEvents(PlayerStats stats)
+    {
+        var skills = stats.GetComponentsInChildren<SkillBase>(true);
+        foreach (var skill in skills)
+            skill.OnSkillUsedInstance += OnSkillUsed;
+
+        Debug.Log($"[HUD] {stats.name} 스킬 이벤트 {skills.Length}개 구독 완료");
+    }
+
+    private void UnsubscribeSkillEvents()
+    {
+        if (_stats == null) return;
+
+        var skills = _stats.GetComponentsInChildren<SkillBase>(true);
+        foreach (var skill in skills)
+            skill.OnSkillUsedInstance -= OnSkillUsed;
+    }
+
+    // ============================================================
+    // HP / MP 갱신
+    // ============================================================
     void OnHPChanged(int cur, int max)
     {
         if (hpFill) hpFill.fillAmount = max > 0 ? (float)cur / max : 0f;
@@ -124,7 +144,9 @@ public class HUDController : MonoBehaviour
         if (mpText) mpText.text = $"{cur} / {max}";
     }
 
-    // 🔸 스킬 쿨다운 표시
+    // ============================================================
+    // 스킬 쿨타임 처리
+    // ============================================================
     void OnSkillUsed(string skillName, float cooldown)
     {
         Debug.Log($"[HUD] Skill Used: {skillName}, Cooldown: {cooldown}");
@@ -133,16 +155,23 @@ public class HUDController : MonoBehaviour
         {
             if (skillIcons[i]?.sprite == null) continue;
 
-            // 🔹 이름이 같거나 부분 일치하는 스킬에 반응 (예: TaegukSlash_0)
-            if (skillIcons[i].sprite.name.Contains(skillName))
+            string iconName = skillIcons[i].sprite.name.ToLower();
+            string skillLower = skillName.ToLower();
+
+            // 🔹 이름 유연 매칭 (앞뒤/대소문자 무시)
+            if (iconName.Contains(skillLower) || skillLower.Contains(iconName))
             {
+                Debug.Log($"[HUD] 쿨타임 매칭 성공 → {skillName} == {iconName}");
+
                 if (cooldownCoroutines[i] != null)
                     StopCoroutine(cooldownCoroutines[i]);
 
                 cooldownCoroutines[i] = StartCoroutine(CooldownRoutine(i, cooldown));
-                break;
+                return;
             }
         }
+
+        Debug.LogWarning($"[HUD] {skillName} 과 일치하는 스킬 아이콘을 찾지 못함 ❌");
     }
 
     IEnumerator CooldownRoutine(int index, float cooldown)
@@ -169,8 +198,7 @@ public class HUDController : MonoBehaviour
             overlay.fillAmount = 0;
             overlay.gameObject.SetActive(false);
         }
-        if (cdText)
-            cdText.text = "";
+        if (cdText) cdText.text = "";
 
         if (cooldownEndSFX)
             AudioSource.PlayClipAtPoint(cooldownEndSFX, Vector3.zero);
@@ -201,6 +229,39 @@ public class HUDController : MonoBehaviour
 
         Destroy(outline);
         icon.color = Color.white;
+    }
+
+    // ============================================================
+    // 쿨타임 초기화 (태그 시 완전 정리)
+    // ============================================================
+    public void ResetCooldowns()
+    {
+        // ✅ 모든 쿨타임 코루틴 중지
+        StopAllCoroutines();
+
+        if (cooldownCoroutines != null)
+        {
+            for (int i = 0; i < cooldownCoroutines.Length; i++)
+                cooldownCoroutines[i] = null;
+        }
+
+        // ✅ 색상, 텍스트, 오버레이 초기화
+        for (int i = 0; i < skillIcons.Length; i++)
+        {
+            if (skillIcons[i] != null)
+                skillIcons[i].color = Color.white;
+
+            if (skillCooldowns != null && i < skillCooldowns.Length && skillCooldowns[i] != null)
+            {
+                skillCooldowns[i].fillAmount = 0f;
+                skillCooldowns[i].gameObject.SetActive(false);
+            }
+
+            if (skillCooldownTexts != null && i < skillCooldownTexts.Length && skillCooldownTexts[i] != null)
+                skillCooldownTexts[i].text = "";
+        }
+
+        Debug.Log("[HUD] 쿨타임 UI 완전 초기화 완료 (StopAllCoroutines 포함)");
     }
 
     public void SetVisible(bool v) => gameObject.SetActive(v);
