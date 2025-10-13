@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TeamSelectController : MonoBehaviour
 {
@@ -19,44 +20,49 @@ public class TeamSelectController : MonoBehaviour
     [Header("슬롯/버튼/패널")]
     public TeamSlotView[] teamSlots;
     public Button saveButton;
-    public ConfirmPanel confirmPanel;    // 저장에서만 사용
+    public ConfirmPanel confirmPanel;
     public TMP_Text titleText;
 
     [Header("동작 옵션")]
-    [Tooltip("목업 전용 데이터로 테스트")]
     public bool useMockData = true;
     [Range(3, 30)] public int mockTotal = 12;
-
-    [Tooltip("선택 시 덮어쓸 슬롯 인덱스 (0 = 첫 슬롯)")]
     public int targetSlotIndex = 0;
-
-    [Tooltip("저장 확정 후 선택 슬롯을 잠글지 여부(원하면 사용)")]
     public bool lockSlotOnSave = false;
 
     // 내부 상태
-    HashSet<string> _alreadyChosen = new();  // 저장 확정된 아이디들
-    HashSet<string> _currentlyShown = new(); // 현재 카드에 표시중인 아이디들
-    TeamMemberSO _selectedCandidate;         // 최근에 Select로 고른 후보
-
-    // 목업 캐시
+    HashSet<string> _alreadyChosen = new();
+    HashSet<string> _currentlyShown = new();
+    TeamMemberSO _selectedCandidate;
     List<TeamMemberSO> _mockAll;
 
     void Start()
     {
+        // ✅ PartyManager 자동 생성 (씬 루트에 생성)
+        if (PartyManager.Instance == null)
+        {
+            var go = new GameObject("PartyManager");
+            go.AddComponent<PartyManager>();
+            go.transform.SetParent(null); // 🔥 부모 완전 해제 (루트로 이동)
+            Debug.Log("<color=yellow>[TeamSelect] PartyManager가 없어서 자동 생성됨.</color>");
+        }
+        else
+        {
+            Debug.Log("<color=green>[TeamSelect] PartyManager.Instance 이미 존재함.</color>");
+        }
+
         // 카드 버튼 이벤트 구독
         foreach (var c in cards)
         {
             c.OnRerollClicked += HandleRerollClicked;
             c.OnSelectClicked += HandleSelectClicked;
-            c.OnInfoClicked += _ => { /* 필요 시 로깅 */ };
+            c.OnInfoClicked += _ => { };
         }
 
         if (saveButton) saveButton.onClick.AddListener(OnSaveClicked);
 
-        // 최초 3장
+        // 최초 3장 뽑기
         Deal3Cards();
 
-        // UI 상태
         if (saveButton) saveButton.interactable = false;
     }
 
@@ -74,7 +80,7 @@ public class TeamSelectController : MonoBehaviour
 
     void HandleRerollClicked(CardView card)
     {
-        Debug.Log("[TeamSelect] Save clicked. candidate=" + (_selectedCandidate ? _selectedCandidate.displayName : "null"));
+        Debug.Log("[TeamSelect] Reroll clicked.");
 
         var exclude = _alreadyChosen.Union(_currentlyShown.Where(id => id != card.bound.id));
         var member = DrawUniqueMember(exclude);
@@ -84,79 +90,80 @@ public class TeamSelectController : MonoBehaviour
     }
 
     void HandleSelectClicked(CardView card)
-{
-    // 선택된 후보 저장
-    _selectedCandidate = card.bound;
-
-    // 슬롯에 바로 반영 (TargetSlotIndex 사용)
-    if (teamSlots != null && teamSlots.Length > 0)
     {
-        int idx = Mathf.Clamp(targetSlotIndex, 0, teamSlots.Length - 1);
-        teamSlots[idx].Set(_selectedCandidate);
-    }
+        _selectedCandidate = card.bound;
 
-    // 저장 버튼 활성화
-    if (saveButton != null)
-        saveButton.interactable = true;
-
-    Debug.Log($"[TeamSelect] Selected {_selectedCandidate.displayName}");
-}
-
-void OnSaveClicked()
-{
-    if (_selectedCandidate == null)
-    {
-        Debug.Log("[TeamSelect] Save clicked but no candidate selected.");
-        confirmPanel.Show("선택된 팀원이 없습니다.", onYes: () => { });
-        return;
-    }
-
-    // 확인창 띄우기
-    confirmPanel.Show($"{_selectedCandidate.displayName} 을(를) 저장하시겠습니까?",
-        onYes: () =>
+        if (teamSlots != null && teamSlots.Length > 0)
         {
-            _alreadyChosen.Add(_selectedCandidate.id);
-            Debug.Log($"[TeamSelect] Saved {_selectedCandidate.displayName}");
-            saveButton.interactable = false; // 저장 후 다시 비활성화
-        },
-        onNo: () =>
-        {
-            Debug.Log("[TeamSelect] Save canceled.");
-        }
-    );
-}
-
-
-    void FinalizeSave()
-    {
-        _alreadyChosen.Add(_selectedCandidate.id);
-
-        if (lockSlotOnSave)
-        {
-            // 필요 시 선택 불가 처리 등 정책 추가
+            int idx = Mathf.Clamp(targetSlotIndex, 0, teamSlots.Length - 1);
+            teamSlots[idx].Set(_selectedCandidate);
         }
 
-        // 다음 선택을 위해 상태 정리
-        _selectedCandidate = null;
-        if (saveButton) saveButton.interactable = false;
+        if (saveButton != null)
+            saveButton.interactable = true;
 
-        // 다음 장에서 다시 뽑고 싶다면:
-        // Deal3Cards();
+        Debug.Log($"[TeamSelect] Selected {_selectedCandidate.displayName}");
     }
 
-    // ---------- 가중치 랜덤 & 중복 방지 ----------
+    void OnSaveClicked()
+    {
+        if (_selectedCandidate == null)
+        {
+            Debug.LogWarning("[TeamSelect] Save clicked but no candidate selected.");
+            confirmPanel.Show("선택된 팀원이 없습니다.", onYes: () => { });
+            return;
+        }
+
+        confirmPanel.Show($"{_selectedCandidate.displayName} 을(를) 저장하시겠습니까?",
+            onYes: () =>
+            {
+                _alreadyChosen.Add(_selectedCandidate.id);
+                Debug.Log($"<color=cyan>[TeamSelect] Saved {_selectedCandidate.displayName}</color>");
+
+                // ✅ PartyManager 등록
+                if (PartyManager.Instance != null)
+                {
+                    var data = new PartyMemberData
+                    {
+                        id = _selectedCandidate.id,
+                        portrait = _selectedCandidate.portrait,
+                        prefab = _selectedCandidate.prefab
+                    };
+                    PartyManager.Instance.AddMember(data);
+                    Debug.Log($"<color=lime>[TeamSelect] {_selectedCandidate.displayName} added to PartyManager.</color>");
+                }
+
+                Debug.Log($"[TeamSelect] PartyManager 파티원 수: {PartyManager.Instance?.GetCount()}");
+
+                saveButton.interactable = false;
+
+                // ✅ 씬 이동 전에 0.1초 대기 (중요)
+                StartCoroutine(LoadNextSceneWithDelay());
+            },
+            onNo: () => Debug.Log("[TeamSelect] Save canceled.")
+        );
+    }
+
+    System.Collections.IEnumerator LoadNextSceneWithDelay()
+    {
+        yield return new WaitForSeconds(0.1f);
+        Debug.Log("<color=yellow>[TeamSelect] test_ts 씬으로 이동 중...</color>");
+        SceneManager.LoadScene("test_ts");
+    }
+
+
+    // ---------- 데이터 생성 ----------
     TeamMemberSO DrawUniqueMember(IEnumerable<string> exclude)
     {
-        var pool = GetAllMembers(); // 괄호 필수
+        var pool = GetAllMembers();
         if (pool.Count == 0)
         {
-            Debug.LogError("[TeamSelect] 후보 풀이 비었습니다. DB를 연결하거나 useMockData를 켜세요.");
+            Debug.LogError("[TeamSelect] 후보 풀이 비었습니다. DB 연결 또는 useMockData 활성화 필요.");
             return CreateMock(1, Rarity.Common);
         }
 
         var excl = new HashSet<string>(exclude ?? Enumerable.Empty<string>());
-        var filtered = pool.Where(m => !excl.Contains(m.id)).ToList();  // ToList 필수
-
+        var filtered = pool.Where(m => !excl.Contains(m.id)).ToList();
         if (filtered.Count == 0) filtered = pool;
 
         var target = ChooseRarityByWeight();
@@ -179,7 +186,6 @@ void OnSaveClicked()
         return Rarity.Legendary;
     }
 
-    // ---------- 데이터 소스 ----------
     List<TeamMemberSO> GetAllMembers()
     {
         if (db != null && db.All != null && db.All.Count > 0)
@@ -209,12 +215,9 @@ void OnSaveClicked()
     {
         var mock = ScriptableObject.CreateInstance<TeamMemberSO>();
         mock.id = num.ToString();
-        mock.displayName = num.ToString();
+        mock.displayName = $"Mock #{num}";
         mock.rarity = rarity;
-        mock.description = $"팀원 #{num} 설명 텍스트(목업).";
-        mock.portrait = null; // 필요 시 테스트 스프라이트 할당
-        mock.skillIconA = null;
-        mock.skillIconB = null;
+        mock.description = $"테스트용 팀원 #{num}";
         return mock;
     }
 }

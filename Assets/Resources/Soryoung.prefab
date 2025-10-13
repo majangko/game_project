@@ -6568,10 +6568,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Soryoung
   portrait: {fileID: 198201473757730004, guid: b31532f219b16fd4dac5feb6aaf7df16, type: 3}
-  maxHP: 100
-  maxMP: 50
-  _hp: 0
-  _mp: 0
+  maxHP: 40
+  maxMP: 30
+  _hp: 40
+  _mp: 30
   skillIcons:
   - {fileID: 1126891265584629361, guid: 669f4056be438684488034020a896afc, type: 3}
   - {fileID: -1225695337442736279, guid: c3d496295c9bcd94b952bd8da2f8f9f1, type: 3}

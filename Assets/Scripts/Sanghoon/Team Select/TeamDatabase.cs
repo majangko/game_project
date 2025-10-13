@@ -1,9 +1,8 @@
-// FILE: TeamDatabase.cs
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "TeamDatabase", menuName = "Game/Team Database")]
+[CreateAssetMenu(fileName = "TeamDatabase", menuName = "Game/Team Database", order = 2)]
 public class TeamDatabase : ScriptableObject
 {
-    public List<TeamMemberSO> All = new List<TeamMemberSO>();
+    public List<TeamMemberSO> All;
 }
