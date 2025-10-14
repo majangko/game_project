@@ -1,86 +1,160 @@
-// FILE: CardView.cs
+ï»¿// FILE: CardView.cs
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CardView : MonoBehaviour
 {
-    [Header("¾Õ¸é")]
-    public Image portrait;          // Ä³¸¯ÅÍ ÀüÃ¼ ÀÌ¹ÌÁö
-    public TMP_Text nameText;       // ÀÌ¸§(¼ıÀÚ ¸ñ¾÷)
-    public Image frame;             // Å×µÎ¸®(Èñ±Íµµ »ö)
+    [Header("ì•ë©´")]
+    public Image portrait;          // ìºë¦­í„° ì´ˆìƒí™”
+    public TMP_Text nameText;       // ìºë¦­í„° ì´ë¦„
+    public Image frame;             // ì¹´ë“œ í…Œë‘ë¦¬
 
-    [Header("¹öÆ°")]
+    [Header("ë²„íŠ¼")]
     public Button selectButton;
     public Button rerollButton;
-    public Button infoButton;       // ¾Õ¸é i ¹öÆ°
-    public Button infoButtonBack;   // µŞ¸é i ¹öÆ°(NEW)
+    public Button infoButton;       // ì•ë©´ i ë²„íŠ¼
+    public Button infoButtonBack;   // ë’·ë©´ i ë²„íŠ¼
 
-    [Header("µŞ¸é(¼±ÅÃ »çÇ×)")]
-    public GameObject backRoot;     // µŞ¸é ·çÆ®
+    [Header("ë’·ë©´(ì„ íƒ ì‚¬í•­)")]
+    public GameObject backRoot;
     public TMP_Text descText;
     public Image skillIconA;
     public Image skillIconB;
 
-    [Header("ÄÄÆ÷³ÍÆ®")]
+    [Header("ì»´í¬ë„ŒíŠ¸")]
     public FlipCard flip;
 
-    // ¹ÙÀÎµù µ¥ÀÌÅÍ
+    // ë°ì´í„° ë°”ì¸ë”© ëŒ€ìƒ
     [HideInInspector] public TeamMemberSO bound;
 
-    // ¿ÜºÎ¿¡ ¾Ë¸®´Â ÀÌº¥Æ®
+    // ì™¸ë¶€ ì´ë²¤íŠ¸
     public Action<CardView> OnRerollClicked;
     public Action<CardView> OnSelectClicked;
     public Action<CardView> OnInfoClicked;
 
     void Awake()
     {
-        if (rerollButton) rerollButton.onClick.AddListener(() => OnRerollClicked?.Invoke(this));
-        if (selectButton) selectButton.onClick.AddListener(() => OnSelectClicked?.Invoke(this));
+        // ë²„íŠ¼ ì—°ê²°
+        if (rerollButton)
+            rerollButton.onClick.AddListener(() => OnRerollClicked?.Invoke(this));
 
-        if (infoButton) infoButton.onClick.AddListener(() =>
-        {
-            OnInfoClicked?.Invoke(this);
-            if (flip != null) flip.Toggle();
-        });
+        if (selectButton)
+            selectButton.onClick.AddListener(() => OnSelectClicked?.Invoke(this));
 
-        if (infoButtonBack) infoButtonBack.onClick.AddListener(() =>
-        {
-            OnInfoClicked?.Invoke(this);
-            if (flip != null) flip.Toggle();
-        });
+        if (infoButton)
+            infoButton.onClick.AddListener(() =>
+            {
+                OnInfoClicked?.Invoke(this);
+                if (flip != null) flip.Toggle();
+            });
 
-        // ½ÃÀÛ ±âº»Àº ¾Õ¸é
-        if (flip != null) flip.ShowFront();
+        if (infoButtonBack)
+            infoButtonBack.onClick.AddListener(() =>
+            {
+                OnInfoClicked?.Invoke(this);
+                if (flip != null) flip.Toggle();
+            });
+
+        // ê¸°ë³¸ì€ ì•ë©´ìœ¼ë¡œ ì‹œì‘
+        if (flip != null)
+            flip.ShowFront();
     }
 
+    // ----------------------------------------------------------
+    // ìºë¦­í„° ë°ì´í„° ë°”ì¸ë”©
+    // ----------------------------------------------------------
     public void Bind(TeamMemberSO m)
     {
         bound = m;
-        if (!m) return;
-
-        if (nameText) nameText.text = m.displayName;
-        if (portrait) portrait.sprite = m.portrait;
-
-        // Èñ±Íµµ »ö»ó
-        if (frame)
+        if (m == null)
         {
-            var c = Color.white;
-            switch (m.rarity)
-            {
-                case Rarity.Common: c = Color.black; break;
-                case Rarity.Epic: c = new Color(0.6f, 0.3f, 0.9f); break;
-                case Rarity.Legendary: c = new Color(0.95f, 0.8f, 0.2f); break;
-            }
-            frame.color = c;
+            Debug.LogWarning("[CardView] Bind called with null member");
+            return;
         }
 
-        // µŞ¸é
-        if (descText) descText.text = m.description;
-        if (skillIconA) skillIconA.sprite = m.skillIconA;
-        if (skillIconB) skillIconB.sprite = m.skillIconB;
+        StartCoroutine(ApplyLate(m)); // UI ì´ˆê¸°í™” í›„ í•œ í”„ë ˆì„ ë’¤ì— ì ìš©
+    }
 
-        if (flip != null) flip.ShowFront();
+    private IEnumerator ApplyLate(TeamMemberSO m)
+    {
+        // í•œ í”„ë ˆì„ ëŒ€ê¸° (TMP ì´ˆê¸°í™” ëŒ€ê¸°)
+        yield return null;
+
+        Debug.Log($"[CardView] Binding {m.id}, name={m.displayName}");
+
+        // ------------------------------
+        // ì´ë¦„ í‘œì‹œ
+        // ------------------------------
+        if (nameText)
+        {
+            nameText.text = !string.IsNullOrEmpty(m.displayName)
+                ? m.displayName
+                : "(ì´ë¦„ ì—†ìŒ)";
+
+            nameText.color = Color.black; // ë°°ê²½ ëŒ€ë¹„ìš©
+            nameText.alignment = TextAlignmentOptions.Center;
+            nameText.fontSize = 36;
+            nameText.ForceMeshUpdate(true); // âœ… ì¦‰ì‹œ ë©”ì‰¬ ê°±ì‹ 
+        }
+
+        // ------------------------------
+        // ì´ˆìƒí™” ì´ë¯¸ì§€
+        // ------------------------------
+        if (portrait)
+        {
+            portrait.sprite = m.portrait;
+            portrait.preserveAspect = true;
+            portrait.color = m.portrait ? Color.white : new Color(1, 1, 1, 0.2f);
+        }
+
+        // ------------------------------
+        // í¬ê·€ë„ í”„ë ˆì„ ìƒ‰ìƒ
+        // ------------------------------
+        if (frame)
+        {
+            switch (m.rarity)
+            {
+                case Rarity.Common:
+                    frame.color = new Color(0.8f, 0.8f, 0.8f);
+                    break;
+                case Rarity.Epic:
+                    frame.color = new Color(0.6f, 0.3f, 0.9f);
+                    break;
+                case Rarity.Legendary:
+                    frame.color = new Color(0.95f, 0.8f, 0.2f);
+                    break;
+                default:
+                    frame.color = Color.white;
+                    break;
+            }
+        }
+
+        // ------------------------------
+        // ì„¤ëª… í…ìŠ¤íŠ¸
+        // ------------------------------
+        if (descText)
+        {
+            descText.text = !string.IsNullOrEmpty(m.description)
+                ? m.description
+                : "ì„¤ëª…ì´ ì—†ìŠµë‹ˆë‹¤.";
+        }
+
+        // ------------------------------
+        // ìŠ¤í‚¬ ì•„ì´ì½˜
+        // ------------------------------
+        if (skillIconA)
+            skillIconA.sprite = m.skillIconA;
+
+        if (skillIconB)
+            skillIconB.sprite = m.skillIconB;
+
+        // ------------------------------
+        // ì•ë©´ìœ¼ë¡œ ê°•ì œ ë…¸ì¶œ
+        // ------------------------------
+        if (flip != null)
+            flip.ShowFront();
     }
 }
