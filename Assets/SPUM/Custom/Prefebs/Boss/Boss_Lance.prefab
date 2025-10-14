@@ -138,7 +138,7 @@ MonoBehaviour:
   visualRoot: {fileID: 4770706535892557786}
   player: {fileID: 0}
   attackHitbox: {fileID: 6437697121893587649}
-  detectRadius: 8
+  detectRadius: 12
   attackRange: 2.5
   attackCooldown: 2
   moveSpeed: 4
