@@ -1,0 +1,176 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2365664844502950923
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 61188455452951747}
+  m_Layer: 0
+  m_Name: Manager (Stage 1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &61188455452951747
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2365664844502950923}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 880.714, y: 203.65173, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 137503130754472060}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8344471044709334138
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 137503130754472060}
+  - component: {fileID: 8028825701289222804}
+  m_Layer: 0
+  m_Name: MonsterDayNightManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &137503130754472060
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8344471044709334138}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 61188455452951747}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8028825701289222804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8344471044709334138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 323e6c1a2bb3a79458db73676651c277, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  switchInterval: 30
+  monsters:
+  - pairName: Axe_1
+    humanPrefab: {fileID: 3783241461046718534, guid: 4c2f78f2c254afe4c9590d89e127b2ff, type: 3}
+    orkPrefab: {fileID: 3783241461046718534, guid: 7d74ce16369fbf74b97706786d08a265, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
+  - pairName: Sword_1
+    humanPrefab: {fileID: 1283887132473191301, guid: bd0a51ab49f56b644836d963813cf268, type: 3}
+    orkPrefab: {fileID: 1283887132473191301, guid: 9b11801c7c4e3444b87b01f3166e463c, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
+  - pairName: Lance_1
+    humanPrefab: {fileID: 4631522045629513106, guid: 6f58e067a33dc13498eb538fab311aae, type: 3}
+    orkPrefab: {fileID: 4631522045629513106, guid: 8d80d4f72b554ce4e8bf088e5d481577, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
+  - pairName: Archer_1
+    humanPrefab: {fileID: 1917189315827179600, guid: 5aac3493068f72e4393f918f56709981, type: 3}
+    orkPrefab: {fileID: 1917189315827179600, guid: dfa63b5f70d2c5b41957193670992167, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
+  - pairName: Axe_2
+    humanPrefab: {fileID: 3783241461046718534, guid: 4c2f78f2c254afe4c9590d89e127b2ff, type: 3}
+    orkPrefab: {fileID: 3783241461046718534, guid: 7d74ce16369fbf74b97706786d08a265, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
+  - pairName: Sword_2
+    humanPrefab: {fileID: 1283887132473191301, guid: bd0a51ab49f56b644836d963813cf268, type: 3}
+    orkPrefab: {fileID: 1283887132473191301, guid: 9b11801c7c4e3444b87b01f3166e463c, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
+  - pairName: Lance_2
+    humanPrefab: {fileID: 4631522045629513106, guid: 6f58e067a33dc13498eb538fab311aae, type: 3}
+    orkPrefab: {fileID: 4631522045629513106, guid: 8d80d4f72b554ce4e8bf088e5d481577, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
+  - pairName: Archer_2
+    humanPrefab: {fileID: 1917189315827179600, guid: 5aac3493068f72e4393f918f56709981, type: 3}
+    orkPrefab: {fileID: 1917189315827179600, guid: dfa63b5f70d2c5b41957193670992167, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
+  - pairName: Axe_3
+    humanPrefab: {fileID: 3783241461046718534, guid: 4c2f78f2c254afe4c9590d89e127b2ff, type: 3}
+    orkPrefab: {fileID: 3783241461046718534, guid: 7d74ce16369fbf74b97706786d08a265, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
+  - pairName: Sword_3
+    humanPrefab: {fileID: 1283887132473191301, guid: bd0a51ab49f56b644836d963813cf268, type: 3}
+    orkPrefab: {fileID: 1283887132473191301, guid: 9b11801c7c4e3444b87b01f3166e463c, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
+  - pairName: Lance_3
+    humanPrefab: {fileID: 4631522045629513106, guid: 6f58e067a33dc13498eb538fab311aae, type: 3}
+    orkPrefab: {fileID: 4631522045629513106, guid: 8d80d4f72b554ce4e8bf088e5d481577, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
+  - pairName: Archer_3
+    humanPrefab: {fileID: 1917189315827179600, guid: 5aac3493068f72e4393f918f56709981, type: 3}
+    orkPrefab: {fileID: 1917189315827179600, guid: dfa63b5f70d2c5b41957193670992167, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
+  - pairName: Axe_4
+    humanPrefab: {fileID: 3783241461046718534, guid: 4c2f78f2c254afe4c9590d89e127b2ff, type: 3}
+    orkPrefab: {fileID: 3783241461046718534, guid: 7d74ce16369fbf74b97706786d08a265, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
+  - pairName: Sword_4
+    humanPrefab: {fileID: 1283887132473191301, guid: bd0a51ab49f56b644836d963813cf268, type: 3}
+    orkPrefab: {fileID: 1283887132473191301, guid: 9b11801c7c4e3444b87b01f3166e463c, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
+  - pairName: Lance_4
+    humanPrefab: {fileID: 4631522045629513106, guid: 6f58e067a33dc13498eb538fab311aae, type: 3}
+    orkPrefab: {fileID: 4631522045629513106, guid: 8d80d4f72b554ce4e8bf088e5d481577, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
+  - pairName: Archer_4
+    humanPrefab: {fileID: 1917189315827179600, guid: 5aac3493068f72e4393f918f56709981, type: 3}
+    orkPrefab: {fileID: 1917189315827179600, guid: dfa63b5f70d2c5b41957193670992167, type: 3}
+    spawnPoint: {fileID: 0}
+    currentMonster: {fileID: 0}
+    isDead: 0
