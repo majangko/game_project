@@ -55,7 +55,6 @@ public class TrapMap : MonoBehaviour
             dmg.ApplyDamage(damage);
 
             // ✅ 연출 추가 부분
-            CameraShake.Instance?.Shake(0.2f, 0.2f);
             ScreenFlash.Instance?.Flash(0.25f);
         }
 

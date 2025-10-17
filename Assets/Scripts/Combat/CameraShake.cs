@@ -1,38 +1,52 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class CameraShake : MonoBehaviour
 {
     public static CameraShake Instance;
-    private Transform camTransform;
     private Vector3 originalPos;
+    private Coroutine shakeRoutine;
+    private Transform target; // 플레이어 추적용
 
-    void Awake()
+    private void Awake()
     {
         Instance = this;
-        camTransform = Camera.main.transform;
-        originalPos = camTransform.localPosition;
+        originalPos = transform.localPosition;
+    }
+
+    public void SetTarget(Transform player)
+    {
+        target = player;
     }
 
     public void Shake(float duration = 0.2f, float magnitude = 0.15f)
     {
-        StopAllCoroutines();
-        StartCoroutine(ShakeRoutine(duration, magnitude));
+        if (shakeRoutine != null)
+            StopCoroutine(shakeRoutine);
+        shakeRoutine = StartCoroutine(ShakeRoutine(duration, magnitude));
     }
 
     private IEnumerator ShakeRoutine(float duration, float magnitude)
     {
         float elapsed = 0f;
+        Vector3 basePos = target ? target.position : transform.position;
 
         while (elapsed < duration)
         {
-            float x = Random.Range(-1f, 1f) * magnitude;
-            float y = Random.Range(-1f, 1f) * magnitude;
-            camTransform.localPosition = new Vector3(x, y, originalPos.z);
             elapsed += Time.deltaTime;
+
+            float x = (Mathf.PerlinNoise(Time.time * 10f, 0f) - 0.5f) * magnitude;
+            float y = (Mathf.PerlinNoise(0f, Time.time * 10f) - 0.5f) * magnitude;
+
+            // ✅ 플레이어 중심 유지 + 살짝 진동만
+            transform.position = basePos + new Vector3(x, y, -10f);
+
             yield return null;
         }
 
-        camTransform.localPosition = originalPos;
+        if (target)
+            transform.position = new Vector3(target.position.x, target.position.y, -10f);
+        else
+            transform.localPosition = originalPos;
     }
 }

@@ -31,13 +31,13 @@ public class SkillBase : MonoBehaviour
 
     // 🔹 상태값
     protected bool isCoolingDown = false;
-
-    // 쿨타임 남은 시간 추적용
     private float cooldownTimer = 0f;
 
-    // ✅ HUDController용 스킬 발동 이벤트 (모든 스킬 공용)
+    // ✅ 전역 이벤트 (기존용)
     public static event Action<string, float> OnSkillUsed;
 
+    // ✅ 인스턴스 이벤트 (HUDController가 캐릭터별로 구독)
+    public event Action<string, float> OnSkillUsedInstance;
 
     // ============================================================
     // Unity Life Cycle
@@ -50,11 +50,10 @@ public class SkillBase : MonoBehaviour
         {
             anim = spum.Anim;  // UnitRoot의 Animator 연결
         }
-        else
+        else if (anim == null)
         {
             // 2️⃣ SPUM_Prefabs가 없으면 자식에서 Animator 탐색
-            if (anim == null)
-                anim = GetComponentInChildren<Animator>();
+            anim = GetComponentInChildren<Animator>();
         }
 
         // 3️⃣ Controller 연결
@@ -76,14 +75,9 @@ public class SkillBase : MonoBehaviour
         }
     }
 
-
     // ============================================================
     // 스킬 실행 관련
     // ============================================================
-
-    /// <summary>
-    /// 스킬 발동 (외부에서 호출)
-    /// </summary>
     public virtual void Activate()
     {
         if (isCoolingDown)
@@ -105,9 +99,10 @@ public class SkillBase : MonoBehaviour
         {
             isCoolingDown = true;
             cooldownTimer = cooldown;
-
+            Debug.Log($"[SkillBase] {skillName} → 쿨타임 이벤트 전송 (HUD용)");
             // ✅ HUD에 쿨타임 알림 보내기
-            OnSkillUsed?.Invoke(skillName, cooldown);
+            OnSkillUsed?.Invoke(skillName, cooldown);         // 전역
+            OnSkillUsedInstance?.Invoke(skillName, cooldown); // 인스턴스
         }
 
         yield return null;
@@ -118,29 +113,17 @@ public class SkillBase : MonoBehaviour
     /// </summary>
     protected virtual void OnActivate() { }
 
-
     // ============================================================
-    // 유틸리티 함수
+    // 유틸리티
     // ============================================================
+    protected int GetFacingDir() => ctrl == null ? 1 : ctrl.FacingDir;
 
-    /// <summary>
-    /// 캐릭터가 바라보는 방향 리턴 (1 = 오른쪽, -1 = 왼쪽)
-    /// </summary>
-    protected int GetFacingDir()
-    {
-        if (ctrl == null) return 1;
-        return ctrl.FacingDir;
-    }
-    // SkillBase.cs 안에 추가
     protected void NotifySkillUsed()
     {
         OnSkillUsed?.Invoke(skillName, cooldown);
+        OnSkillUsedInstance?.Invoke(skillName, cooldown);
     }
 
-
-    /// <summary>
-    /// 시전 애니메이션 트리거 실행 (안전하게)
-    /// </summary>
     protected void TriggerAnimation()
     {
         if (anim == null)

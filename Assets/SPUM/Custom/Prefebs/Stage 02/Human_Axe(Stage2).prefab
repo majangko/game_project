@@ -982,7 +982,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2443696227069849498}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -1038,6 +1038,9 @@ MonoBehaviour:
     m_Bits: 8
   damage: 10
   knockback: {x: 2, y: 2}
+  activeTime: 0.1
+  boxSize: {x: 1.5, y: 1.5}
+  boxOffset: {x: -0.5, y: 0.2}
 --- !u!1 &2631404633302055801
 GameObject:
   m_ObjectHideFlags: 0
@@ -1450,7 +1453,7 @@ GameObject:
   - component: {fileID: 7761743663405870025}
   m_Layer: 10
   m_Name: Human_Axe(Stage2)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1554,6 +1557,8 @@ MonoBehaviour:
   dieTrig: 4_Death
   rb: {fileID: 8195033932580274048}
   enemyAI: {fileID: 7761743663405870025}
+  invincibleTime: 0.6
+  hitEffect: {fileID: 0}
 --- !u!114 &7761743663405870025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1575,6 +1580,7 @@ MonoBehaviour:
   attackRange: 1.8
   attackCooldown: 2
   chargeTime: 0.3
+  swingDelay: 0.25
   moveSpeed: 3
   moveBool: 1_Move
   attackTrig: 2_Attack

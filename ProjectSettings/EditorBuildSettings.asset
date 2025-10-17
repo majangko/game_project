@@ -23,7 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameFlow/GameOverResult.unity
     guid: 0700018abf0536b4e90eafc8c1d14904
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Island/StartIsland.unity
     guid: 0e044614725d9874785b21088805e383
   - enabled: 1
@@ -56,6 +56,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Stages/Stage05.unity
     guid: 67fb01c52f09457469ae1ab0e9fd1b22
+  - enabled: 1
+    path: Assets/Scenes/Setting/TeamSelect UI.unity
+    guid: 0907f4edff58d0c4f9cab6021e372f38
+  - enabled: 1
+    path: Assets/Scenes/Stages/test_ts.unity
+    guid: 0ed26806a4b618547b35be9f3bfad1c6
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
