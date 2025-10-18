@@ -20,6 +20,23 @@ public class PlayerStats : MonoBehaviour
     public event Action<int, int> OnMPChanged;
     public event Action OnDied;
 
+    [Header("Combat Stats")]
+    [Tooltip("기본 공격력")]
+    public float baseAttack = 10f;
+
+    [Tooltip("공격력 배율 (1.0 = 기본, 1.5 = +50%)")]
+    public float attackMultiplier = 1f;
+
+    public float GetAttackPower() => baseAttack * Mathf.Max(0.1f, attackMultiplier);
+
+    public void SetAttackMultiplier(float value)
+    {
+        attackMultiplier = Mathf.Max(0.1f, value);
+        OnAttackChanged?.Invoke(GetAttackPower());
+    }
+
+    public event Action<float> OnAttackChanged; // HUD 표시용 (선택사항)
+
     [Header("Skills")]
     public Sprite[] skillIcons;         // 캐릭터별 스킬 아이콘
     public float[] skillCooldownMax;    // 각 스킬의 최대 쿨다운
@@ -30,7 +47,6 @@ public class PlayerStats : MonoBehaviour
         _hp = Mathf.Clamp(_hp <= 0 ? maxHP : _hp, 0, maxHP);
         _mp = Mathf.Clamp(_mp <= 0 ? maxMP : _mp, 0, maxMP);
 
-        // 쿨다운 배열 초기화
         if (skillCooldownMax != null)
         {
             skillCooldownRemain = new float[skillCooldownMax.Length];
@@ -44,7 +60,6 @@ public class PlayerStats : MonoBehaviour
 
     void Update()
     {
-        // 쿨다운 시간 감소
         if (skillCooldownRemain == null) return;
         for (int i = 0; i < skillCooldownRemain.Length; i++)
         {
@@ -85,12 +100,12 @@ public class PlayerStats : MonoBehaviour
         OnMPChanged?.Invoke(_mp, maxMP);
     }
 
-    // 🔹 스킬 쿨다운 발동
     public void TriggerSkillCooldown(int index)
     {
         if (index < 0 || index >= skillCooldownMax.Length) return;
         skillCooldownRemain[index] = skillCooldownMax[index];
     }
+
     public void SetHPMP(int hp, int mp)
     {
         _hp = Mathf.Clamp(hp, 0, maxHP);
@@ -99,11 +114,11 @@ public class PlayerStats : MonoBehaviour
         OnMPChanged?.Invoke(_mp, maxMP);
         if (_hp == 0) OnDied?.Invoke();
     }
+
     public void SetHP(int hp)
     {
         _hp = Mathf.Clamp(hp, 0, maxHP);
         OnHPChanged?.Invoke(_hp, maxHP);
         if (_hp == 0) OnDied?.Invoke();
     }
-
 }

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66d9f44cfe41e2b4ea8919f18ddb7280, type: 3}
+  m_Name: Guma_B
+  m_EditorClassIdentifier: 
+  id: Guma_B
+  displayName: "\uADC0\uD63C\uD3ED\uC5F4\uC790 \uACE0\uAD6C\uB9C8"
+  description: "\uC545\uB839\uC758 \uD798\uC744 \uD761\uC218\uD558\uC5EC \uADC0\uC2E0\uC758
+    \uD798\uC744 \uB2E4\uB8E8\uC5B4 \uC801\uC744 \uC12C\uBA78\uD558\uB294\uC790\n"
+  rarity: 2
+  portrait: {fileID: 21300000, guid: a7fedb909010f634a8db145d51e706a1, type: 3}
+  skillIconA: {fileID: 4730049741179975653, guid: 58c799700e4f6c049a15f4bf35f4f719, type: 3}
+  skillIconB: {fileID: -8765582943710055968, guid: d875cf57eecaa124fb4cd0097da8dd55, type: 3}
+  prefab: {fileID: 8913514820144235450, guid: 7d9549e728512c1439faa8f2c00225ab, type: 3}

@@ -24,12 +24,17 @@ public class SpumPlatformerController : MonoBehaviour
     [SerializeField] private float attackDamage = 10f;
     [SerializeField] private float attackKnockback = 5f;
     [SerializeField] private LayerMask enemyMask;
+    public LayerMask EnemyMask => enemyMask;
 
     [Header("Melee Attack Settings")]
     [SerializeField] private Transform attackOrigin;
     [SerializeField] private Vector2 attackBoxSize = new Vector2(1.2f, 0.8f);
     [SerializeField] private Vector2 attackBoxOffset = new Vector2(1f, 0.1f);
     [SerializeField] private GameObject hitEffectPrefab;
+    
+    [Header("Attack Sounds")]
+    [SerializeField] private AudioClip swingSound;  // 무기 휘두를 때
+    [SerializeField] private AudioClip hitSound;    // 적을 맞췄을 때
 
     [Header("Ranged Attack Settings")]
     [SerializeField] private bool isRanged = false;
@@ -39,6 +44,9 @@ public class SpumPlatformerController : MonoBehaviour
 
     [HideInInspector] public float moveSpeedMul = 1f;
     [HideInInspector] public float attackPowerMul = 1f;
+
+    // ✅ 이동 제어용 변수
+    [HideInInspector] public bool canMove = true;
 
     private int enhancedRemaining = 0;
     private GameObject enhancedExplosionPrefab;
@@ -101,7 +109,16 @@ public class SpumPlatformerController : MonoBehaviour
 
     void Update()
     {
-        // 이동
+        // ✅ 이동 불가 상태면 바로 리턴
+        if (!canMove)
+        {
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+            if (anim)
+                anim.SetBool(P_MOVE_BOOL, false);
+            return;
+        }
+
+        // 이동 입력
         float x = 0f;
         if (Input.GetKey(KeyCode.LeftArrow)) x = -1f;
         else if (Input.GetKey(KeyCode.RightArrow)) x = 1f;
@@ -176,7 +193,14 @@ public class SpumPlatformerController : MonoBehaviour
                          + new Vector2(attackBoxOffset.x * dir, attackBoxOffset.y);
 
         var hits = Physics2D.OverlapBoxAll(center, attackBoxSize, 0f, enemyMask);
+
+        // ✅ ① 휘두르는 소리 재생 (무기 swing)
+        if (SoundManager.Instance && swingSound)
+            SoundManager.Instance.PlaySFX(swingSound);
+
         float finalDamage = attackDamage * Mathf.Max(0.1f, attackPowerMul);
+        if (TryGetComponent(out PlayerStats stats))
+            finalDamage = stats.GetAttackPower();
 
         foreach (var h in hits)
         {
@@ -185,6 +209,10 @@ public class SpumPlatformerController : MonoBehaviour
             var dmg = h.GetComponentInParent<Damageable>();
             if (dmg != null)
             {
+                // ✅ ② 타격음 재생 (hit)
+                if (SoundManager.Instance && hitSound)
+                    SoundManager.Instance.PlaySFX(hitSound);
+
                 Vector2 knock = new Vector2(dir * attackKnockback, attackKnockback * 0.25f);
                 dmg.TakeHit(Mathf.RoundToInt(finalDamage), knock, h.transform.position);
 
@@ -196,6 +224,7 @@ public class SpumPlatformerController : MonoBehaviour
             }
         }
     }
+
 
     void DoRangedAttack()
     {

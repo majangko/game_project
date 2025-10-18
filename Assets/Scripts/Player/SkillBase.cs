@@ -4,7 +4,7 @@ using UnityEngine;
 
 /// <summary>
 /// 모든 스킬의 기본 클래스.
-/// 공통 속성(쿨타임, 지속시간, 애니메이션, 컨트롤러 등) 관리.
+/// 공통 속성(쿨타임, 지속시간, 애니메이션, 사운드, 설명, 컨트롤러 등) 관리.
 /// SPUM 캐릭터 구조(UnitRoot 안 Animator) 자동 인식 버전.
 /// </summary>
 public class SkillBase : MonoBehaviour
@@ -12,6 +12,9 @@ public class SkillBase : MonoBehaviour
     [Header("Common Settings")]
     [Tooltip("스킬 이름 (디버깅 및 식별용)")]
     public string skillName = "New Skill";
+
+    [Tooltip("UI 등에 표시될 한글 이름")]
+    public string displayName = "새로운 스킬";
 
     [Tooltip("쿨타임 (초 단위)")]
     public float cooldown = 1.0f;
@@ -25,6 +28,15 @@ public class SkillBase : MonoBehaviour
     [Tooltip("스킬 이펙트 프리팹 (즉시 생성형일 경우 사용)")]
     public GameObject effectPrefab;
 
+    [Header("Description Settings")]
+    [Tooltip("HUD, 툴팁 등에 표시될 스킬 설명")]
+    [TextArea(2, 4)]
+    public string skillDescription = "이 스킬의 설명을 여기에 작성하세요.";
+
+    [Header("Audio Settings")]
+    [Tooltip("스킬 발동 사운드 (없으면 무음)")]
+    [SerializeField] private AudioClip skillSound;
+
     // 🔹 내부 참조
     protected Animator anim;
     protected SpumPlatformerController ctrl;
@@ -33,10 +45,10 @@ public class SkillBase : MonoBehaviour
     protected bool isCoolingDown = false;
     private float cooldownTimer = 0f;
 
-    // ✅ 전역 이벤트 (기존용)
+    // ✅ 전역 이벤트 (HUD 등에서 쿨타임 표시용)
     public static event Action<string, float> OnSkillUsed;
 
-    // ✅ 인스턴스 이벤트 (HUDController가 캐릭터별로 구독)
+    // ✅ 인스턴스 이벤트 (캐릭터별로 독립 구독 가능)
     public event Action<string, float> OnSkillUsedInstance;
 
     // ============================================================
@@ -94,15 +106,17 @@ public class SkillBase : MonoBehaviour
         // 🔸 실제 스킬 발동
         OnActivate();
 
+        // 🔸 사운드 재생
+        PlaySkillSound();
+
         // 🔸 쿨타임 시작
         if (cooldown > 0)
         {
             isCoolingDown = true;
             cooldownTimer = cooldown;
             Debug.Log($"[SkillBase] {skillName} → 쿨타임 이벤트 전송 (HUD용)");
-            // ✅ HUD에 쿨타임 알림 보내기
-            OnSkillUsed?.Invoke(skillName, cooldown);         // 전역
-            OnSkillUsedInstance?.Invoke(skillName, cooldown); // 인스턴스
+            OnSkillUsed?.Invoke(skillName, cooldown);         // 전역 이벤트
+            OnSkillUsedInstance?.Invoke(skillName, cooldown); // 인스턴스 이벤트
         }
 
         yield return null;
@@ -135,4 +149,25 @@ public class SkillBase : MonoBehaviour
         if (!string.IsNullOrEmpty(animTrigger))
             anim.SetTrigger(animTrigger);
     }
+
+    /// <summary>
+    /// 스킬 사운드 재생 (SoundManager를 통해)
+    /// </summary>
+    protected void PlaySkillSound()
+    {
+        if (skillSound == null)
+            return;
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySFX(skillSound);
+        else
+            Debug.LogWarning($"[SkillBase] SoundManager not found — '{skillName}' 사운드 재생 불가");
+    }
+
+    // ============================================================
+    // HUD/Tooltip용 정보 제공
+    // ============================================================
+    public string GetSkillDisplayName() => string.IsNullOrEmpty(displayName) ? skillName : displayName;
+    public string GetSkillDescription() => skillDescription;
+    public float GetCooldown() => cooldown;
 }

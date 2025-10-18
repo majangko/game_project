@@ -35,7 +35,7 @@ public class CardView : MonoBehaviour
     public Action<CardView> OnSelectClicked;
     public Action<CardView> OnInfoClicked;
 
-    void Awake()
+    void Start()
     {
         // 버튼 연결
         if (rerollButton)
@@ -47,6 +47,7 @@ public class CardView : MonoBehaviour
         if (infoButton)
             infoButton.onClick.AddListener(() =>
             {
+                Debug.Log($"[CardView] Info front clicked: {name}");
                 OnInfoClicked?.Invoke(this);
                 if (flip != null) flip.Toggle();
             });
@@ -54,6 +55,7 @@ public class CardView : MonoBehaviour
         if (infoButtonBack)
             infoButtonBack.onClick.AddListener(() =>
             {
+                Debug.Log($"[CardView] Info back clicked: {name}");
                 OnInfoClicked?.Invoke(this);
                 if (flip != null) flip.Toggle();
             });
@@ -61,7 +63,13 @@ public class CardView : MonoBehaviour
         // 기본은 앞면으로 시작
         if (flip != null)
             flip.ShowFront();
+
+        Debug.Log($"[CardView] Start() called for {gameObject.name}");
     }
+
+
+    // CardView.cs 안에 추가
+
 
     // ----------------------------------------------------------
     // 캐릭터 데이터 바인딩

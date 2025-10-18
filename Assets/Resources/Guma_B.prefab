@@ -1358,7 +1358,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4054506920778221396}
@@ -4468,7 +4468,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 1, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -170}
+  m_AnchoredPosition: {x: 0.129, y: -170.024}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8545453476386454674
@@ -9807,7 +9807,7 @@ MonoBehaviour:
   tilemapMask:
     serializedVersion: 2
     m_Bits: 0
-  flipRoot: {fileID: 7081122001843966599}
+  flipRoot: {fileID: 4054506920778221396}
   visualRoot: {fileID: 0}
   spriteFacesRight: 0
   attackMoveLock: 0.12

@@ -16,6 +16,13 @@ public class EnemyAI : MonoBehaviour
 
     [Header("Move")]
     [SerializeField] float moveSpeed = 2f;
+    private float originalSpeed;
+    private bool isLocked = false; // 완전 고정 여부
+    private bool isSlowed = false; // 슬로우 상태 여부
+    private float slowRatio = 1f;
+
+    [Header("Boss Settings")]
+    public bool isBoss = false; // 보스 판정용
 
     [Header("Animator Params")]
     [SerializeField] string moveBool = "1_Move";
@@ -30,11 +37,18 @@ public class EnemyAI : MonoBehaviour
         if (!rb) rb = GetComponent<Rigidbody2D>();
         if (!animator) animator = GetComponentInChildren<Animator>();
         if (!visualRoot) visualRoot = transform;
+        originalSpeed = moveSpeed;
     }
 
     void Update()
     {
         if (isDead || !player) return;
+
+        if (isLocked)
+        {
+            StopMoving();
+            return;
+        }
 
         float distance = Vector2.Distance(transform.position, player.position);
 
@@ -58,7 +72,7 @@ public class EnemyAI : MonoBehaviour
     void ChasePlayer()
     {
         Vector2 dir = (player.position - transform.position).normalized;
-        rb.linearVelocity = new Vector2(dir.x * moveSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(dir.x * (moveSpeed * slowRatio), rb.linearVelocity.y);
         animator.SetBool(moveBool, true);
     }
 
@@ -104,5 +118,43 @@ public class EnemyAI : MonoBehaviour
         foreach (var c in GetComponentsInChildren<Collider2D>())
             c.enabled = false;
         this.enabled = false;
+    }
+
+    // ----------------------------------------------------
+    // 🔒 결계 제어용 함수 추가
+    // ----------------------------------------------------
+
+    /// <summary>
+    /// 일정 시간 동안 이동 완전 정지 (일반 몬스터용)
+    /// </summary>
+    public void LockMovement(float duration)
+    {
+        if (isLocked) return;
+        isLocked = true;
+        StopMoving();
+        animator.SetBool(moveBool, false);
+        Invoke(nameof(UnlockMovement), duration);
+    }
+
+    private void UnlockMovement()
+    {
+        isLocked = false;
+    }
+
+    /// <summary>
+    /// 일정 시간 동안 이동속도 감소 (보스용)
+    /// </summary>
+    public void ApplySlow(float ratio, float duration)
+    {
+        if (isSlowed) return;
+        isSlowed = true;
+        slowRatio = Mathf.Clamp01(ratio);
+        Invoke(nameof(RemoveSlow), duration);
+    }
+
+    private void RemoveSlow()
+    {
+        isSlowed = false;
+        slowRatio = 1f;
     }
 }
