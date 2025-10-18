@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66d9f44cfe41e2b4ea8919f18ddb7280, type: 3}
+  m_Name: Harvald
+  m_EditorClassIdentifier: 
+  id: Harvald
+  displayName: "\uD558\uB974\uBC1C\uB4DC"
+  description: 
+  rarity: 2
+  portrait: {fileID: -420357585462065038, guid: 215d2e9e383674d4ba0bfabb951d252a, type: 3}
+  skillIconA: {fileID: 6151156976243556317, guid: 9162e03861ca02945bf071b314da49a5, type: 3}
+  skillIconB: {fileID: -5490735976535073712, guid: c59db86c2d038e94788884b5cd61b1d2, type: 3}
+  prefab: {fileID: 1577508926596187062, guid: b8cebb098110b0e47832c04e9c04dc69, type: 3}

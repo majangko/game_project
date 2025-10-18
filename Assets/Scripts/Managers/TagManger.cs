@@ -46,6 +46,11 @@ public class TagManager : MonoBehaviour
 
         TryConnectPartyManager();
         RefreshHUD();
+
+        // ✅ 시작 시 카메라가 첫 캐릭터를 바라보게 설정
+        var cam = FindObjectOfType<CameraFollow>();
+        if (cam != null && characters.Count > 0)
+            cam.target = characters[currentIndex].transform;
     }
 
     void Update()
@@ -83,6 +88,11 @@ public class TagManager : MonoBehaviour
 
         currentIndex = 0;
         RefreshHUD();
+
+        // ✅ 카메라 대상 초기 설정
+        var cam = FindObjectOfType<CameraFollow>();
+        if (cam != null && characters.Count > 0)
+            cam.target = characters[currentIndex].transform;
 
         var tagUI = FindObjectOfType<TagPanelUI>();
         if (tagUI != null)
@@ -127,6 +137,11 @@ public class TagManager : MonoBehaviour
         current.gameObject.SetActive(false);
         next.gameObject.SetActive(true);
 
+        // ✅ 카메라 대상 갱신
+        var cam = FindObjectOfType<CameraFollow>();
+        if (cam != null)
+            cam.target = next.transform;
+
         // 무적 처리
         var dmg = next.GetComponent<Damageable>();
         if (dmg != null)
@@ -136,7 +151,7 @@ public class TagManager : MonoBehaviour
         currentIndex = newIndex;
         RefreshCharacterOrder();
 
-        // ✅ HUD 완전 갱신 (초상화 + 스킬 + 쿨타임)
+        // ✅ HUD 완전 갱신
         RefreshHUD();
 
         // 이벤트 호출 (TagPanelUI용)

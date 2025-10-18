@@ -85,7 +85,10 @@ public class HUDController : MonoBehaviour
         // ✅ 새 캐릭터의 스킬 이벤트 등록
         SubscribeSkillEvents(_stats);
 
-        Debug.Log($"[HUD] {_stats.name} 스킬 이벤트 구독 완료 및 HUD 초기화 완료");
+        // ✅ 스킬 툴팁 자동 연결
+        ApplySkillTooltips(_stats);
+
+        Debug.Log($"[HUD] {_stats.name} 스킬 이벤트 구독 및 HUD 초기화 완료");
     }
 
     void ApplyCharacterData()
@@ -236,7 +239,6 @@ public class HUDController : MonoBehaviour
     // ============================================================
     public void ResetCooldowns()
     {
-        // ✅ 모든 쿨타임 코루틴 중지
         StopAllCoroutines();
 
         if (cooldownCoroutines != null)
@@ -245,7 +247,6 @@ public class HUDController : MonoBehaviour
                 cooldownCoroutines[i] = null;
         }
 
-        // ✅ 색상, 텍스트, 오버레이 초기화
         for (int i = 0; i < skillIcons.Length; i++)
         {
             if (skillIcons[i] != null)
@@ -262,6 +263,47 @@ public class HUDController : MonoBehaviour
         }
 
         Debug.Log("[HUD] 쿨타임 UI 완전 초기화 완료 (StopAllCoroutines 포함)");
+    }
+
+    // ============================================================
+    // 스킬 툴팁 자동 연결
+    // ============================================================
+    private void ApplySkillTooltips(PlayerStats stats)
+    {
+        if (skillIcons == null || skillIcons.Length == 0) return;
+
+        var skills = stats.GetComponentsInChildren<SkillBase>(true);
+
+        for (int i = 0; i < skillIcons.Length; i++)
+        {
+            Image icon = skillIcons[i];
+            if (icon == null || icon.sprite == null) continue;
+
+            string iconName = icon.sprite.name.ToLower();
+
+            foreach (var skill in skills)
+            {
+                if (skill == null || string.IsNullOrEmpty(skill.skillName)) continue;
+
+                string skillLower = skill.skillName.ToLower();
+                if (iconName.Contains(skillLower) || skillLower.Contains(iconName))
+                {
+                    var trigger = icon.GetComponent<SkillIconTooltipTrigger>();
+                    if (trigger == null)
+                        trigger = icon.gameObject.AddComponent<SkillIconTooltipTrigger>();
+
+                    trigger.skill = skill;
+                    trigger.skillNameOverride = skill.GetSkillDisplayName();
+                    trigger.skillDescriptionOverride = skill.GetSkillDescription();
+                    trigger.extraInfoOverride = skill.GetCooldown() > 0
+                        ? $"쿨타임: {skill.GetCooldown():F1}초"
+                        : "패시브 스킬";
+
+                    Debug.Log($"[HUD] 툴팁 연결 완료 → {skill.displayName}");
+                    break;
+                }
+            }
+        }
     }
 
     public void SetVisible(bool v) => gameObject.SetActive(v);

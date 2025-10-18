@@ -25,6 +25,7 @@ public class Damageable : MonoBehaviour, ICanTakeDamage
 
     private bool isDead;
     private bool isPlayer; // 자동 인식용
+    private float damageMultiplier = 1f; // ✅ 추가: 피해량 배율 제어 (1 = 기본)
 
     public Action OnDeath;
 
@@ -34,24 +35,37 @@ public class Damageable : MonoBehaviour, ICanTakeDamage
         isPlayer = CompareTag("Player");
     }
 
+    // ✅ 외부에서 피해 배율 조정 (예: 가드 스킬, 버프 등)
+    public void SetDamageMultiplier(float multiplier)
+    {
+        damageMultiplier = Mathf.Max(0f, multiplier); // 0 = 완전 무적
+    }
+
+    // ✅ 현재 피해 배율 가져오기
+    public float GetDamageMultiplier() => damageMultiplier;
+
     // ✅ 외부(TrapMap, TagManager 등)가 호출할 수 있는 인터페이스 함수
     public void ApplyDamage(int amount)
     {
         TakeHit(amount);
     }
 
-    // ✅ 핵심 피격 함수
-    public void TakeHit(int damage)
+    // ✅ 핵심 피격 함수 (float 입력)
+    public void TakeHit(float damage)
     {
-        TakeHit(damage, Vector2.zero, transform.position);
+        TakeHit(Mathf.RoundToInt(damage), Vector2.zero, transform.position);
     }
 
+    // ✅ 실제 피해 처리
     public void TakeHit(int damage, Vector2 knockback, Vector2 hitPoint)
     {
         if (isDead) return;
         if (isPlayer && isInvincible) return;
 
-        currentHP -= damage;
+        // ✅ 피해량 배율 반영
+        int finalDamage = Mathf.RoundToInt(damage * damageMultiplier);
+
+        currentHP -= finalDamage;
         currentHP = Mathf.Max(currentHP, 0);
 
         // 피격 연출
