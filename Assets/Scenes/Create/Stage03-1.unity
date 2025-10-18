@@ -11469,10 +11469,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: -1.5
     y: 0
-    width: 1
-    height: 1
+    width: 3
+    height: 0
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -11655,7 +11655,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8404559800973675327, guid: 45d1aca6d6a0a20499a83105a9142009, type: 3}
       propertyPath: m_Name
-      value: Spawn Points (Stage 2)
+      value: Spawn Points (Stage 3)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11672,7 +11672,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4236806059859134882, guid: e92e264fb50cba648820218fd5a0276c, type: 3}
       propertyPath: m_Name
-      value: Manager (Stage 2)
+      value: Manager (Stage 3)
       objectReference: {fileID: 0}
     - target: {fileID: 5158921230665521996, guid: e92e264fb50cba648820218fd5a0276c, type: 3}
       propertyPath: monsters.Array.data[0].spawnPoint
