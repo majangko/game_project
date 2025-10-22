@@ -848,7 +848,7 @@ GameObject:
   - component: {fileID: 2552125077837980929}
   m_Layer: 3
   m_Name: Edgar Rian
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6329,10 +6329,11 @@ MonoBehaviour:
   tilemapMask:
     serializedVersion: 2
     m_Bits: 2048
-  flipRoot: {fileID: 2745576982108370061}
-  visualRoot: {fileID: 0}
+  flipRoot: {fileID: 0}
+  visualRoot: {fileID: 2745576982108370061}
   spriteFacesRight: 0
   attackMoveLock: 0.12
+  attackCooldown: 1
   attackDamage: 10
   attackKnockback: 5
   enemyMask:
@@ -6342,12 +6343,17 @@ MonoBehaviour:
   attackBoxSize: {x: 2, y: 0.7}
   attackBoxOffset: {x: 1.2, y: 0.1}
   hitEffectPrefab: {fileID: 0}
+  swingSound: {fileID: 8300000, guid: 9c65336c670029a4e85f0683ab661df6, type: 3}
+  hitSound: {fileID: 0}
   isRanged: 0
   projectilePrefab: {fileID: 0}
   projectileSpeed: 10
   projectileSpawnPoint: {fileID: 0}
   moveSpeedMul: 1
   attackPowerMul: 1
+  attackSpeedMul: 1
+  defenseMul: 1
+  regenRate: 0
   canMove: 1
 --- !u!114 &6950061626543483866
 MonoBehaviour:
@@ -6386,6 +6392,7 @@ MonoBehaviour:
   _mp: 30
   baseAttack: 10
   attackMultiplier: 1
+  tempAttackBuffMultiplier: 1
   skillIcons:
   - {fileID: -6325134396487345097, guid: df55878f2bc88204fa429650110b34cb, type: 3}
   - {fileID: 4885613115316566115, guid: 99a05045647f9e34583f0e60487b83df, type: 3}
@@ -6403,7 +6410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62e251957668cd4469407835137eed1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 100
+  maxHP: 80
   animator: {fileID: 8416472740274908585, guid: 7d9549e728512c1439faa8f2c00225ab, type: 3}
   hitTrig: 3_Damage
   dieTrig: 4_Death
@@ -6424,10 +6431,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: ChargeSpear
+  displayName: "\uB3CC\uACA9"
   cooldown: 8
   duration: 3
   animTrigger: 7_Skill
   effectPrefab: {fileID: 3207203358452480676, guid: eb15a10cee923484486f10dd931d2036, type: 3}
+  skillDescription: "\uCC3D\uC744 \uC6C0\uCF1C\uC950\uACE0 \uBC14\uB77C\uBCF4\uB294
+    \uBC29\uD5A5\uC73C\uB85C \uBE60\uB974\uAC8C \uB3CC\uC9C4\uD569\uB2C8\uB2E4.\n\uB3CC\uC9C4
+    \uACBD\uB85C\uC5D0 \uC788\uB294 \uC801\uC5D0\uAC8C \uCC3D\uC73C\uB85C \uAC15\uB825\uD55C
+    \uD53C\uD574\uB97C \uC8FC\uBA70,\n\uB3CC\uC9C4 \uC911 \uCDA9\uB3CC \uC2DC \uACF5\uACA9\uC774
+    \uC989\uC2DC \uBA48\uCDA5\uB2C8\uB2E4."
+  skillSound: {fileID: 8300000, guid: 4e9b08425dab4654bad7c03c9dc6527f, type: 3}
+  buffType: 0
+  buffDuration: 0
+  buffMultiplier: 1
   chargeDistance: 4.5
   chargeSpeed: 10
   hitRadius: 1.5
@@ -6454,11 +6471,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: GuardStance
+  displayName: "\uBC29\uC5B4 \uD0DC\uC138"
   cooldown: 10
   duration: 3
   animTrigger: 
   effectPrefab: {fileID: 0}
-  guardDuration: 3
+  skillDescription: "\uC5D0\uB4DC\uAC00 \uB9AC\uC548\uC774 \uBC29\uC5B4 \uC790\uC138\uB97C
+    \uCDE8\uD558\uC5EC \uC77C\uC815 \uC2DC\uAC04 \uB3D9\uC548 \uBC1B\uB294 \uD53C\uD574\uB97C
+    \uC904\uC774\uC9C0\uB9CC, \uC774\uB3D9 \uC18D\uB3C4\uAC00 \uAC10\uC18C\uD569\uB2C8\uB2E4. "
+  skillSound: {fileID: 8300000, guid: ace34ae2560f7624a8434241de2c4e4c, type: 3}
+  buffType: 4
+  buffDuration: 4
+  buffMultiplier: 1
+  guardDuration: 4
   damageReduction: 0.5
   guardMoveMultiplier: 0.3
   guardEffectPrefab: {fileID: 6432626408599990894, guid: 057e016e8a3aa724ca5ca04a2f2eecd6, type: 3}

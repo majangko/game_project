@@ -4,10 +4,10 @@ using System.Collections;
 public class TaegukSlash : SkillBase
 {
     [Header("Charge Settings")]
-    public float minChargeTime = 0.3f;        // 최소 차징 시간
-    public float maxChargeTime = 2f;          // 최대 차징 시간
-    public string chargeAnim = "8_Charge";    // 차징 애니메이션 Bool
-    public string slashAnim = "7_Skill";      // 발동 애니메이션 Trigger
+    public float minChargeTime = 0.3f;
+    public float maxChargeTime = 2f;
+    public string chargeAnim = "8_Charge";
+    public string slashAnim = "7_Skill";
 
     [Header("Slash Settings")]
     public Transform hitOrigin;
@@ -22,8 +22,24 @@ public class TaegukSlash : SkillBase
     public GameObject slashEffectPrefab;
     public GameObject hitEffectPrefab;
 
+    [Header("Audio Clips")]
+    [Tooltip("차징 중 재생되는 소리 (루프)")]
+    public AudioClip chargeSound;
+    [Tooltip("공격 발동 시 재생되는 소리 (1회)")]
+    public AudioClip slashSound;
+
     private bool isCharging = false;
     private float chargeTimer = 0f;
+    private AudioSource chargeAudioSource; // 루프용 사운드 컨트롤러
+
+    protected override void Start()
+    {
+        base.Start();
+        // 오디오 소스 준비
+        chargeAudioSource = gameObject.AddComponent<AudioSource>();
+        chargeAudioSource.loop = true;
+        chargeAudioSource.playOnAwake = false;
+    }
 
     protected override void OnActivate()
     {
@@ -41,7 +57,15 @@ public class TaegukSlash : SkillBase
         // 🔹 차징 애니메이션 시작
         if (anim) anim.SetBool(chargeAnim, true);
 
-        // 🔹 키를 누르고 있는 동안 차징 (X 키 기준)
+        // 🔹 차징 사운드 시작 (루프 재생)
+        if (chargeSound && SoundManager.Instance)
+        {
+            chargeAudioSource.clip = chargeSound;
+            chargeAudioSource.volume = 1.0f;
+            chargeAudioSource.Play();
+        }
+
+        // 🔹 키를 누르고 있는 동안 차징
         while (Input.GetKey(KeyCode.X))
         {
             chargeTimer += Time.deltaTime;
@@ -49,20 +73,27 @@ public class TaegukSlash : SkillBase
             yield return null;
         }
 
-        // 🔹 키에서 손 뗀 순간 — 발동
+        // 🔹 키에서 손을 뗀 순간 — 발동
         if (anim)
         {
             anim.SetBool(chargeAnim, false);
             anim.SetTrigger(slashAnim);
         }
 
-        // 타격 처리
+        // 🔹 차징 사운드 즉시 정지
+        if (chargeAudioSource.isPlaying)
+            chargeAudioSource.Stop();
+
+        // 🔹 공격 사운드 재생
+        if (slashSound && SoundManager.Instance)
+            SoundManager.Instance.PlaySFX(slashSound);
+
+        // 🔹 타격 처리
         PerformSlash();
 
-        // 차징 종료
         isCharging = false;
 
-        // ✅ SkillBase에서 자동 쿨타임 처리 + HUD 알림
+        // ✅ SkillBase 쿨타임 및 HUD 처리
         if (cooldown > 0)
         {
             isCoolingDown = true;

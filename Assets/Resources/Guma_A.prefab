@@ -6730,10 +6730,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: TaegukSlash
+  displayName: "\uD0DC\uADF9\uCC38"
   cooldown: 6
   duration: 0
   animTrigger: 
   effectPrefab: {fileID: 0}
+  skillDescription: "\uAE30\uC6B4\uC744 \uBAA8\uC740 \uB4A4 \uD718\uAD11\uC758 \uC77C\uACA9\uC73C\uB85C
+    \uC804\uBC29\uC758 \uC801\uC744 \uBCA0\uC5B4\uB0B8\uB2E4.\n\uCC28\uC9D5 \uC2DC\uAC04\uC5D0
+    \uB530\uB77C \uD53C\uD574\uAC00 \uC99D\uAC00\uD55C\uB2E4."
+  skillSound: {fileID: 0}
+  buffType: 0
+  buffDuration: 0
+  buffMultiplier: 1
   minChargeTime: 0.3
   maxChargeTime: 2
   chargeAnim: 8_Charge
@@ -6749,6 +6757,8 @@ MonoBehaviour:
   knockback: 8
   slashEffectPrefab: {fileID: 3730959721715086870, guid: c3b5d9ca9da38504db9098bfee8049fb, type: 3}
   hitEffectPrefab: {fileID: 0}
+  chargeSound: {fileID: 8300000, guid: 4391cb8cf85f2894cb907f14370099c6, type: 3}
+  slashSound: {fileID: 8300000, guid: 1c6af61bf8f2cbc43a277b256f97ee33, type: 3}
 --- !u!114 &4822481301100564233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6762,17 +6772,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: ExorcismCombo
-  cooldown: 0
+  displayName: "\uD1F4\uB9C8\uC5F0\uACA9"
+  cooldown: 12
   duration: 0
   animTrigger: 
   effectPrefab: {fileID: 0}
+  skillDescription: "\uACF5\uAC04\uC744 \uAC00\uB974\uBA70 \uC0DD\uC131\uB418\uB294
+    \uD1F4\uB9C8\uC758 \uC794\uC0C1\uC774 \uACBD\uB85C\uB97C \uB530\uB77C \uD3ED\uBC1C\uD558\uBA70,
+    \uC801\uB4E4\uC5D0\uAC8C \uC5F0\uC18D \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4."
+  skillSound: {fileID: 8300000, guid: b4d17a6974c66ee4db9faed463b1a377, type: 3}
+  buffType: 0
+  buffDuration: 0
+  buffMultiplier: 1
   hitOrigin: {fileID: 5433489484966074367}
   enemyMask:
     serializedVersion: 2
     m_Bits: 1024
   damage: 25
   knockback: 0
-  dashDistance: 5
+  dashDistance: 4
   focusDuration: 0.5
   hitBoxSize: {x: 2.5, y: 1.2}
   hitBoxOffset: {x: 0.5, y: 0.2}
@@ -6861,7 +6879,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.4}
-  m_Size: {x: 1, y: 0.3}
+  m_Size: {x: 0.8, y: 0.3}
   m_Direction: 0
 --- !u!114 &1672408692185099147
 MonoBehaviour:
@@ -6889,6 +6907,7 @@ MonoBehaviour:
   visualRoot: {fileID: 0}
   spriteFacesRight: 0
   attackMoveLock: 0.12
+  attackCooldown: 0.6
   attackDamage: 10
   attackKnockback: 5
   enemyMask:
@@ -6898,12 +6917,18 @@ MonoBehaviour:
   attackBoxSize: {x: 1.8, y: 1}
   attackBoxOffset: {x: 1.2, y: 0.1}
   hitEffectPrefab: {fileID: 3061540847762355810, guid: 0179a93036229b24e85c390c158ae912, type: 3}
+  swingSound: {fileID: 8300000, guid: 9c65336c670029a4e85f0683ab661df6, type: 3}
+  hitSound: {fileID: 0}
   isRanged: 0
   projectilePrefab: {fileID: 0}
   projectileSpeed: 10
   projectileSpawnPoint: {fileID: 0}
   moveSpeedMul: 1
   attackPowerMul: 1
+  attackSpeedMul: 1
+  defenseMul: 1
+  regenRate: 0
+  canMove: 1
 --- !u!114 &3645299509452632070
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6922,6 +6947,9 @@ MonoBehaviour:
   maxMP: 50
   _hp: 75
   _mp: 50
+  baseAttack: 10
+  attackMultiplier: 1
+  tempAttackBuffMultiplier: 1
   skillIcons:
   - {fileID: 21300000, guid: 88dc609a175a06e4bac1b8f0cf9da4f4, type: 3}
   - {fileID: 21300000, guid: 444cd832fc3bb634da6ddbdcd3a776a0, type: 3}
@@ -6939,7 +6967,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62e251957668cd4469407835137eed1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 50
+  maxHP: 75
   animator: {fileID: 6294841255928898544}
   hitTrig: 3_Damage
   dieTrig: 4_Death
@@ -9772,7 +9800,7 @@ Transform:
   m_GameObject: {fileID: 8935326228859985882}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.033, y: 0.018, z: -0.005}
+  m_LocalPosition: {x: -0.04, y: -0.04, z: -0.005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

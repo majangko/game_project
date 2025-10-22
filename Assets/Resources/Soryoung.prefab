@@ -1083,6 +1083,7 @@ GameObject:
   - component: {fileID: 206145624637932839}
   - component: {fileID: 1375900118556349043}
   - component: {fileID: 3808446299385147832}
+  - component: {fileID: 4194139864963684336}
   m_Layer: 3
   m_Name: Soryoung
   m_TagString: Player
@@ -6414,7 +6415,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.4}
-  m_Size: {x: 0.5, y: 0.1}
+  m_Size: {x: 0.8, y: 0.3}
   m_Direction: 0
 --- !u!114 &-2764371242832732362
 MonoBehaviour:
@@ -6482,10 +6483,11 @@ MonoBehaviour:
   tilemapMask:
     serializedVersion: 2
     m_Bits: 2048
-  flipRoot: {fileID: 1207346368573137348}
-  visualRoot: {fileID: 0}
+  flipRoot: {fileID: 0}
+  visualRoot: {fileID: 1207346368573137348}
   spriteFacesRight: 0
   attackMoveLock: 0.12
+  attackCooldown: 1
   attackDamage: 10
   attackKnockback: 5
   enemyMask:
@@ -6495,12 +6497,18 @@ MonoBehaviour:
   attackBoxSize: {x: 1.8, y: 1}
   attackBoxOffset: {x: 1.2, y: 0.1}
   hitEffectPrefab: {fileID: 3061540847762355810, guid: 0179a93036229b24e85c390c158ae912, type: 3}
+  swingSound: {fileID: 8300000, guid: 8a74ffa173f144549a6aad2fb4321009, type: 3}
+  hitSound: {fileID: 0}
   isRanged: 1
   projectilePrefab: {fileID: 9010834814542384479, guid: 185819c42ac88c841b02e39abef34ca5, type: 3}
   projectileSpeed: 10
   projectileSpawnPoint: {fileID: 4408637273250473827}
   moveSpeedMul: 1
   attackPowerMul: 1
+  attackSpeedMul: 1
+  defenseMul: 1
+  regenRate: 0
+  canMove: 1
 --- !u!114 &206145624637932839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6514,10 +6522,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: DayandNightBujeok
+  displayName: "\uC77C\uC6D4\uC18C\uBA85 \uBD80\uC801"
   cooldown: 7
   duration: 0.5
   animTrigger: 6_Other
   effectPrefab: {fileID: 6427698387216386134, guid: b73d8c5ed96306446b53b35e6d024f72, type: 3}
+  skillDescription: "\uC77C\uC6D4\uC758 \uC815\uAE30\uB97C \uBD88\uB7EC\uC640 \uBAB8\uC5D0
+    \uC9D1\uC911\uC2DC\uCF1C \uD3C9\uD0C0\uB97C \uC77C\uC2DC\uC801\uC73C\uB85C \uAC15\uD654\uD569\uB2C8\uB2E4.\n\uAC15\uD654\uB41C
+    \uACF5\uACA9\uC740 3\uD68C \uB3D9\uC548 \uADC0\uB839\uC758 \uD3ED\uBC1C\uC744
+    \uC77C\uC73C\uD0A4\uBA70,\n\uD3ED\uBC1C \uBC94\uC704 \uB0B4 \uC801\uC5D0\uAC8C
+    \uCD94\uAC00 \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
+  skillSound: {fileID: 8300000, guid: 63ff121c03a733a45954a6bc05be2b7e, type: 3}
+  buffType: 0
+  buffDuration: 0
+  buffMultiplier: 1
   enhancedCount: 3
   explosionDamage: 20
   explosionRadius: 2
@@ -6539,10 +6557,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: FireBujeok
+  displayName: "\uD654\uC5FC\uBD80\uC801"
   cooldown: 10
   duration: 3
   animTrigger: 7_Skill
   effectPrefab: {fileID: 0}
+  skillDescription: "\uAC15\uC18C\uB839\uC774 \uBD88\uC758 \uAE30\uC6B4\uC744 \uB2F4\uC740
+    \uBD80\uC801\uC744 \uB358\uC838 \uC804\uBC29\uC758 \uC801\uC744 \uBD88\uD0DC\uC6C1\uB2C8\uB2E4.\n\uBD80\uC801\uC774
+    \uBA85\uC911\uD558\uBA74 \uD654\uC5FC \uD3ED\uBC1C\uC774 \uC77C\uC5B4\uB098\uBA70,
+    \uC8FC\uBCC0 \uC801\uC5D0\uAC8C \uCD94\uAC00 \uD53C\uD574\uB97C \uC785\uD799\uB2C8\uB2E4.\n\uD0C0\uACA9
+    \uC9C0\uC810\uC5D0\uB294 \uC7A0\uC2DC \uBD88\uAE38\uC774 \uB0A8\uC544 \uC9C0\uC18D
+    \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
+  skillSound: {fileID: 8300000, guid: 6f74fa17c202a574db4ecda7e20b119e, type: 3}
+  buffType: 0
+  buffDuration: 0
+  buffMultiplier: 1
   projectilePrefab: {fileID: 964729203910332814, guid: eb6caab1c78b3624d9e5d44e2f82a68f, type: 3}
   projectileSpeed: 8
   areaEffectPrefab: {fileID: 1942003936801577953, guid: 04af7f0d43519cd4dbd0581ea03e1c10, type: 3}
@@ -6572,11 +6601,34 @@ MonoBehaviour:
   maxMP: 30
   _hp: 40
   _mp: 30
+  baseAttack: 10
+  attackMultiplier: 1
+  tempAttackBuffMultiplier: 1
   skillIcons:
   - {fileID: 1126891265584629361, guid: 669f4056be438684488034020a896afc, type: 3}
   - {fileID: -1225695337442736279, guid: c3d496295c9bcd94b952bd8da2f8f9f1, type: 3}
   skillCooldownMax: []
   skillCooldownRemain: []
+--- !u!114 &4194139864963684336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2579712906687728336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62e251957668cd4469407835137eed1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 40
+  animator: {fileID: 3563566223750064678}
+  hitTrig: 3_Damage
+  dieTrig: 4_Death
+  rb: {fileID: 0}
+  enemyAI: {fileID: 0}
+  invincibleTime: 0.6
+  hitEffect: {fileID: 0}
 --- !u!1 &2581156933739852896
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,34 +1,51 @@
-using UnityEngine;
+ï»¿using UnityEngine;
+using System.Reflection;
 
 public class DamageableExtended : Damageable
 {
-    // Ã¼·Â Á¢±ÙÀÚ
-    public int CurrentHP => typeof(Damageable)
-        .GetField("hp", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-        .GetValue(this) is int value ? value : 0;
+    private FieldInfo _hpField;
+    private FieldInfo _maxHpField;
+    private MethodInfo _dieMethod;
+    private PlayerStats _stats;
 
-    public int MaxHPValue => typeof(Damageable)
-        .GetField("maxHP", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-        .GetValue(this) is int value ? value : 1;
+    void Awake()
+    {
+        // âœ… Damageable ë‚´ë¶€ ë³€ìˆ˜ëª…ì— ë§žê²Œ ë³€ê²½
+        _hpField = typeof(Damageable).GetField("currentHP", BindingFlags.NonPublic | BindingFlags.Instance);
+        _maxHpField = typeof(Damageable).GetField("maxHP", BindingFlags.Public | BindingFlags.Instance);
+        _dieMethod = typeof(Damageable).GetMethod("Die", BindingFlags.NonPublic | BindingFlags.Instance);
 
-    public float HPRatio => (float)CurrentHP / Mathf.Max(1, MaxHPValue);
+        _stats = GetComponentInParent<PlayerStats>();
+    }
 
-    // Ã¼·Â ¼Ò¸ð ¸Þ¼­µå (³Ë¹é ¾øÀÌ ¼ø¼ö HP °¨¼Ò)
+    public int CurrentHPValue => (int)(_hpField?.GetValue(this) ?? 0);
+    public int MaxHPValue => (int)(_maxHpField?.GetValue(this) ?? 1);
+    public float HPRatio => (float)CurrentHPValue / Mathf.Max(1, MaxHPValue);
+
     public void TakePureDamage(int damage)
     {
-        int newHP = Mathf.Max(CurrentHP - damage, 0);
-
-        // ³»ºÎ hp °ª °­Á¦·Î ¹Ý¿µ
-        typeof(Damageable)
-            .GetField("hp", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-            .SetValue(this, newHP);
-
-        if (newHP <= 0)
+        if (_hpField == null)
         {
-            // Die() È£Ãâ
-            typeof(Damageable)
-                .GetMethod("Die", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                .Invoke(this, null);
+            Debug.LogWarning("[DamageableExtended] hpField not found!");
+            return;
+        }
+
+        int curHP = CurrentHPValue;
+        int newHP = Mathf.Max(curHP - Mathf.Abs(damage), 0);
+
+        // âœ… ë‚´ë¶€ Damageable ì²´ë ¥ ê°±ì‹ 
+        _hpField.SetValue(this, newHP);
+
+        // âœ… PlayerStats HUD ë™ê¸°í™”
+        if (_stats != null)
+        {
+            _stats.SetHP(newHP);
+        }
+
+        // âœ… ì‚¬ë§ ì²˜ë¦¬
+        if (newHP <= 0 && _dieMethod != null)
+        {
+            _dieMethod.Invoke(this, null);
         }
     }
 }

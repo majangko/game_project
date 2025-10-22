@@ -9667,7 +9667,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.4}
-  m_Size: {x: 0.5, y: 0.1}
+  m_Size: {x: 0.8, y: 0.3}
   m_Direction: 0
 --- !u!114 &1353054721222629528
 MonoBehaviour:
@@ -9690,11 +9690,12 @@ MonoBehaviour:
     m_Bits: 256
   tilemapMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2048
   flipRoot: {fileID: 0}
   visualRoot: {fileID: 2483169576309380535}
   spriteFacesRight: 0
   attackMoveLock: 0.12
+  attackCooldown: 1
   attackDamage: 10
   attackKnockback: 5
   enemyMask:
@@ -9704,12 +9705,18 @@ MonoBehaviour:
   attackBoxSize: {x: 1.8, y: 1}
   attackBoxOffset: {x: 1.2, y: 0.1}
   hitEffectPrefab: {fileID: 3061540847762355810, guid: 0179a93036229b24e85c390c158ae912, type: 3}
+  swingSound: {fileID: 8300000, guid: 9c65336c670029a4e85f0683ab661df6, type: 3}
+  hitSound: {fileID: 0}
   isRanged: 0
   projectilePrefab: {fileID: 0}
   projectileSpeed: 10
   projectileSpawnPoint: {fileID: 0}
   moveSpeedMul: 1
   attackPowerMul: 1
+  attackSpeedMul: 1
+  defenseMul: 1
+  regenRate: 0
+  canMove: 1
 --- !u!114 &5079191817297556802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9740,10 +9747,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: GhostBuff
+  displayName: "\uADC0\uD63C\uC77C\uCCB4"
   cooldown: 12
   duration: 6
   animTrigger: 6_Other
   effectPrefab: {fileID: 0}
+  skillDescription: "\uAD6C\uB9C8\uAC00 \uADC0\uB839\uC758 \uD798\uC744 \uBAB8\uC5D0
+    \uBD88\uC5B4\uB123\uC2B5\uB2C8\uB2E4. \uC77C\uC815 \uC2DC\uAC04 \uB3D9\uC548
+    \uAC15\uD654 \uC0C1\uD0DC\uC5D0 \uB3CC\uC785\uD558\uC5EC \uACF5\uACA9\uB825\uACFC
+    \uC774\uB3D9\uC18D\uB3C4\uAC00 \uC99D\uAC00\uD569\uB2C8\uB2E4."
+  skillSound: {fileID: 8300000, guid: afbc227b9a9bd6043899a9d281ca90ba, type: 3}
+  buffType: 2
+  buffDuration: 6
+  buffMultiplier: 1
   moveSpeedMul: 1.3
   attackPowerMul: 1.4
   useAnimEvent: 0
@@ -9764,10 +9780,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: GhostSlash
+  displayName: "\uADC0\uB839\uCC38 "
   cooldown: 6
   duration: 0
   animTrigger: 7_Skill
-  effectPrefab: {fileID: 3884549794586822947, guid: 083c9a9e6aa41c6438f81fe9ff60f6a4, type: 3}
+  effectPrefab: {fileID: 0}
+  skillDescription: "\uAD6C\uB9C8\uAC00 \uADC0\uB839\uC758 \uD798\uC744 \uAE43\uB4E0
+    \uAC80\uACA9\uC73C\uB85C \uC804\uBC29\uC758 \uC801\uC744 \uBCA0\uC5B4\uB0C5\uB2C8\uB2E4."
+  skillSound: {fileID: 8300000, guid: e525aa5738698bf4685d0ee58e1654d0, type: 3}
+  buffType: 0
+  buffDuration: 0
+  buffMultiplier: 1
   hitOrigin: {fileID: 6736406760757572060}
   enemyMask:
     serializedVersion: 2
@@ -9781,7 +9804,7 @@ MonoBehaviour:
   freezeTime: 0.1
   hitEffectPrefab: {fileID: 3061540847762355810, guid: 0179a93036229b24e85c390c158ae912, type: 3}
   effectSpawnPoint: {fileID: 2777826730372081889}
-  effectPrefab: {fileID: 3884549794586822947, guid: 083c9a9e6aa41c6438f81fe9ff60f6a4, type: 3}
+  slashEffectPrefab: {fileID: 3884549794586822947, guid: 083c9a9e6aa41c6438f81fe9ff60f6a4, type: 3}
 --- !u!114 &1387524678326008393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9800,6 +9823,9 @@ MonoBehaviour:
   maxMP: 30
   _hp: 50
   _mp: 30
+  baseAttack: 10
+  attackMultiplier: 1
+  tempAttackBuffMultiplier: 1
   skillIcons:
   - {fileID: -5000545500424060834, guid: 3c21255759719f64c8e679b218d9be45, type: 3}
   - {fileID: 7853025445267311361, guid: 2aad857cfdd161549ba83f025c0d3c0b, type: 3}

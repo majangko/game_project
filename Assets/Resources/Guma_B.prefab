@@ -4441,7 +4441,7 @@ GameObject:
   - component: {fileID: 5128499153810524471}
   - component: {fileID: 5519206913404046632}
   - component: {fileID: 6913154499314822169}
-  - component: {fileID: 8741199078394743690}
+  - component: {fileID: 5076726059643812091}
   m_Layer: 3
   m_Name: Guma_B
   m_TagString: Player
@@ -9783,7 +9783,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.4}
-  m_Size: {x: 0.5, y: 0.1}
+  m_Size: {x: 0.8, y: 0.3}
   m_Direction: 0
 --- !u!114 &3004129061974999752
 MonoBehaviour:
@@ -9806,26 +9806,33 @@ MonoBehaviour:
     m_Bits: 256
   tilemapMask:
     serializedVersion: 2
-    m_Bits: 0
-  flipRoot: {fileID: 4054506920778221396}
-  visualRoot: {fileID: 0}
-  spriteFacesRight: 0
+    m_Bits: 2048
+  flipRoot: {fileID: 0}
+  visualRoot: {fileID: 4054506920778221396}
+  spriteFacesRight: 1
   attackMoveLock: 0.12
+  attackCooldown: 1
   attackDamage: 10
   attackKnockback: 5
   enemyMask:
     serializedVersion: 2
     m_Bits: 1024
-  attackOrigin: {fileID: 0}
+  attackOrigin: {fileID: 8051085061252470860}
   attackBoxSize: {x: 1.8, y: 1}
   attackBoxOffset: {x: 1.2, y: 0.1}
   hitEffectPrefab: {fileID: 7301643388249206853, guid: d2e0da08c97855f4fb07cc607958f24f, type: 3}
+  swingSound: {fileID: 8300000, guid: 9c65336c670029a4e85f0683ab661df6, type: 3}
+  hitSound: {fileID: 0}
   isRanged: 0
   projectilePrefab: {fileID: 0}
   projectileSpeed: 10
   projectileSpawnPoint: {fileID: 0}
   moveSpeedMul: 1
   attackPowerMul: 1
+  attackSpeedMul: 1
+  defenseMul: 1
+  regenRate: 0
+  canMove: 1
 --- !u!114 &3162243169550830930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9856,10 +9863,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: DarkSlash
+  displayName: "\uC554\uD751\uCC38"
   cooldown: 6
   duration: 0
   animTrigger: 7_Skill
   effectPrefab: {fileID: 0}
+  skillDescription: "\uAD6C\uB9C8\uAC00 \uC5B4\uB460\uC758 \uAE30\uC6B4\uC744 \uB2F4\uC544
+    \uC804\uBC29\uC744 \uAC15\uD558\uAC8C \uBCA0\uC5B4\uB0B8\uB2E4.\n\uC790\uC2E0\uC758
+    \uCCB4\uB825\uC774 \uB0AE\uC744\uC218\uB85D \uC77C\uACA9\uC758 \uC704\uB825\uC774
+    \uCEE4\uC9C4\uB2E4."
+  skillSound: {fileID: 8300000, guid: e7c876d59563e7d46a8402d04b97a2c9, type: 3}
+  buffType: 0
+  buffDuration: 0
+  buffMultiplier: 1
   hitOrigin: {fileID: 8051085061252470860}
   enemyMask:
     serializedVersion: 2
@@ -9881,13 +9897,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: GhostGate
+  displayName: "\uADC0\uBB38\uAC1C\uBC29"
   cooldown: 1
   duration: 0
   animTrigger: 6_Other
   effectPrefab: {fileID: 0}
+  skillDescription: "\uC790\uC2E0\uC758 \uD53C\uB97C \uC81C\uBB3C\uB85C \uC0BC\uC544
+    \uADC0\uBB38\uC744 \uC5F4\uC5B4 \uAC01\uC131 \uC0C1\uD0DC\uC5D0 \uB3CC\uC785\uD569\uB2C8\uB2E4.
+    \uACF5\uACA9\uB825\uACFC \uC774\uB3D9\uC18D\uB3C4\uAC00 \uC99D\uAC00\uD558\uC9C0\uB9CC,
+    \uCD08\uB2F9 \uC77C\uC815 \uBE44\uC728\uC758 HP\uAC00 \uC9C0\uC18D\uC801\uC73C\uB85C
+    \uC18C\uBAA8\uB429\uB2C8\uB2E4. \uC7AC\uC0AC\uC6A9 \uC2DC \uADC0\uBB38\uC744
+    \uB2EB\uC73C\uBA70, \uAC15\uD654 \uD6A8\uACFC\uAC00 \uD574\uC81C\uB429\uB2C8\uB2E4."
+  skillSound: {fileID: 8300000, guid: 63ff121c03a733a45954a6bc05be2b7e, type: 3}
+  buffType: 2
+  buffDuration: 0
+  buffMultiplier: 1
   atkBoost: 1.3
   speedBoost: 1.2
   hpDrainPercent: 0.02
+  minHPThreshold: 30
   gateAuraEffect: {fileID: 9116332346501087194, guid: 63fbbc228714ad84eadd8fd7b7b7d6a6, type: 3}
   effectOffset: {x: 0, y: 0.5, z: 0}
 --- !u!114 &6913154499314822169
@@ -9902,18 +9930,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7406d83438e5aca4b85d3e768fe00581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterName: Default
+  characterName: "\uADC0\uD63C\uD3ED\uC5F4\uC790 \uACE0\uAD6C\uB9C8"
   portrait: {fileID: 21300000, guid: a7fedb909010f634a8db145d51e706a1, type: 3}
   maxHP: 100
   maxMP: 50
   _hp: 100
   _mp: 50
+  baseAttack: 10
+  attackMultiplier: 1
+  tempAttackBuffMultiplier: 1
   skillIcons:
   - {fileID: 4730049741179975653, guid: 58c799700e4f6c049a15f4bf35f4f719, type: 3}
   - {fileID: -8765582943710055968, guid: d875cf57eecaa124fb4cd0097da8dd55, type: 3}
   skillCooldownMax: []
   skillCooldownRemain: []
---- !u!114 &8741199078394743690
+--- !u!114 &5076726059643812091
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9922,10 +9953,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8913514820144235450}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62e251957668cd4469407835137eed1d, type: 3}
+  m_Script: {fileID: 11500000, guid: 73a05882cd90e6f4e9ef20f5cedc7961, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 100
+  maxHP: 50
   animator: {fileID: 8416472740274908585}
   hitTrig: 3_Damage
   dieTrig: 4_Death

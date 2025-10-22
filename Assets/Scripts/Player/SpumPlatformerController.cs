@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
@@ -12,7 +13,7 @@ public class SpumPlatformerController : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private Vector2 groundCheckSize = new Vector2(0.8f, 0.18f);
     [SerializeField] private LayerMask groundMask;
-    [SerializeField] private LayerMask tilemapMask; // ✅ 추가: 타일맵 인식용
+    [SerializeField] private LayerMask tilemapMask;
 
     [Header("Flip Roots")]
     [SerializeField] private Transform flipRoot;
@@ -21,6 +22,7 @@ public class SpumPlatformerController : MonoBehaviour
 
     [Header("Attack (Common Settings)")]
     [SerializeField] private float attackMoveLock = 0.12f;
+    [SerializeField] private float attackCooldown = 0.6f;
     [SerializeField] private float attackDamage = 10f;
     [SerializeField] private float attackKnockback = 5f;
     [SerializeField] private LayerMask enemyMask;
@@ -31,10 +33,10 @@ public class SpumPlatformerController : MonoBehaviour
     [SerializeField] private Vector2 attackBoxSize = new Vector2(1.2f, 0.8f);
     [SerializeField] private Vector2 attackBoxOffset = new Vector2(1f, 0.1f);
     [SerializeField] private GameObject hitEffectPrefab;
-    
+
     [Header("Attack Sounds")]
-    [SerializeField] private AudioClip swingSound;  // 무기 휘두를 때
-    [SerializeField] private AudioClip hitSound;    // 적을 맞췄을 때
+    [SerializeField] private AudioClip swingSound;
+    [SerializeField] private AudioClip hitSound;
 
     [Header("Ranged Attack Settings")]
     [SerializeField] private bool isRanged = false;
@@ -44,8 +46,10 @@ public class SpumPlatformerController : MonoBehaviour
 
     [HideInInspector] public float moveSpeedMul = 1f;
     [HideInInspector] public float attackPowerMul = 1f;
+    [HideInInspector] public float attackSpeedMul = 1f;
+    [HideInInspector] public float defenseMul = 1f;
+    [HideInInspector] public float regenRate = 0f;
 
-    // ✅ 이동 제어용 변수
     [HideInInspector] public bool canMove = true;
 
     private int enhancedRemaining = 0;
@@ -60,11 +64,13 @@ public class SpumPlatformerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private Animator anim;
+    private PlayerStats stats; // ✅ PlayerStats 캐싱
 
     private float lockUntil;
     private int desiredDir = 0;
     private float baseFlipAbsX = 1f;
     private string attackTriggerName = "2_Attack";
+    private float nextAttackTime = 0f;
 
     public int FacingDir
     {
@@ -76,40 +82,48 @@ public class SpumPlatformerController : MonoBehaviour
         }
     }
 
+    // ============================================================
+    // Awake
+    // ============================================================
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        var spum = GetComponent<SPUM_Prefabs>();
-        if (spum != null && spum.Anim)
-            anim = spum.Anim;
-        else
-            anim = GetComponentInChildren<Animator>();
 
+        var spum = GetComponent<SPUM_Prefabs>();
+        anim = spum != null && spum.Anim ? spum.Anim : GetComponentInChildren<Animator>();
         rb.freezeRotation = true;
 
-        if (!visualRoot && anim) visualRoot = anim.transform;
+        // ✅ PlayerStats 자동 탐색 및 이벤트 구독
+        if (TryGetComponent(out stats))
+        {
+            // 공격력 배율이 바뀌면 자동 반영
+            stats.OnAttackMultiplierChanged += (mult) =>
+            {
+                attackPowerMul = mult;
+            };
+        }
 
+        // 루트 설정
         if (!flipRoot)
         {
-            var go = new GameObject("FlipRoot_Auto");
-            flipRoot = go.transform;
-            if (visualRoot) go.transform.SetParent(visualRoot.parent, true);
-            else go.transform.SetParent(transform.parent, true);
-
-            go.transform.position = transform.position;
-            go.transform.localScale = Vector3.one;
-
-            if (visualRoot) visualRoot.SetParent(go.transform, true);
-            else transform.SetParent(go.transform, true);
+            if (anim != null)
+                flipRoot = anim.transform.parent;
+            else
+                flipRoot = transform;
         }
+
+        if (!visualRoot && anim)
+            visualRoot = anim.transform;
 
         baseFlipAbsX = Mathf.Abs(flipRoot.localScale.x);
         if (baseFlipAbsX < 0.0001f) baseFlipAbsX = 1f;
     }
 
+    // ============================================================
+    // Update
+    // ============================================================
     void Update()
     {
-        // ✅ 이동 불가 상태면 바로 리턴
         if (!canMove)
         {
             rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
@@ -118,19 +132,15 @@ public class SpumPlatformerController : MonoBehaviour
             return;
         }
 
-        // 이동 입력
         float x = 0f;
         if (Input.GetKey(KeyCode.LeftArrow)) x = -1f;
         else if (Input.GetKey(KeyCode.RightArrow)) x = 1f;
-
         if (Time.time < lockUntil) x = 0f;
 
         float speed = moveSpeed * Mathf.Max(0.1f, moveSpeedMul);
         rb.linearVelocity = new Vector2(x * speed, rb.linearVelocity.y);
-
         if (Mathf.Abs(x) > 0.01f) desiredDir = x > 0 ? +1 : -1;
 
-        // ✅ Ground + Tilemap 체크
         bool grounded = false;
         if (groundCheck)
         {
@@ -138,7 +148,7 @@ public class SpumPlatformerController : MonoBehaviour
             grounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, combinedMask);
         }
 
-        // Animator 파라미터
+        // Animator
         if (anim)
         {
             anim.SetBool(P_MOVE_BOOL, Mathf.Abs(x) > 0.01f);
@@ -147,11 +157,12 @@ public class SpumPlatformerController : MonoBehaviour
             if (HasParam(anim, P_VERT_SPEED, AnimatorControllerParameterType.Float))
                 anim.SetFloat(P_VERT_SPEED, rb.linearVelocity.y);
 
-            // 공격
-            if (Input.GetKeyDown(KeyCode.Z) && Time.time >= lockUntil)
+            if (Input.GetKeyDown(KeyCode.Z) && Time.time >= nextAttackTime)
             {
                 anim.SetTrigger(attackTriggerName);
                 lockUntil = Time.time + attackMoveLock;
+                float realCooldown = attackCooldown / Mathf.Max(0.1f, attackSpeedMul);
+                nextAttackTime = Time.time + realCooldown;
                 DoBasicAttack();
             }
         }
@@ -162,12 +173,17 @@ public class SpumPlatformerController : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
+
+        // ✅ 초당 회복 버프
+        if (regenRate > 0 && stats != null)
+        {
+            stats.Heal(Mathf.RoundToInt(regenRate * Time.deltaTime));
+        }
     }
 
     void LateUpdate()
     {
         if (!flipRoot) return;
-
         int want = 0;
         if (desiredDir != 0)
         {
@@ -180,6 +196,9 @@ public class SpumPlatformerController : MonoBehaviour
         flipRoot.localScale = new Vector3(baseFlipAbsX * sign, s.y, s.z);
     }
 
+    // ============================================================
+    // 기본 공격 처리
+    // ============================================================
     void DoBasicAttack()
     {
         if (isRanged) DoRangedAttack();
@@ -191,25 +210,21 @@ public class SpumPlatformerController : MonoBehaviour
         int dir = FacingDir;
         Vector2 center = (Vector2)(attackOrigin ? attackOrigin.position : transform.position)
                          + new Vector2(attackBoxOffset.x * dir, attackBoxOffset.y);
-
         var hits = Physics2D.OverlapBoxAll(center, attackBoxSize, 0f, enemyMask);
 
-        // ✅ ① 휘두르는 소리 재생 (무기 swing)
         if (SoundManager.Instance && swingSound)
             SoundManager.Instance.PlaySFX(swingSound);
 
-        float finalDamage = attackDamage * Mathf.Max(0.1f, attackPowerMul);
-        if (TryGetComponent(out PlayerStats stats))
-            finalDamage = stats.GetAttackPower();
+        // ✅ PlayerStats 기반 공격력 계산
+        float finalDamage = attackDamage;
+        if (stats != null)
+            finalDamage = stats.GetAttackPower() * Mathf.Max(0.1f, attackPowerMul);
 
         foreach (var h in hits)
         {
-            if (h.attachedRigidbody && h.attachedRigidbody.gameObject == this.gameObject) continue;
-
             var dmg = h.GetComponentInParent<Damageable>();
             if (dmg != null)
             {
-                // ✅ ② 타격음 재생 (hit)
                 if (SoundManager.Instance && hitSound)
                     SoundManager.Instance.PlaySFX(hitSound);
 
@@ -225,16 +240,21 @@ public class SpumPlatformerController : MonoBehaviour
         }
     }
 
-
     void DoRangedAttack()
     {
         int dir = FacingDir;
-        float finalDamage = attackDamage * Mathf.Max(0.1f, attackPowerMul);
+
+        // ✅ PlayerStats 기반 공격력 계산
+        float finalDamage = attackDamage;
+        if (stats != null)
+            finalDamage = stats.GetAttackPower() * Mathf.Max(0.1f, attackPowerMul);
+
+        if (SoundManager.Instance && swingSound)
+            SoundManager.Instance.PlaySFX(swingSound);
 
         if (projectilePrefab && projectileSpawnPoint)
         {
             GameObject proj = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
-
             SpriteRenderer sr = proj.GetComponent<SpriteRenderer>();
             if (sr != null)
                 sr.flipX = (dir == -1);
@@ -249,6 +269,9 @@ public class SpumPlatformerController : MonoBehaviour
         }
     }
 
+    // ============================================================
+    // 강화 공격 관련
+    // ============================================================
     public void SetEnhancedAttack(int count, GameObject prefab, int dmg, float radius, LayerMask mask)
     {
         enhancedRemaining = count;
@@ -260,7 +283,79 @@ public class SpumPlatformerController : MonoBehaviour
 
     public void ConsumeEnhanced()
     {
-        if (enhancedRemaining > 0) enhancedRemaining--;
+        if (enhancedRemaining > 0)
+            enhancedRemaining--;
+    }
+
+    // ============================================================
+    // 버프 코루틴 (공통)
+    // ============================================================
+    public void ApplyAttackSpeedBuff(float multiplier, float duration)
+        => StartCoroutine(ApplyBuffCoroutine(BuffType.AttackSpeed, multiplier, duration));
+
+    public void ApplyMoveSpeedBuff(float multiplier, float duration)
+        => StartCoroutine(ApplyBuffCoroutine(BuffType.MoveSpeed, multiplier, duration));
+
+    public void ApplyDefenseBuff(float multiplier, float duration)
+        => StartCoroutine(ApplyBuffCoroutine(BuffType.DefenseUp, multiplier, duration));
+
+    public void ApplyRegenBuff(float regenPerSecond, float duration)
+        => StartCoroutine(RegenBuffCoroutine(regenPerSecond, duration));
+
+    private IEnumerator ApplyBuffCoroutine(BuffType type, float multiplier, float duration)
+    {
+        var buffUI = FindObjectOfType<BuffUIController>();
+        if (buffUI)
+        {
+            BuffData data = new BuffData
+            {
+                type = type,
+                duration = duration,
+                multiplier = multiplier,
+                icon = Resources.Load<Sprite>($"UI/Buffs/icon_{type.ToString().ToLower()}")
+            };
+            buffUI.ShowBuff(data);
+        }
+
+        switch (type)
+        {
+            case BuffType.AttackSpeed: attackSpeedMul *= multiplier; break;
+            case BuffType.MoveSpeed: moveSpeedMul *= multiplier; break;
+            case BuffType.DefenseUp: defenseMul *= multiplier; break;
+        }
+
+        yield return new WaitForSeconds(duration);
+
+        switch (type)
+        {
+            case BuffType.AttackSpeed: attackSpeedMul /= multiplier; break;
+            case BuffType.MoveSpeed: moveSpeedMul /= multiplier; break;
+            case BuffType.DefenseUp: defenseMul /= multiplier; break;
+        }
+
+        if (buffUI) buffUI.HideBuff(type);
+    }
+
+    private IEnumerator RegenBuffCoroutine(float regenPerSecond, float duration)
+    {
+        var buffUI = FindObjectOfType<BuffUIController>();
+        if (buffUI)
+        {
+            BuffData data = new BuffData
+            {
+                type = BuffType.Regen,
+                duration = duration,
+                multiplier = regenPerSecond,
+                icon = Resources.Load<Sprite>("UI/Buffs/icon_regen")
+            };
+            buffUI.ShowBuff(data);
+        }
+
+        regenRate += regenPerSecond;
+        yield return new WaitForSeconds(duration);
+        regenRate -= regenPerSecond;
+
+        if (buffUI) buffUI.HideBuff(BuffType.Regen);
     }
 
     static bool HasParam(Animator a, string name, AnimatorControllerParameterType type)

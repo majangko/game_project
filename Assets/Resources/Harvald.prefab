@@ -1040,7 +1040,7 @@ GameObject:
   - component: {fileID: 5129131549335090124}
   m_Layer: 3
   m_Name: Harvald
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6394,7 +6394,8 @@ MonoBehaviour:
   visualRoot: {fileID: 1454269347932242031}
   spriteFacesRight: 0
   attackMoveLock: 0.12
-  attackDamage: 10
+  attackCooldown: 0.6
+  attackDamage: 15
   attackKnockback: 5
   enemyMask:
     serializedVersion: 2
@@ -6411,6 +6412,9 @@ MonoBehaviour:
   projectileSpawnPoint: {fileID: 0}
   moveSpeedMul: 1
   attackPowerMul: 1
+  attackSpeedMul: 1
+  defenseMul: 1
+  regenRate: 0
   canMove: 1
 --- !u!114 &-4420960882100104664
 MonoBehaviour:
@@ -6448,6 +6452,7 @@ MonoBehaviour:
   _mp: 30
   baseAttack: 10
   attackMultiplier: 1
+  tempAttackBuffMultiplier: 1
   skillIcons:
   - {fileID: 6151156976243556317, guid: 9162e03861ca02945bf071b314da49a5, type: 3}
   - {fileID: -5490735976535073712, guid: c59db86c2d038e94788884b5cd61b1d2, type: 3}
@@ -6466,7 +6471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 100
-  animator: {fileID: 8416472740274908585, guid: 7d9549e728512c1439faa8f2c00225ab, type: 3}
+  animator: {fileID: 7935796021067992178}
   hitTrig: 3_Damage
   dieTrig: 4_Death
   rb: {fileID: 0}
@@ -6486,17 +6491,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: Bloodstorm
-  cooldown: 1
+  displayName: "\uD53C\uC758 \uD3ED\uD48D"
+  cooldown: 10
   duration: 3
   animTrigger: 7_Skill
   effectPrefab: {fileID: 7439441081542300532, guid: 6ecc2b3e54d65244ea3cedff9510ed8a, type: 3}
+  skillDescription: "\uC804\uBC29\uC73C\uB85C \uB3CC\uC9C4\uD558\uBA70 \uB3C4\uB07C\uB97C
+    \uD718\uB458\uB7EC \uC801\uB4E4\uC5D0\uAC8C \uD53C\uD574\uB97C \uC8FC\uACE0,\uD53C\uB97C
+    \uD761\uC218\uD574 \uC77C\uC2DC\uC801\uC73C\uB85C \uD798\uC744 \uAC15\uD654\uD55C\uB2E4."
   skillSound: {fileID: 8300000, guid: 8211ade8ff4a8614e91827f0afe1725b, type: 3}
+  buffType: 0
+  buffDuration: 0
+  buffMultiplier: 1
   dashDistance: 4
   dashSpeed: 10
   attackBuffMultiplier: 1.5
-  buffDuration: 5
-  attackRadius: 1.5
-  baseDamage: 25
+  attackBuffDuration: 4
+  attackRadius: 2
+  baseDamage: 30
   knockbackPower: 5
   bloodstormEffectPrefab: {fileID: 5013331616226115991, guid: 1ad73c0740862b646888cb6e6752aa0b, type: 3}
   effectOffset: {x: 0, y: 0, z: 0}
@@ -6512,6 +6524,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82c33406d435e59469e2283e0da8d13a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skillName: BloodRage
+  displayName: "\uD53C\uC758 \uAD11\uB780"
+  cooldown: 0
+  duration: 3
+  animTrigger: 
+  effectPrefab: {fileID: 0}
+  skillDescription: " \uCCB4\uB825\uC774 \uB0AE\uC744\uC218\uB85D \uACF5\uACA9\uB825\uACFC
+    \uC774\uB3D9\uC18D\uB3C4\uAC00 \uC99D\uAC00\uD55C\uB2E4."
+  skillSound: {fileID: 0}
+  buffType: 0
+  buffDuration: 0
+  buffMultiplier: 1
   maxAttackMultiplier: 1.5
   maxSpeedMultiplier: 1.3
 --- !u!1 &1682298036170260347
