@@ -66,6 +66,8 @@ public class Damageable : MonoBehaviour, ICanTakeDamage
         int finalDamage = Mathf.RoundToInt(damage * damageMultiplier);
 
         currentHP -= finalDamage;
+        Debug.Log($"[Damageable] {gameObject.name} took {finalDamage} damage → HP: {currentHP}/{maxHP}");
+
         currentHP = Mathf.Max(currentHP, 0);
 
         // 피격 연출

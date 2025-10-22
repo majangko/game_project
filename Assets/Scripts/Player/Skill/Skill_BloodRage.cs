@@ -1,16 +1,16 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 /// <summary>
-/// ÇÏ¸£¹ßµåÀÇ ÆĞ½Ãºê ½ºÅ³: ÇÇÀÇ ±¤¶õ (Blood Rage)
-/// Ã¼·ÂÀÌ ³·À»¼ö·Ï °ø°İ·Â°ú °ø°İ¼Óµµ°¡ Áõ°¡.
+/// í•˜ë¥´ë°œë“œì˜ íŒ¨ì‹œë¸Œ ìŠ¤í‚¬: í”¼ì˜ ê´‘ë€ (Blood Rage)
+/// ì²´ë ¥ì´ ë‚®ì„ìˆ˜ë¡ ê³µê²©ë ¥ê³¼ ì´ë™ì†ë„ê°€ ì¦ê°€.
 /// </summary>
 public class Skill_BloodRage : SkillBase
 {
     [Header("Blood Rage Settings")]
-    [Tooltip("°ø°İ·Â ÃÖ´ë ¹èÀ² (HP 0%ÀÏ ¶§)")]
+    [Tooltip("ê³µê²©ë ¥ ìµœëŒ€ ë°°ìœ¨ (HP 0%ì¼ ë•Œ)")]
     [SerializeField] private float maxAttackMultiplier = 1.5f;
 
-    [Tooltip("°ø°İ¼Óµµ ÃÖ´ë ¹èÀ² (HP 0%ÀÏ ¶§)")]
+    [Tooltip("ì´ë™ì†ë„ ìµœëŒ€ ë°°ìœ¨ (HP 0%ì¼ ë•Œ)")]
     [SerializeField] private float maxSpeedMultiplier = 1.3f;
 
     private PlayerStats stats;
@@ -23,32 +23,29 @@ public class Skill_BloodRage : SkillBase
         stats = GetComponent<PlayerStats>();
         ctrl = GetComponent<SpumPlatformerController>();
 
-        // ¼³¸í ¹× ÀÌ¸§ ¼³Á¤
-        displayName = "ÇÇÀÇ ±¤¶õ (Blood Rage)";
-        skillDescription = "Ã¼·ÂÀÌ ³·À»¼ö·Ï °ø°İ·Â°ú ÀÌµ¿¼Óµµ°¡ Áõ°¡ÇÑ´Ù.\n" +
-                           "ÇÏ¸£¹ßµåÀÇ ºĞ³ë´Â Á×À½ÀÌ ´Ù°¡¿Ã¼ö·Ï °­ÇØÁø´Ù.";
-        cooldown = 0; // ÆĞ½ÃºêÀÌ¹Ç·Î ÄğÅ¸ÀÓ ¾øÀ½
+        displayName = "í”¼ì˜ ê´‘ë€ (Blood Rage)";
+        skillDescription = "ì²´ë ¥ì´ ë‚®ì„ìˆ˜ë¡ ê³µê²©ë ¥ê³¼ ì´ë™ì†ë„ê°€ ì¦ê°€í•œë‹¤.\n" +
+                           "í•˜ë¥´ë°œë“œì˜ ë¶„ë…¸ëŠ” ì£½ìŒì´ ë‹¤ê°€ì˜¬ìˆ˜ë¡ ê°•í•´ì§„ë‹¤.";
+        cooldown = 0; // íŒ¨ì‹œë¸Œì´ë¯€ë¡œ ì¿¨íƒ€ì„ ì—†ìŒ
     }
 
-    protected override void OnActivate()
-    {
-        // ÆĞ½Ãºê´Â Activate È£ÃâÀÌ ÇÊ¿ä ¾øÀ½.
-        // ÇÏÁö¸¸ SkillBase ±¸Á¶ À¯Áö¸¦ À§ÇØ ºñ¿öµÓ´Ï´Ù.
-    }
+    protected override void OnActivate() { } // íŒ¨ì‹œë¸ŒëŠ” ìˆ˜ë™ ë°œë™ ì—†ìŒ
 
     private void Update()
     {
         if (stats == null || ctrl == null) return;
 
         float hpRatio = Mathf.Clamp01((float)stats.HP / stats.maxHP);
-        float intensity = 1f - hpRatio; // HP°¡ ³·À»¼ö·Ï Ä¿Áü
+        float intensity = 1f - hpRatio; // HPê°€ ë‚®ì„ìˆ˜ë¡ ì»¤ì§
 
-        // °ø°İ·Â ¹èÀ² °è»ê
+        // HPë¹„ë¡€ ê³µê²©/ì´ì† ë°°ìœ¨ ê³„ì‚°
         float atkMul = Mathf.Lerp(1f, maxAttackMultiplier, intensity);
         float spdMul = Mathf.Lerp(1f, maxSpeedMultiplier, intensity);
 
-        // Áï½Ã ¹İ¿µ
-        stats.attackMultiplier = atkMul;
+        // âœ… PlayerStats ì´ë²¤íŠ¸ ê¸°ë°˜ìœ¼ë¡œ ê³µê²©ë ¥ ìë™ ë°˜ì˜
+        stats.SetAttackMultiplier(atkMul);
+
+        // ì´ë™ì†ë„ëŠ” ì§ì ‘ ë°˜ì˜
         ctrl.moveSpeedMul = spdMul;
     }
 }

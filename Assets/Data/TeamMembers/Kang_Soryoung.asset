@@ -14,8 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: kang_soryeong
   displayName: "\uAC15\uC18C\uB839"
-  description: "\uBD88\uAF43 \uBD80\uC801\uC744 \uC0AC\uC6A9\uD558\uB294 \uBD09\uB9C8\uC9C4\uC220\uC0AC"
-  rarity: 1
+  description: "\U0001F9FF \uAC15\uC18C\uB839 (Kang Soryeong)\n\uD0C0\uC785: \uBC94\uC704\uD615
+    \uB9C8\uBC95 \uB51C\uB7EC / \uBD80\uC801 \uB9C8\uBC95\uC0AC\n\uC2E0\uBE44\uB85C\uC6B4
+    \uAE30\uC6B4\uC744 \uB2E4\uB8E8\uB294 \uD1F4\uB9C8\uC0AC \uAC00\uBB38\uC758 \uD6C4\uC608.\n\uC77C(\u65E5)\uACFC
+    \uC6D4(\u6708)\uC758 \uBD80\uC801\uC744 \uB2E4\uB8E8\uC5B4 \uC815\uD654\uC758
+    \uBD88\uAF43\uC744 \uC77C\uC73C\uD0A4\uBA70,\n\uC545\uADC0\uB97C \uC18C\uBA78\uC2DC\uD0A4\uB294
+    \uC758\uC2DD\uC744 \uD3BC\uCE5C\uB2E4.\n"
+  rarity: 0
   portrait: {fileID: 198201473757730004, guid: b31532f219b16fd4dac5feb6aaf7df16, type: 3}
   skillIconA: {fileID: 1126891265584629361, guid: 669f4056be438684488034020a896afc, type: 3}
   skillIconB: {fileID: -1225695337442736279, guid: c3d496295c9bcd94b952bd8da2f8f9f1, type: 3}

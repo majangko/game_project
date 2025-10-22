@@ -6,6 +6,7 @@ using UnityEngine;
 /// 모든 스킬의 기본 클래스.
 /// 공통 속성(쿨타임, 지속시간, 애니메이션, 사운드, 설명, 컨트롤러 등) 관리.
 /// SPUM 캐릭터 구조(UnitRoot 안 Animator) 자동 인식 버전.
+/// + 버프 자동 적용 시스템 통합
 /// </summary>
 public class SkillBase : MonoBehaviour
 {
@@ -37,17 +38,40 @@ public class SkillBase : MonoBehaviour
     [Tooltip("스킬 발동 사운드 (없으면 무음)")]
     [SerializeField] private AudioClip skillSound;
 
-    // 🔹 내부 참조
+    // ============================================================
+    // 🔹 버프 자동 적용 설정
+    // ============================================================
+    public enum BuffType
+    {
+        None,
+        AttackSpeed,
+        MoveSpeed,
+        Regen,
+        DefenseUp
+    }
+
+    [Header("Buff Auto Settings")]
+    [Tooltip("스킬 사용 시 자동 적용할 버프 타입 (없으면 None)")]
+    public BuffType buffType = BuffType.None;
+
+    [Tooltip("버프 지속 시간 (초 단위)")]
+    public float buffDuration = 0f;
+
+    [Tooltip("버프 배율 (1.5 = 50% 증가 등)")]
+    public float buffMultiplier = 1f;
+
+    // ============================================================
+    // 내부 참조
+    // ============================================================
     protected Animator anim;
     protected SpumPlatformerController ctrl;
 
-    // 🔹 상태값
+    // 상태값
     protected bool isCoolingDown = false;
     private float cooldownTimer = 0f;
 
     // ✅ 전역 이벤트 (HUD 등에서 쿨타임 표시용)
     public static event Action<string, float> OnSkillUsed;
-
     // ✅ 인스턴스 이벤트 (캐릭터별로 독립 구독 가능)
     public event Action<string, float> OnSkillUsedInstance;
 
@@ -56,19 +80,14 @@ public class SkillBase : MonoBehaviour
     // ============================================================
     protected virtual void Start()
     {
-        // 1️⃣ SPUM_Prefabs에서 Animator 자동 인식
+        // Animator 자동 인식
         var spum = GetComponent<SPUM_Prefabs>();
         if (spum != null && spum.Anim != null)
-        {
-            anim = spum.Anim;  // UnitRoot의 Animator 연결
-        }
-        else if (anim == null)
-        {
-            // 2️⃣ SPUM_Prefabs가 없으면 자식에서 Animator 탐색
+            anim = spum.Anim;
+        else
             anim = GetComponentInChildren<Animator>();
-        }
 
-        // 3️⃣ Controller 연결
+        // Controller 연결
         if (ctrl == null)
             ctrl = GetComponent<SpumPlatformerController>();
     }
@@ -88,7 +107,7 @@ public class SkillBase : MonoBehaviour
     }
 
     // ============================================================
-    // 스킬 실행 관련
+    // 스킬 실행
     // ============================================================
     public virtual void Activate()
     {
@@ -103,20 +122,23 @@ public class SkillBase : MonoBehaviour
 
     private IEnumerator ActivateRoutine()
     {
-        // 🔸 실제 스킬 발동
+        // 실제 스킬 발동
         OnActivate();
 
-        // 🔸 사운드 재생
+        // 자동 버프 적용 (설정된 경우)
+        TryApplyAutoBuff();
+
+        // 사운드 재생
         PlaySkillSound();
 
-        // 🔸 쿨타임 시작
+        // 쿨타임 시작
         if (cooldown > 0)
         {
             isCoolingDown = true;
             cooldownTimer = cooldown;
             Debug.Log($"[SkillBase] {skillName} → 쿨타임 이벤트 전송 (HUD용)");
-            OnSkillUsed?.Invoke(skillName, cooldown);         // 전역 이벤트
-            OnSkillUsedInstance?.Invoke(skillName, cooldown); // 인스턴스 이벤트
+            OnSkillUsed?.Invoke(skillName, cooldown);
+            OnSkillUsedInstance?.Invoke(skillName, cooldown);
         }
 
         yield return null;
@@ -126,6 +148,33 @@ public class SkillBase : MonoBehaviour
     /// 실제 스킬 로직 구현부 (자식 클래스에서 override)
     /// </summary>
     protected virtual void OnActivate() { }
+
+    // ============================================================
+    // 🔹 자동 버프 적용 로직
+    // ============================================================
+    protected void TryApplyAutoBuff()
+    {
+        if (buffType == BuffType.None || ctrl == null) return;
+        if (buffDuration <= 0f) return;
+
+        switch (buffType)
+        {
+            case BuffType.AttackSpeed:
+                ctrl.ApplyAttackSpeedBuff(buffMultiplier, buffDuration);
+                break;
+            case BuffType.MoveSpeed:
+                ctrl.ApplyMoveSpeedBuff(buffMultiplier, buffDuration);
+                break;
+            case BuffType.Regen:
+                ctrl.ApplyRegenBuff(buffMultiplier, buffDuration);
+                break;
+            case BuffType.DefenseUp:
+                ctrl.ApplyDefenseBuff(buffMultiplier, buffDuration);
+                break;
+        }
+
+        Debug.Log($"[SkillBase] {skillName} 자동 버프 적용: {buffType} ×{buffMultiplier} for {buffDuration}s");
+    }
 
     // ============================================================
     // 유틸리티

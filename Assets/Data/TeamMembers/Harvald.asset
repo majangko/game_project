@@ -14,7 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: Harvald
   displayName: "\uD558\uB974\uBC1C\uB4DC"
-  description: 
+  description: "\u2694\uFE0F \uD558\uB974\uBC1C\uB4DC (Harvald)\n\uD0C0\uC785: \uC804\uC9C4\uD615
+    \uADFC\uC811 \uD30C\uC774\uD130 / \uBC84\uC11C\uCEE4\n\uBD81\uC720\uB7FD\uC5D0\uC11C
+    \uD30C\uACAC\uC628 \uACE0\uC2A4\uD2B8 \uD5CC\uD130 \n\uB9E5\uC8FC\uB97C \uC88B\uC544\uD558\uBA70
+    \uC2F8\uC6C0\uC5D0\uB294 \uBCC4 \uAD00\uC2EC \uC5C6\uC5B4 \uBCF4\uC774\uC9C0\uB9CC\n\uADF8
+    \uC774\uB984\uC740 \uC804\uC7A5\uC744 \uD53C\uB85C \uBB3C\uB4E4\uC774\uB294 \uAD11\uC804\uC0AC\uB85C
+    \uBD88\uB9B0\uB2E4.\n\n"
   rarity: 2
   portrait: {fileID: -420357585462065038, guid: 215d2e9e383674d4ba0bfabb951d252a, type: 3}
   skillIconA: {fileID: 6151156976243556317, guid: 9162e03861ca02945bf071b314da49a5, type: 3}

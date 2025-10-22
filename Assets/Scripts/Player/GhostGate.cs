@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// 구마 B 루트: 귀문(鬼門) 스킬
+/// 일정 시간 동안 공격력/이속 증가, 체력 지속 소모.
+/// HP 30 이하일 땐 더 이상 소모되지 않음.
+/// </summary>
 public class GhostGate : SkillBase
 {
     [Header("Buff Settings")]
@@ -13,30 +18,36 @@ public class GhostGate : SkillBase
     [Tooltip("초당 HP 소모 비율 (0.02 = 초당 최대체력의 2%)")]
     public float hpDrainPercent = 0.02f;
 
-    [Header("Effects")]
-    [Tooltip("버프 유지 중 캐릭터 주위 이펙트")]
-    public GameObject gateAuraEffect;
+    [Tooltip("HP가 이 수치 이하로 내려가면 더 이상 HP 소모 중단")]
+    public int minHPThreshold = 30;
 
-    [Tooltip("이펙트 위치 오프셋 (기본은 약간 위)")]
+    [Header("Effects")]
+    public GameObject gateAuraEffect;
     public Vector3 effectOffset = new Vector3(0, 0.5f, 0);
 
     private bool isActive = false;
     private GameObject auraInstance;
     private DamageableExtended dmg;
+    private PlayerStats stats;
+    private SpumPlatformerController ctrl;
 
-    // SkillBase의 Start()를 덮어씌움
-    protected override void Start()
+    private void Awake()
     {
-        base.Start();
         dmg = GetComponent<DamageableExtended>();
+        if (dmg == null)
+            dmg = GetComponentInParent<DamageableExtended>();
+
+        stats = GetComponent<PlayerStats>();
+        ctrl = GetComponent<SpumPlatformerController>();
+
+        if (dmg == null)
+            Debug.LogWarning("[GhostGate] DamageableExtended not found!");
     }
 
     protected override void OnActivate()
     {
-        // 버프 상태에 따라 On/Off 전환
         if (!isActive)
         {
-            // ✅ 애니메이션 실행
             TriggerAnimation();
             StartCoroutine(OpenGate());
         }
@@ -50,30 +61,43 @@ public class GhostGate : SkillBase
     {
         isActive = true;
 
-        // 🔸 버프 적용
-        if (ctrl != null)
-        {
-            ctrl.attackPowerMul *= atkBoost;
-            ctrl.moveSpeedMul *= speedBoost;
-        }
+        // ✅ PlayerStats 이벤트 기반 버프
+        if (stats != null)
+            stats.SetAttackMultiplier(stats.attackMultiplier * atkBoost);
 
-        // 🔸 오라 이펙트 생성 (없을 때만)
+        if (ctrl != null)
+            ctrl.moveSpeedMul *= speedBoost;
+
+        // 이펙트 생성
         if (gateAuraEffect && auraInstance == null)
         {
             Vector3 spawnPos = transform.position + effectOffset;
             auraInstance = Instantiate(gateAuraEffect, spawnPos, Quaternion.identity, transform);
         }
 
-        // 🔸 HP 지속 소모 루프
+        // HP 지속 소모 루프
         while (isActive)
         {
             if (dmg != null)
             {
-                int drainAmount = Mathf.RoundToInt(dmg.MaxHPValue * hpDrainPercent);
-                dmg.TakePureDamage(drainAmount);
+                int curHP = dmg.CurrentHPValue;
+
+                if (curHP <= minHPThreshold)
+                {
+                    Debug.Log($"[GhostGate] HP at {curHP}, drain stopped (threshold: {minHPThreshold})");
+                }
+                else
+                {
+                    int drainAmount = Mathf.RoundToInt(dmg.MaxHPValue * hpDrainPercent);
+                    dmg.TakePureDamage(drainAmount);
+                }
+            }
+            else
+            {
+                Debug.LogWarning("[GhostGate] dmg reference lost!");
+                yield break;
             }
 
-            // 이펙트 위치 유지
             if (auraInstance != null)
                 auraInstance.transform.position = transform.position + effectOffset;
 
@@ -85,21 +109,19 @@ public class GhostGate : SkillBase
     {
         isActive = false;
 
-        // 🔸 버프 해제
-        if (ctrl != null)
-        {
-            ctrl.attackPowerMul /= atkBoost;
-            ctrl.moveSpeedMul /= speedBoost;
-        }
+        // ✅ 버프 해제
+        if (stats != null)
+            stats.SetAttackMultiplier(stats.attackMultiplier / atkBoost);
 
-        // 🔸 오라 이펙트 제거
+        if (ctrl != null)
+            ctrl.moveSpeedMul /= speedBoost;
+
         if (auraInstance)
             Destroy(auraInstance);
     }
 
     private void OnDisable()
     {
-        // 캐릭터가 비활성화되면 자동으로 버프 종료
         if (isActive)
             CloseGate();
     }
