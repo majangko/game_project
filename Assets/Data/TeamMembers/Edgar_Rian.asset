@@ -13,8 +13,13 @@ MonoBehaviour:
   m_Name: Edgar_Rian
   m_EditorClassIdentifier: 
   id: Edgar_Rian
-  displayName: "\uC5D0\uB4DC\uAC70 \uB9AC\uC548"
-  description: 
+  displayName: "\uC5D0\uB4DC\uAC00 \uB9AC\uC548"
+  description: "\U0001F6E1\uFE0F \uC5D0\uB4DC\uAC00 \uB9AC\uC548 (Edgar Rian)\n\uD0C0\uC785:
+    \uBC29\uC5B4\uD615 \uD0F1\uCEE4 / \uB3CC\uC9C4\uD615\n\uC601\uAD6D \uAE30\uC0AC\uB2E8
+    \uCD9C\uC2E0\uC758 \uCC3D\uBCD1.\n\uD3C9\uC18C\uC5D0\uB294 \uC7A5\uB09C\uAE30\uC2A4\uB7EC\uC6B4
+    \uBAA8\uC2B5\uC774\uC9C0\uB9CC,\n\uD56D\uC0C1 \uC804\uC7A5\uC758 \uC120\uB450\uC5D0\uC11C
+    \uC544\uAD70\uC744 \uC774\uB048\uB2E4.\n\uADF8\uC758 \uBC29\uD328\uB294 \uC218\uB9CE\uC740
+    \uC545\uADC0\uB97C \uB9C9\uC544\uB0B8 \n\uC2E0\uB150\uC758 \uC0C1\uC9D5\uC774\uB2E4."
   rarity: 0
   portrait: {fileID: -3952815649445590464, guid: b1ca4a9ab52eebe4f814aefb9001211f, type: 3}
   skillIconA: {fileID: -6325134396487345097, guid: df55878f2bc88204fa429650110b34cb, type: 3}

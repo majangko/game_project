@@ -15,7 +15,7 @@ public class GhostSlash : SkillBase
     public float freezeTime = 0.10f;
     public GameObject hitEffectPrefab;
     public Transform effectSpawnPoint;
-    public GameObject effectPrefab;
+    public GameObject slashEffectPrefab;
 
     private bool eventTriggered = false;
 
@@ -65,9 +65,9 @@ public class GhostSlash : SkillBase
         Vector2 center = (Vector2)(hitOrigin ? hitOrigin.position : transform.position)
                          + new Vector2(hitBoxOffset.x * dir, hitBoxOffset.y);
 
-        if (effectPrefab && effectSpawnPoint)
+        if (slashEffectPrefab && effectSpawnPoint)
         {
-            var fx = Instantiate(effectPrefab, effectSpawnPoint.position, Quaternion.identity);
+            var fx = Instantiate(slashEffectPrefab, effectSpawnPoint.position, Quaternion.identity);
             fx.transform.localScale = new Vector3(dir, 1, 1);
             Destroy(fx, 0.5f);
         }

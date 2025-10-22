@@ -14,9 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: Guma_B
   displayName: "\uADC0\uD63C\uD3ED\uC5F4\uC790 \uACE0\uAD6C\uB9C8"
-  description: "\uC545\uB839\uC758 \uD798\uC744 \uD761\uC218\uD558\uC5EC \uADC0\uC2E0\uC758
-    \uD798\uC744 \uB2E4\uB8E8\uC5B4 \uC801\uC744 \uC12C\uBA78\uD558\uB294\uC790\n"
-  rarity: 2
+  description: "\U0001FA78 \uADC0\uD63C\uD3ED\uC5F4\uC790 \uACE0\uAD6C\uB9C8\n\uD0C0\uC785:
+    \uD558\uC774\uB9AC\uC2A4\uD06C\xB7\uD558\uC774\uB9AC\uD134\uD615 \uCE90\uB9AD\uD130.\n\uC545\uB839\uC758
+    \uD798\uC744 \uD761\uC218\uD55C \uAD6C\uB9C8.  \n\uC0DD\uBA85\uB825\uC744 \uB300\uAC00\uB85C
+    \uADC0\uBB38\uC744 \uC5F4\uC5B4 \n\uAC15\uB825\uD55C \uD798\uC744 \uBF51\uC544\uB0B4\uC9C0\uB9CC,
+    \n\uADF8 \uCE7C\uC774 \uC5B4\uB514\uB85C \uD5A5\uD560\uC9C0\uB294 \uBAA8\uB978\uB2E4.\n"
+  rarity: 1
   portrait: {fileID: 21300000, guid: a7fedb909010f634a8db145d51e706a1, type: 3}
   skillIconA: {fileID: 4730049741179975653, guid: 58c799700e4f6c049a15f4bf35f4f719, type: 3}
   skillIconB: {fileID: -8765582943710055968, guid: d875cf57eecaa124fb4cd0097da8dd55, type: 3}

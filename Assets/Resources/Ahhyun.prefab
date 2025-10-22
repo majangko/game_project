@@ -1372,9 +1372,10 @@ GameObject:
   - component: {fileID: 4725387083955119665}
   - component: {fileID: 5192835778341142457}
   - component: {fileID: 8516236465862046635}
+  - component: {fileID: -7137352267296660509}
   m_Layer: 3
   m_Name: Ahhyun
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6668,7 +6669,7 @@ CapsuleCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 6aef8f595f7921d499f28eb4729c581c, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -6693,7 +6694,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.4}
-  m_Size: {x: 0.8, y: 0.1}
+  m_Size: {x: 0.8, y: 0.3}
   m_Direction: 0
 --- !u!114 &8084528546540615140
 MonoBehaviour:
@@ -6761,10 +6762,11 @@ MonoBehaviour:
   tilemapMask:
     serializedVersion: 2
     m_Bits: 2048
-  flipRoot: {fileID: 2776174641206967172}
-  visualRoot: {fileID: 0}
+  flipRoot: {fileID: 0}
+  visualRoot: {fileID: 2776174641206967172}
   spriteFacesRight: 0
   attackMoveLock: 0.12
+  attackCooldown: 1
   attackDamage: 10
   attackKnockback: 5
   enemyMask:
@@ -6774,12 +6776,18 @@ MonoBehaviour:
   attackBoxSize: {x: 1.8, y: 1}
   attackBoxOffset: {x: 1.2, y: 0.1}
   hitEffectPrefab: {fileID: 3061540847762355810, guid: 0179a93036229b24e85c390c158ae912, type: 3}
+  swingSound: {fileID: 8300000, guid: 8a74ffa173f144549a6aad2fb4321009, type: 3}
+  hitSound: {fileID: 0}
   isRanged: 1
   projectilePrefab: {fileID: 9010834814542384479, guid: 185819c42ac88c841b02e39abef34ca5, type: 3}
   projectileSpeed: 10
   projectileSpawnPoint: {fileID: 4220045231647492289}
   moveSpeedMul: 1
   attackPowerMul: 1
+  attackSpeedMul: 1
+  defenseMul: 1
+  regenRate: 0
+  canMove: 1
 --- !u!114 &4725387083955119665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6798,6 +6806,9 @@ MonoBehaviour:
   maxMP: 40
   _hp: 60
   _mp: 40
+  baseAttack: 10
+  attackMultiplier: 1
+  tempAttackBuffMultiplier: 1
   skillIcons:
   - {fileID: 21300000, guid: f7cfad88f1ddfd2499f61956c016f59d, type: 3}
   - {fileID: 21300000, guid: 4f2128bc6d1789f45a77eca9dac38d5f, type: 3}
@@ -6816,10 +6827,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: PurifySeal_Control
+  displayName: "\uBD09\uC778 \uBD80\uC801"
   cooldown: 10
   duration: 3
   animTrigger: 7_Skill
   effectPrefab: {fileID: 0}
+  skillDescription: "\uBD80\uC801\uC758 \uBD09\uC778\uC744 \uD574\uBC29\uD574 \uC801\uC744
+    \uC77C\uC2DC\uC801\uC73C\uB85C \uC18D\uBC15\uD569\uB2C8\uB2E4.\n\uBCF4\uC2A4\uAE09
+    \uC801\uC740 \uB290\uB824\uC9C0\uACE0, \uC77C\uBC18 \uC801\uC740 \uC7A0\uC2DC
+    \uC6C0\uC9C1\uC77C \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\n"
+  skillSound: {fileID: 8300000, guid: afbc227b9a9bd6043899a9d281ca90ba, type: 3}
+  buffType: 0
+  buffDuration: 0
+  buffMultiplier: 1
   projectilePrefab: {fileID: 5577849040856212327, guid: fc529a52dc7b557428af0df56dc6728b, type: 3}
   sealPrefab: {fileID: 4127099036613180571, guid: 6be41c3eb43ebad409572ab6ef9e7633, type: 3}
   projectileSpeed: 8
@@ -6839,16 +6859,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillName: PurifySeal_Damage
+  displayName: "\uC815\uD654\uC9C4"
   cooldown: 10
   duration: 3
   animTrigger: 7_Skill
   effectPrefab: {fileID: 0}
+  skillDescription: "\uBD80\uC801\uC744 \uD3BC\uCCD0 \uD654\uC5FC\uC758 \uACB0\uACC4\uB97C
+    \uC0DD\uC131\uD569\uB2C8\uB2E4.\n\uACB0\uACC4 \uC548\uC5D0 \uB4E4\uC5B4\uC628
+    \uC801\uC740 \uC9C0\uC18D\uC801\uC73C\uB85C \uD53C\uD574\uB97C \uC785\uC73C\uBA70,\n\uACB0\uACC4\uAC00
+    \uC0AC\uB77C\uC9C8 \uB54C \uAC15\uB825\uD55C \uD3ED\uBC1C\uC774 \uBC1C\uC0DD\uD574
+    \uC8FC\uBCC0 \uC801\uB4E4\uC5D0\uAC8C \uD070 \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
+  skillSound: {fileID: 8300000, guid: 41352f71dc7181c4fbfb4687624b1fda, type: 3}
+  buffType: 0
+  buffDuration: 0
+  buffMultiplier: 1
   projectilePrefab: {fileID: 5577849040856212327, guid: 0a51ce0bfd0958e46bb1ce597c6dcfe6, type: 3}
   sealPrefab: {fileID: 1961943487935175056, guid: ea2c7a75c5e613d4da3eafd9af246cc2, type: 3}
   projectileSpeed: 8
   sealDuration: 2.5
   throwOrigin: {fileID: 0}
   throwOffset: {x: 0.5, y: 0.8}
+--- !u!114 &-7137352267296660509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3557604383356224402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62e251957668cd4469407835137eed1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 40
+  animator: {fileID: 506245198705686162}
+  hitTrig: 3_Damage
+  dieTrig: 4_Death
+  rb: {fileID: 0}
+  enemyAI: {fileID: 0}
+  invincibleTime: 0.6
+  hitEffect: {fileID: 0}
 --- !u!1 &3651997110750728358
 GameObject:
   m_ObjectHideFlags: 0

@@ -158,6 +158,31 @@ public class CardView : MonoBehaviour
 
         if (skillIconB)
             skillIconB.sprite = m.skillIconB;
+        var prefab = m.prefab;
+        if (prefab != null)
+        {
+            var skills = prefab.GetComponentsInChildren<SkillBase>(true);
+
+            // 스킬 1
+            if (skillIconA != null)
+            {
+                var triggerA = skillIconA.GetComponent<SkillIconTooltipTrigger>();
+                if (triggerA != null && skills.Length > 0)
+                {
+                    triggerA.skill = skills[0]; // 첫 번째 스킬 연결
+                }
+            }
+
+            // 스킬 2
+            if (skillIconB != null)
+            {
+                var triggerB = skillIconB.GetComponent<SkillIconTooltipTrigger>();
+                if (triggerB != null && skills.Length > 1)
+                {
+                    triggerB.skill = skills[1]; // 두 번째 스킬 연결
+                }
+            }
+        }
 
         // ------------------------------
         // 앞면으로 강제 노출
