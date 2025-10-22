@@ -176,10 +176,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
-  speed: 6
+  speed: 3
   lifeTime: 4
   splitDistance: 4
-  splitCount: 10
-  splitAngle: 45
+  splitCount: 4
+  splitAngle: 75
   boltPrefab: {fileID: 7227557706655697999}
   targetTag: Player
