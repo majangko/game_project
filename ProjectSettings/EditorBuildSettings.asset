@@ -62,6 +62,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Stages/test_ts.unity
     guid: 0ed26806a4b618547b35be9f3bfad1c6
+  - enabled: 1
+    path: Assets/Scenes/Create/StartIsland-1.unity
+    guid: 20a9697cddd19c04ba76f9d062987cf8
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
