@@ -42,7 +42,19 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
-        if (isDead || !player) return;
+        // ✅ 플레이어가 씬 나중에 생성돼도 계속 탐색
+        if (player == null)
+        {
+            GameObject found = GameObject.FindGameObjectWithTag("Player");
+            if (found != null)
+            {
+                player = found.transform;
+                Debug.Log($"[EnemyAI] {name} → Player 발견, 추적 시작!");
+            }
+            return; // 찾은 프레임에는 아직 추격하지 않음
+        }
+
+        if (isDead) return;
 
         if (isLocked)
         {
@@ -121,12 +133,8 @@ public class EnemyAI : MonoBehaviour
     }
 
     // ----------------------------------------------------
-    // 🔒 결계 제어용 함수 추가
+    // 🔒 결계 제어용 함수
     // ----------------------------------------------------
-
-    /// <summary>
-    /// 일정 시간 동안 이동 완전 정지 (일반 몬스터용)
-    /// </summary>
     public void LockMovement(float duration)
     {
         if (isLocked) return;
@@ -141,9 +149,6 @@ public class EnemyAI : MonoBehaviour
         isLocked = false;
     }
 
-    /// <summary>
-    /// 일정 시간 동안 이동속도 감소 (보스용)
-    /// </summary>
     public void ApplySlow(float ratio, float duration)
     {
         if (isSlowed) return;

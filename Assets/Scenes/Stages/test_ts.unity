@@ -62963,11 +62963,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1fdad167f9429ae4291ba0596cc58d87, type: 3}
---- !u!4 &536585230 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4160163027323657026, guid: 516fb84c808e52742a5a4bb3b3386758, type: 3}
-  m_PrefabInstance: {fileID: 9153205040451574786}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &578893910 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1765599321011922007, guid: 166fe5187a4f37f458918713b2a7a7f3, type: 3}
@@ -68154,52 +68149,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7081844291885189273, guid: 4f312ac02cf1d2e4580838cb9282803e, type: 3}
   m_PrefabInstance: {fileID: 4166640922044657522}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1183347098
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1183347099}
-  - component: {fileID: 1183347100}
-  m_Layer: 0
-  m_Name: SoundManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1183347099
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1183347098}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 417.49664, y: -612.2161, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 536585230}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1183347100
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1183347098}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9ee17e54b3009f4baa60c7752d82bb0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sfxSource: {fileID: 0}
-  sfxVolume: 1
 --- !u!1 &1258468972 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4734658833664703101, guid: 166fe5187a4f37f458918713b2a7a7f3, type: 3}
@@ -70609,12 +70558,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 5974363062443201554, guid: 516fb84c808e52742a5a4bb3b3386758, type: 3}
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 4160163027323657026, guid: 516fb84c808e52742a5a4bb3b3386758, type: 3}
-      insertIndex: 0
-      addedObject: {fileID: 1183347099}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 516fb84c808e52742a5a4bb3b3386758, type: 3}
 --- !u!1660057539 &9223372036854775807

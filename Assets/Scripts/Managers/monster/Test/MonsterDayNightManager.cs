@@ -66,7 +66,10 @@ public class DayNightMonsterManager : MonoBehaviour
 
         GameObject prefabToSpawn = spawnAsDay ? pair.humanPrefab : pair.orkPrefab;
         pair.currentMonster = Instantiate(prefabToSpawn, pair.spawnPoint.position, Quaternion.identity);
+        pair.currentMonster.tag = "Enemy";
         pair.isDead = false;
+        if (TagManager.Instance != null)
+            TagManager.Instance.StartCoroutine(TagManager.Instance.DelayedEnemyRegister());
 
         // Damageable 이벤트 구독
         Damageable dmg = pair.currentMonster.GetComponent<Damageable>();

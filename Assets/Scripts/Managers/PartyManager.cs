@@ -93,7 +93,7 @@ public class PartyManager : MonoBehaviour
     /// true일 경우, TagManager 내 기존 캐릭터(Guma_B 등)를 유지한 채 멤버 추가.
     /// false일 경우, 기존 캐릭터 리스트를 모두 초기화하고 새로 구성.
     /// </param>
-    public void AssignToTagManager(TagManager tagManager, bool keepExisting = false)
+    public void AssignToTagManager(TagManager tagManager, bool keepExisting = true)
     {
         if (tagManager == null)
         {
@@ -115,16 +115,38 @@ public class PartyManager : MonoBehaviour
                 continue;
             }
 
+            // ✅ 중복 방지: 이미 동일 이름/ID의 캐릭터가 존재한다면 추가 생략
+            if (tagManager.characters.Exists(c => c != null && c.name == member.prefab.name))
+            {
+                Debug.Log($"[PartyManager] {member.id}는 이미 TagManager에 존재, 중복 추가 생략.");
+                continue;
+            }
+
             // 파티 구성원 프리팹을 인스턴스화하여 TagManager에 전달
             GameObject obj = Object.Instantiate(member.prefab);
             obj.name = member.prefab.name;
+
+            // ✅ Player 태그 자동 지정 (PlayerData와 연동 위해)
+            obj.tag = "Player";
             obj.SetActive(false); // 기본은 비활성 상태
+
+            // ✅ 스폰 시점 보정: PlayerSpawnPoints가 있다면 그 위치로 생성
+            GameObject spawn = GameObject.Find("PlayerSpawnPoints");
+            if (spawn != null)
+            {
+                obj.transform.position = spawn.transform.position;
+                Debug.Log($"[PartyManager] {member.id} 스폰포인트에서 생성됨 ({spawn.transform.position})");
+            }
 
             var ctrl = obj.GetComponent<SpumPlatformerController>();
             if (ctrl != null)
             {
                 tagManager.characters.Add(ctrl);
                 Debug.Log($"[PartyManager] {member.id} 전투용으로 등록됨.");
+            }
+            else
+            {
+                Debug.LogWarning($"[PartyManager] {member.id} 프리팹에 SpumPlatformerController가 없습니다.");
             }
         }
 

@@ -7,7 +7,7 @@ public class EnemyLanceAI : MonoBehaviour, IEnemyAIEvents
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Animator animator;
     [SerializeField] Transform visualRoot;
-    [SerializeField] Transform player;
+    public Transform player;
     [SerializeField] AttackHitbox attackHitbox;
 
     [Header("Detect/Attack")]
@@ -28,6 +28,10 @@ public class EnemyLanceAI : MonoBehaviour, IEnemyAIEvents
     [SerializeField] string dieTrig = "4_Death";
 
     bool isDead;
+    public void SetPlayer(Transform t)
+    {
+        player = t;
+    }
 
     void Awake()
     {
