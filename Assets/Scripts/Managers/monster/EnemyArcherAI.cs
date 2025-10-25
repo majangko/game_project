@@ -6,7 +6,7 @@ public class EnemyArcherAI : MonoBehaviour, IEnemyAIEvents
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Animator animator;
     [SerializeField] private Transform visualRoot;
-    [SerializeField] private Transform player;
+    public Transform player;
     [SerializeField] private Transform arrowSpawnPoint;  // 화살 생성 위치
     [SerializeField] private GameObject arrowPrefab;     // 화살 프리팹
 
@@ -27,6 +27,10 @@ public class EnemyArcherAI : MonoBehaviour, IEnemyAIEvents
     [SerializeField] private string dieTrig = "4_Death";
 
     private bool isDead;
+    public void SetPlayer(Transform t)
+    {
+        player = t;
+    }
 
     void Awake()
     {

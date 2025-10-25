@@ -7,7 +7,7 @@ public class EnemyAxeAI : MonoBehaviour, IEnemyAIEvents
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Animator animator;
     [SerializeField] Transform visualRoot;
-    [SerializeField] Transform player;
+    public Transform player;
     [SerializeField] AttackHitbox attackHitbox;
 
     [Header("Detect/Attack")]
@@ -28,6 +28,15 @@ public class EnemyAxeAI : MonoBehaviour, IEnemyAIEvents
     [SerializeField] string dieTrig = "4_Death";
 
     bool isDead;
+    public void SetPlayer(Transform t)
+    {
+        player = t;
+        if (player != null)
+            Debug.Log($"[EnemyAxeAI] {gameObject.name} → Player 연결 완료: {player.name}");
+        else
+            Debug.LogWarning($"[EnemyAxeAI] {gameObject.name} → Player 연결 실패!");
+    }
+
 
     void Awake()
     {

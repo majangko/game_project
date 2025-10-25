@@ -1,6 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UI;
+using System.Collections;
 
 public class SceneLoader : MonoBehaviour
 {
@@ -52,5 +53,28 @@ public class SceneLoader : MonoBehaviour
         var fade = FadeTransition.Instance;
         if (fade != null) fade.FadeToScene(sceneName);
         else SceneManager.LoadScene(sceneName);
+
+        // ✅ 씬 로드 후 자동 동기화
+        SceneManager.sceneLoaded -= OnSceneLoaded; // 중복 방지
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    // -------------------- 전투씬 진입 후 파티/태그 동기화 --------------------
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded; // 한 번만 실행
+
+        string name = scene.name;
+        if (name.StartsWith("Stage") || name.StartsWith("Boss"))
+        {
+            var party = PartyManager.Instance;
+            var tag = TagManager.Instance ?? FindObjectOfType<TagManager>();
+
+            if (party != null && tag != null)
+            {
+                party.AssignToTagManager(tag, keepExisting: false);
+                Debug.Log($"[SceneLoader] {name} 진입 → 파티 동기화 완료 ✅");
+            }
+        }
     }
 }

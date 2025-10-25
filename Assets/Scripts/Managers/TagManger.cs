@@ -98,7 +98,46 @@ public class TagManager : MonoBehaviour
         if (tagUI != null)
             tagUI.LoadCharacterPortraits();
 
+        // 🟢 플레이어 생성 후 EnemyAI 등록 (지연 호출)
+        StartCoroutine(DelayedEnemyRegister());
+
         Debug.Log("<color=green>[TagManager] PartyManager 연동 완료 ✅</color>");
+    }
+
+    // -------------------- Enemy 등록 (딜레이 적용) --------------------
+    public IEnumerator DelayedEnemyRegister()
+    {
+        yield return new WaitForSeconds(0.5f); // 몬스터 스폰 완료 대기 (시간 약간 늘림)
+        RegisterEnemiesToPlayer();
+    }
+
+    private void RegisterEnemiesToPlayer()
+    {
+        var playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj == null)
+        {
+            Debug.LogWarning("[TagManager] RegisterEnemiesToPlayer() - Player를 찾지 못함 ❌");
+            return;
+        }
+
+        var playerTransform = playerObj.transform;
+        int count = 0;
+
+        // 비활성화된 적도 포함해서 모두 탐색
+        var enemies = FindObjectsOfType<MonoBehaviour>(true);
+        foreach (var enemy in enemies)
+        {
+            if (enemy == null) continue;
+            var typeName = enemy.GetType().Name;
+
+            if (typeName.StartsWith("Enemy"))
+            {
+                enemy.SendMessage("SetPlayer", playerTransform, SendMessageOptions.DontRequireReceiver);
+                count++;
+            }
+        }
+
+        Debug.Log($"[TagManager] Player 등록 완료 → {count}개의 EnemyAI에 연결됨 ✅");
     }
 
     // -------------------- 캐릭터 전환 --------------------
@@ -165,6 +204,9 @@ public class TagManager : MonoBehaviour
             tagUI.LoadCharacterPortraits();
             tagUI.UpdateHighlight(0);
         }
+
+        // 🟢 캐릭터 전환 후에도 적이 새 플레이어를 인식하도록 재등록
+        StartCoroutine(DelayedEnemyRegister());
     }
 
     // -------------------- 순서 정렬 --------------------
@@ -206,7 +248,7 @@ public class TagManager : MonoBehaviour
         var stats = activeChar.GetComponent<PlayerStats>();
         if (stats != null)
         {
-            hud.BindToPlayer(stats); // ✅ 초상화 + 스킬 + 쿨타임 전체 교체
+            hud.BindToPlayer(stats);
             Debug.Log($"[TagManager] HUD 갱신 완료 → {stats.name}");
         }
     }
