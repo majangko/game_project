@@ -3010,10 +3010,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: -0.33333334
+    x: 0
     y: 0
     width: 1
-    height: 0.44444445
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -4633,6 +4633,67 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1613742816
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1294772217582296486, guid: cc2f61150a6ced94dae4996010fbcf05, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 955.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 1294772217582296486, guid: cc2f61150a6ced94dae4996010fbcf05, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 203.94
+      objectReference: {fileID: 0}
+    - target: {fileID: 1294772217582296486, guid: cc2f61150a6ced94dae4996010fbcf05, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1294772217582296486, guid: cc2f61150a6ced94dae4996010fbcf05, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1294772217582296486, guid: cc2f61150a6ced94dae4996010fbcf05, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1294772217582296486, guid: cc2f61150a6ced94dae4996010fbcf05, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1294772217582296486, guid: cc2f61150a6ced94dae4996010fbcf05, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1294772217582296486, guid: cc2f61150a6ced94dae4996010fbcf05, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1294772217582296486, guid: cc2f61150a6ced94dae4996010fbcf05, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1294772217582296486, guid: cc2f61150a6ced94dae4996010fbcf05, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6773328075417406959, guid: cc2f61150a6ced94dae4996010fbcf05, type: 3}
+      propertyPath: m_Name
+      value: Portal
+      objectReference: {fileID: 0}
+    - target: {fileID: 7012443152418360731, guid: cc2f61150a6ced94dae4996010fbcf05, type: 3}
+      propertyPath: isBossStage
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cc2f61150a6ced94dae4996010fbcf05, type: 3}
 --- !u!1 &1663711561
 GameObject:
   m_ObjectHideFlags: 0
@@ -7588,3 +7649,4 @@ SceneRoots:
   - {fileID: 1540636393375761995}
   - {fileID: 7398452363554463107}
   - {fileID: 741009226}
+  - {fileID: 1613742816}

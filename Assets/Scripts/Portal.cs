@@ -2,10 +2,11 @@
 
 public class Portal : MonoBehaviour
 {
-    [Header("Next Scene Settings")]
-    [SerializeField] private int nextStageIndex = 1;  // 예: Stage01 → 1, Stage02 → 2
-    [SerializeField] private GameObject playerPrefab; // guma_test 프리팹
-    [SerializeField] private Sprite portrait;         // 초상화 이미지
+    [Header("Next Stage Settings")]
+    [SerializeField] private int nextStageIndex = 1;      // 예: 1 → Stage01, Boss01
+    [SerializeField] private bool isBossStage = false;    // ✅ 보스 스테이지 여부
+    [SerializeField] private GameObject playerPrefab;     // guma_test 프리팹
+    [SerializeField] private Sprite portrait;             // 초상화 이미지
 
     private bool isPlayerInRange = false;
 
@@ -13,16 +14,26 @@ public class Portal : MonoBehaviour
     {
         if (isPlayerInRange && Input.GetKeyDown(KeyCode.UpArrow))
         {
-            Debug.Log("↑ Key Pressed! Loading next scene...");
+            Debug.Log($"↑ Key Pressed! Loading next scene (Stage {nextStageIndex}, Boss: {isBossStage})");
 
             // ✅ 현재 플레이어 파티 등록
             RegisterPlayerParty();
 
-            // ✅ 기존 세이브 로직 호출 (필요시)
+            // ✅ 세이브 데이터 저장
             PlayerData.SavePlayerData();
 
-            // ✅ SceneLoader 통해 스테이지 로드
-            SceneLoader.Instance.LoadStage(nextStageIndex);
+            // ✅ SceneLoader 통해 전환
+            if (SceneLoader.Instance != null)
+            {
+                if (isBossStage)
+                    SceneLoader.Instance.LoadBoss(nextStageIndex);
+                else
+                    SceneLoader.Instance.LoadStage(nextStageIndex);
+            }
+            else
+            {
+                Debug.LogError("[Portal] SceneLoader.Instance가 존재하지 않습니다!");
+            }
         }
     }
 
@@ -44,7 +55,7 @@ public class Portal : MonoBehaviour
         PartyManager.Instance.ClearParty();
         PartyManager.Instance.AddMember(data);
 
-        Debug.Log($"[Portal] guma_test 등록 완료 → 다음 Stage: {nextStageIndex}");
+        Debug.Log($"[Portal] guma_test 등록 완료 → 다음 Stage: {(isBossStage ? "Boss" : "Stage")} {nextStageIndex}");
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -52,7 +63,7 @@ public class Portal : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerInRange = true;
-            Debug.Log("Player entered portal zone");
+            Debug.Log("[Portal] Player entered portal zone");
         }
     }
 
@@ -61,7 +72,7 @@ public class Portal : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerInRange = false;
-            Debug.Log("Player left portal zone");
+            Debug.Log("[Portal] Player left portal zone");
         }
     }
 }
