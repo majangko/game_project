@@ -1,19 +1,10 @@
 fileFormatVersion: 2
-guid: 70f894226bef7ce4ea05b0ab3c1c007a
+guid: 598dbf185ef5f4a4b96ab28be3d8a910
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6869325624984279803
-    second: HUD_0
-  - first:
-      213: -2205522050570982886
-    second: HUD_1
-  - first:
-      213: 1229794671371557974
-    second: HUD_2
-  - first:
-      213: -7859544607282556093
-    second: HUD_3
+      213: 6371499912400203541
+    second: stage03_wall_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -60,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 1
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -109,89 +100,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Clock_Frame
+      name: stage03_wall_0
       rect:
         serializedVersion: 2
-        x: 592
-        y: 847
-        width: 660
-        height: 233
+        x: 0
+        y: 192
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 505e2544db04ba0a0800000000000000
-      internalID: -6869325624984279803
+      spriteID: 51feb05a96d1c6850800000000000000
+      internalID: 6371499912400203541
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BossHP_Frame
+      name: stage03_wall_1
       rect:
         serializedVersion: 2
-        x: 1292
-        y: 896
-        width: 606
-        height: 106
+        x: 0
+        y: 128
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: a1aec6f51696461e0800000000000000
-      internalID: -2205522050570982886
+      spriteID: 0ec2e3fb5110ab6499409a8487d74e6e
+      internalID: -1290850384
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: PlayerHUD
+      name: stage03_wall_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a3bcc499a4acd9044bfc1faabb8648d0
+      internalID: -648180409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: stage03_wall_3
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 834
-        height: 315
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: 65c15c5ecbb111110800000000000000
-      internalID: 1229794671371557974
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Coin_Frame
-      rect:
-        serializedVersion: 2
-        x: 842
-        y: 2
-        width: 72
-        height: 68
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 343169242d94de290800000000000000
-      internalID: -7859544607282556093
+      spriteID: ea122df119414b74c8087c5002945e71
+      internalID: -1562044661
       vertices: []
       indices: 
       edges: []
@@ -200,7 +191,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: eb0d3949ccd3104438c813ddb27d4cbb
+    spriteID: 69383c535b5ed0d4f8adb725c78493a6
     internalID: 0
     vertices: []
     indices: 
@@ -208,12 +199,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      BossHP_Frame: -2205522050570982886
-      Clock_Frame: -6869325624984279803
-      Coin_Frame: -7859544607282556093
-      PlayerHUD: 1229794671371557974
+      stage03_wall_0: 6371499912400203541
+      stage03_wall_1: -1290850384
+      stage03_wall_2: -648180409
+      stage03_wall_3: -1562044661
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
