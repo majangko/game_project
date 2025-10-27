@@ -5,9 +5,9 @@ public class MageBossAI : MonoBehaviour
     [Header("References")]
     [SerializeField] private Animator animator;
     [SerializeField] private Transform visualRoot;
-    [SerializeField] private Transform player;
-    [SerializeField] private Transform boltSpawnPoint; // 🔮 볼트 생성 위치
-    [SerializeField] private GameObject boltPrefab;    // 🔮 에너지 볼트 프리팹
+    [SerializeField] private Transform player;          // 인스펙터 비워두면 자동 탐색
+    [SerializeField] private Transform boltSpawnPoint;  // 🔮 볼트 생성 위치
+    [SerializeField] private GameObject boltPrefab;     // 🔮 에너지 볼트 프리팹
 
     [Header("Attack Settings")]
     [SerializeField] private float detectRadius = 10f;   // 플레이어 감지 거리
@@ -17,6 +17,7 @@ public class MageBossAI : MonoBehaviour
 
     private float lastAttackTime;
     private bool isDead;
+    private float nextFindPlayerAt; // 늦게 스폰 대응용
 
     [Header("Animator Params")]
     [SerializeField] private string attackTrig = "2_Attack";
@@ -31,33 +32,41 @@ public class MageBossAI : MonoBehaviour
 
     private void Start()
     {
-        // 플레이어 자동 탐색
-        if (!player)
-        {
-            GameObject found = GameObject.FindGameObjectWithTag("Player");
-            if (found != null) player = found.transform;
-        }
+        TryFindPlayer(); // 1차 탐색
     }
 
     private void Update()
     {
-        if (isDead || !player) return;
+        if (isDead) return;
 
-        float distance = Vector2.Distance(transform.position, player.position);
-
-        if (distance <= attackRange)
+        // 플레이어가 늦게 생기는 경우 주기적으로 재탐색
+        if (!player && Time.time >= nextFindPlayerAt)
         {
-            TryAttack();
+            TryFindPlayer();
+            nextFindPlayerAt = Time.time + 0.5f;
         }
+        if (!player) return;
+
+        float dist = Vector2.Distance(transform.position, player.position);
+        if (dist > detectRadius) return;      // 감지 반경 밖이면 무시
+
+        if (dist <= attackRange)
+            TryAttack();
 
         FlipToPlayer();
+    }
+
+    private void TryFindPlayer()
+    {
+        var found = GameObject.FindGameObjectWithTag("Player");
+        if (found) player = found.transform;
     }
 
     private void TryAttack()
     {
         if (Time.time - lastAttackTime < attackCooldown) return;
 
-        animator.SetTrigger(attackTrig);
+        if (animator) animator.SetTrigger(attackTrig);
         Invoke(nameof(ShootBolt), shootDelay);
 
         lastAttackTime = Time.time;
@@ -65,7 +74,7 @@ public class MageBossAI : MonoBehaviour
 
     private void ShootBolt()
     {
-        if (boltPrefab == null || boltSpawnPoint == null || player == null) return;
+        if (!boltPrefab || !boltSpawnPoint || !player) return;
 
         // 생성
         GameObject bolt = Instantiate(boltPrefab, boltSpawnPoint.position, Quaternion.identity);
@@ -73,28 +82,26 @@ public class MageBossAI : MonoBehaviour
         // 방향 계산
         Vector2 dir = (player.position - boltSpawnPoint.position).normalized;
 
-        // Bolt 스크립트로 방향 전달
-        EnergyBolt boltScript = bolt.GetComponent<EnergyBolt>();
+        // Bolt 스크립트로 방향 전달 (기존 방식 유지)
+        var boltScript = bolt.GetComponent<EnergyBolt>();
         if (boltScript != null)
-        {
             boltScript.SetDirection(dir);
-        }
     }
 
     private void FlipToPlayer()
     {
         if (!player) return;
-        Vector3 scale = visualRoot.localScale;
+        Vector3 s = visualRoot.localScale;
 
         if (player.position.x > transform.position.x)
-            scale.x = -Mathf.Abs(scale.x);
+            s.x = -Mathf.Abs(s.x);
         else
-            scale.x = Mathf.Abs(scale.x);
+            s.x = Mathf.Abs(s.x);
 
-        visualRoot.localScale = scale;
+        visualRoot.localScale = s;
     }
 
-    // 사망 처리 (Damageable에서 호출될 수 있음)
+    // 사망/피격(기존 연결 유지)
     public void OnHurt()
     {
         if (!isDead && animator) animator.SetTrigger(hitTrig);
@@ -105,7 +112,7 @@ public class MageBossAI : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
-        animator.SetTrigger(dieTrig);
+        if (animator) animator.SetTrigger(dieTrig);
         this.enabled = false;
     }
 }
