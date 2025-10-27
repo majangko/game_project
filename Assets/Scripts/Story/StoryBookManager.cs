@@ -64,11 +64,22 @@ public class StoryBookManager : MonoBehaviour
     void TryFlip(int dir)
     {
         if (busy || pages == null || pages.Length == 0) return;
+
         int target = index + dir;
+
+        // ✅ 추가: 마지막 페이지에서 '다음' 버튼 누르면 게임으로 전환
+        if (dir > 0 && index == pages.Length - 1)
+        {
+            SkipToGame();
+            return;
+        }
+
         if (target < 0 || target >= pages.Length) return;
+
         PlayFlipSfx(dir);
         StartCoroutine(CoFlip(target, dir));
     }
+
 
     IEnumerator CoFlip(int targetIndex, int dir)
     {
@@ -167,12 +178,20 @@ public class StoryBookManager : MonoBehaviour
         bool hasNext = index < pages.Length - 1;
 
         if (prevButton != null) prevButton.gameObject.SetActive(hasPrev);
-        if (nextButton != null) nextButton.gameObject.SetActive(hasNext);
+
+        if (nextButton != null)
+        {
+            nextButton.gameObject.SetActive(true); // ✅ 항상 보이게
+            var nextLabel = nextButton.GetComponentInChildren<TMP_Text>();
+            if (nextLabel != null)
+                nextLabel.text = hasNext ? "다음 ▶" : "시작하기"; // ✅ 마지막 페이지면 버튼 글자 변경
+        }
     }
+
 
     void SkipToGame()
     {
-        var target = string.IsNullOrEmpty(nextSceneName) ? "StartIsland" : nextSceneName;
+        var target = string.IsNullOrEmpty(nextSceneName) ? "StartIsland-1" : nextSceneName;
         var fade = FadeTransition.Instance;
         if (fade != null)
         {
