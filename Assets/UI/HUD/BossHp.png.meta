@@ -1,19 +1,10 @@
 fileFormatVersion: 2
-guid: 70f894226bef7ce4ea05b0ab3c1c007a
+guid: e10c143f9ea4d9e4f8a205339e638960
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6869325624984279803
-    second: HUD_0
-  - first:
-      213: -2205522050570982886
-    second: HUD_1
-  - first:
-      213: 1229794671371557974
-    second: HUD_2
-  - first:
-      213: -7859544607282556093
-    second: HUD_3
+      213: 5202297854058701951
+    second: BossHp_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -60,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 1
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -84,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -109,89 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Clock_Frame
-      rect:
-        serializedVersion: 2
-        x: 592
-        y: 847
-        width: 660
-        height: 233
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 505e2544db04ba0a0800000000000000
-      internalID: -6869325624984279803
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BossHP_Frame
-      rect:
-        serializedVersion: 2
-        x: 1292
-        y: 896
-        width: 606
-        height: 106
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a1aec6f51696461e0800000000000000
-      internalID: -2205522050570982886
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: PlayerHUD
+      name: BossHp_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 834
-        height: 315
+        width: 500
+        height: 100
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 65c15c5ecbb111110800000000000000
-      internalID: 1229794671371557974
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Coin_Frame
-      rect:
-        serializedVersion: 2
-        x: 842
-        y: 2
-        width: 72
-        height: 68
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 343169242d94de290800000000000000
-      internalID: -7859544607282556093
+      spriteID: f7422f6d556423840800000000000000
+      internalID: 5202297854058701951
       vertices: []
       indices: 
       edges: []
@@ -200,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: eb0d3949ccd3104438c813ddb27d4cbb
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -210,10 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      BossHP_Frame: -2205522050570982886
-      Clock_Frame: -6869325624984279803
-      Coin_Frame: -7859544607282556093
-      PlayerHUD: 1229794671371557974
+      BossHp_0: 5202297854058701951
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
