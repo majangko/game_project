@@ -2589,6 +2589,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goldText: {fileID: 2013477254528804940}
+  gainTextPrefab: {fileID: 0}
+  effectParent: {fileID: 0}
+  floatSpeed: 40
+  fadeTime: 1
 --- !u!1 &8663984149616204359
 GameObject:
   m_ObjectHideFlags: 0

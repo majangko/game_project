@@ -9,7 +9,11 @@ public class SceneLoader : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
@@ -72,9 +76,15 @@ public class SceneLoader : MonoBehaviour
 
             if (party != null && tag != null)
             {
-                party.AssignToTagManager(tag, keepExisting: false);
-                Debug.Log($"[SceneLoader] {name} 진입 → 파티 동기화 완료 ✅");
+                bool keepExisting = name.StartsWith("Boss");
+                // 🎯 보스 씬에서는 파티 유지 (TeamSelect 후 복귀 시 중복 방지)
+                // 일반 스테이지에서는 완전 새로 세팅
+
+                party.AssignToTagManager(tag, keepExisting);
+                Debug.Log($"[SceneLoader] {name} 진입 → 파티 동기화 완료 ✅ (keepExisting={keepExisting})");
             }
         }
     }
+
+    public void LoadTeamSelect() => Load("TeamSelect UI");
 }

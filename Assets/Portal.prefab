@@ -147,6 +147,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67dd275848d524948b2700485ea98d26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextStageIndex: 1
+  nextStageIndex: 0
+  isBossStage: 0
+  goToTeamSelect: 0
   playerPrefab: {fileID: 7582156980416342348, guid: 1fdad167f9429ae4291ba0596cc58d87, type: 3}
   portrait: {fileID: 21300000, guid: 769ea8a7d5fe115459b158ed47f6e71e, type: 3}

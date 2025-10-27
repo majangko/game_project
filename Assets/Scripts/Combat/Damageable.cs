@@ -148,12 +148,31 @@ public class Damageable : MonoBehaviour, ICanTakeDamage
 
         this.enabled = false;
 
+        // ✅ 💀 먼저 골드 지급 (적만)
+        if (!isPlayer && GoldManager.Instance != null)
+        {
+            int goldReward = CompareTag("Boss") ? 50 : 5;
+            GoldManager.Instance.AddGold(goldReward);
+            Debug.Log($"[Damageable] {gameObject.name} 사망 → +{goldReward}G 지급 ✅");
+        }
+
+        // ✅ 💀 보스 사망 시 포탈 자동 생성
+        var bossPortalSpawner = GetComponent<BossDeathPortalSpawner>();
+        if (bossPortalSpawner != null)
+        {
+            bossPortalSpawner.OnBossDeath();
+            Debug.Log("[Damageable] BossDeathPortalSpawner triggered after boss death ✅");
+        }
+
         // ✅ 플레이어는 파괴하지 않음
         if (!isPlayer)
             Destroy(gameObject, 1.5f);
         else
             Debug.Log("플레이어 사망 (게임오버 처리 필요)");
     }
+
+
+
 
     public void Heal(int amount)
     {
