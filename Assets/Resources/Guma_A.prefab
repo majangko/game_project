@@ -6749,7 +6749,7 @@ MonoBehaviour:
   hitOrigin: {fileID: 5433489484966074367}
   enemyMask:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 33792
   baseDamage: 30
   damagePerCharge: 10
   hitBoxSize: {x: 2.8, y: 1.2}
@@ -6787,7 +6787,7 @@ MonoBehaviour:
   hitOrigin: {fileID: 5433489484966074367}
   enemyMask:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 33792
   damage: 25
   knockback: 0
   dashDistance: 4
@@ -6912,7 +6912,7 @@ MonoBehaviour:
   attackKnockback: 5
   enemyMask:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 33792
   attackOrigin: {fileID: 5433489484966074367}
   attackBoxSize: {x: 1.8, y: 1}
   attackBoxOffset: {x: 1.2, y: 0.1}

@@ -23,15 +23,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameFlow/GameOverResult.unity
     guid: 0700018abf0536b4e90eafc8c1d14904
-  - enabled: 0
-    path: Assets/Scenes/Island/StartIsland.unity
-    guid: 0e044614725d9874785b21088805e383
   - enabled: 1
     path: Assets/Scenes/Stages/Boss01.unity
     guid: 1c0ff20d7898ecb4dbb21c13278ff2db
-  - enabled: 1
-    path: Assets/Scenes/Stages/Boss02.unity
-    guid: e18b4d622e49a1446bd127e121980e34
   - enabled: 1
     path: Assets/Scenes/Stages/Boss03.unity
     guid: 1a0d20126ea02554eaa1679bd2e9541f
@@ -44,12 +38,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Stages/Stage01.unity
     guid: 563e4944a05de0348abc0f74af1ea20a
-  - enabled: 1
-    path: Assets/Scenes/Stages/Stage02.unity
-    guid: 26cf413275e327d49be4f2fa29b74fc3
-  - enabled: 1
-    path: Assets/Scenes/Stages/Stage03.unity
-    guid: a646bb94aa0c50e4190e268a39b760ed
   - enabled: 1
     path: Assets/Scenes/Stages/Stage04.unity
     guid: 937cf5ca730ff9a41a0af861b9655554
@@ -65,6 +53,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Create/StartIsland-1.unity
     guid: 20a9697cddd19c04ba76f9d062987cf8
+  - enabled: 1
+    path: Assets/Scenes/Create/Stage02.unity
+    guid: f2015ebc5e30a274eb2539dd79c79d1d
+  - enabled: 1
+    path: Assets/Scenes/Create/Boss02.unity
+    guid: dd0d78dfa5237b14bac710e02ccdea58
+  - enabled: 1
+    path: Assets/Scenes/Create/Stage03.unity
+    guid: 2a5168fee13b2be41bbdf49317022663
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

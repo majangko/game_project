@@ -1,5 +1,4 @@
-﻿// FILE: TeamSelectController.cs
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -37,12 +36,12 @@ public class TeamSelectController : MonoBehaviour
 
     void Start()
     {
-        // ✅ PartyManager 자동 생성 (씬 루트에 생성)
+        // ✅ PartyManager 자동 생성
         if (PartyManager.Instance == null)
         {
             var go = new GameObject("PartyManager");
             go.AddComponent<PartyManager>();
-            go.transform.SetParent(null); // 🔥 부모 완전 해제 (루트로 이동)
+            go.transform.SetParent(null);
             Debug.Log("<color=yellow>[TeamSelect] PartyManager가 없어서 자동 생성됨.</color>");
         }
         else
@@ -50,7 +49,6 @@ public class TeamSelectController : MonoBehaviour
             Debug.Log("<color=green>[TeamSelect] PartyManager.Instance 이미 존재함.</color>");
         }
 
-        // 카드 버튼 이벤트 구독
         foreach (var c in cards)
         {
             c.OnRerollClicked += HandleRerollClicked;
@@ -60,13 +58,11 @@ public class TeamSelectController : MonoBehaviour
 
         if (saveButton) saveButton.onClick.AddListener(OnSaveClicked);
 
-        // 최초 3장 뽑기
         Deal3Cards();
-
         if (saveButton) saveButton.interactable = false;
     }
 
-    // ---------- 생성/뽑기 ----------
+    // ----------------- 카드 생성 / 선택 -----------------
     void Deal3Cards()
     {
         _currentlyShown.Clear();
@@ -105,11 +101,11 @@ public class TeamSelectController : MonoBehaviour
         Debug.Log($"[TeamSelect] Selected {_selectedCandidate.displayName}");
     }
 
+    // ----------------- 저장 처리 -----------------
     void OnSaveClicked()
     {
         if (_selectedCandidate == null)
         {
-            Debug.LogWarning("[TeamSelect] Save clicked but no candidate selected.");
             confirmPanel.Show("선택된 팀원이 없습니다.", onYes: () => { });
             return;
         }
@@ -120,45 +116,76 @@ public class TeamSelectController : MonoBehaviour
                 _alreadyChosen.Add(_selectedCandidate.id);
                 Debug.Log($"<color=cyan>[TeamSelect] Saved {_selectedCandidate.displayName}</color>");
 
-                // ✅ PartyManager 등록
+                // ✅ PartyManager에 캐릭터 추가 (기존 파티 유지)
                 if (PartyManager.Instance != null)
                 {
+                    var pm = PartyManager.Instance;
                     var data = new PartyMemberData
                     {
                         id = _selectedCandidate.id,
                         portrait = _selectedCandidate.portrait,
                         prefab = _selectedCandidate.prefab
                     };
-                    PartyManager.Instance.AddMember(data);
-                    Debug.Log($"<color=lime>[TeamSelect] {_selectedCandidate.displayName} added to PartyManager.</color>");
+
+                    // 🔒 중복 방지
+                    if (pm.currentMembers.Any(m => m.id == data.id))
+                    {
+                        Debug.Log($"[TeamSelect] 이미 존재하는 멤버 {data.id}, 추가 생략.");
+                    }
+                    else
+                    {
+                        pm.AddMember(data);
+                        Debug.Log($"<color=lime>[TeamSelect] {_selectedCandidate.displayName} added to PartyManager.</color>");
+                    }
+
+                    Debug.Log($"[TeamSelect] 현재 파티 수: {pm.GetCount()}");
                 }
 
-                Debug.Log($"[TeamSelect] PartyManager 파티원 수: {PartyManager.Instance?.GetCount()}");
-
                 saveButton.interactable = false;
-
-                // ✅ 씬 이동 전에 0.1초 대기 (중요)
                 StartCoroutine(LoadNextSceneWithDelay());
             },
             onNo: () => Debug.Log("[TeamSelect] Save canceled.")
         );
     }
 
+    // ----------------- 다음 스테이지 계산 -----------------
     System.Collections.IEnumerator LoadNextSceneWithDelay()
     {
         yield return new WaitForSeconds(0.1f);
-        Debug.Log("<color=yellow>[TeamSelect] test_ts 씬으로 이동 중...</color>");
-        SceneManager.LoadScene("test_ts");
+
+        string prevScene = PlayerPrefs.GetString("LastScene", "Stage01");
+        Debug.Log($"<color=yellow>[TeamSelect] 이전 씬: {prevScene} → 다음 스테이지 계산 중...</color>");
+
+        int nextIndex = 1;
+
+        if (prevScene.StartsWith("Boss"))
+        {
+            string numStr = prevScene.Replace("Boss", "");
+            if (int.TryParse(numStr, out int num))
+                nextIndex = num + 1;
+        }
+        else if (prevScene.StartsWith("Stage"))
+        {
+            string numStr = prevScene.Replace("Stage", "");
+            if (int.TryParse(numStr, out int num))
+                nextIndex = num + 1;
+        }
+
+        Debug.Log($"[TeamSelect] 다음 스테이지 인덱스 → Stage0{nextIndex}");
+
+        if (SceneLoader.Instance != null)
+            SceneLoader.Instance.LoadStage(nextIndex);
+        else
+            SceneManager.LoadScene($"Stage0{nextIndex}");
     }
 
-
-    // ---------- 데이터 생성 ----------
+    // ----------------- 카드 뽑기 로직 -----------------
     TeamMemberSO DrawUniqueMember(IEnumerable<string> exclude)
     {
         var pool = GetAllMembers();
         if (pool.Count == 0)
         {
-            Debug.LogError("[TeamSelect] 후보 풀이 비었습니다. DB 연결 또는 useMockData 활성화 필요.");
+            Debug.LogError("[TeamSelect] 후보 풀이 비었습니다. DB 연결 또는 useMockData 필요.");
             return CreateMock(1, Rarity.Common);
         }
 

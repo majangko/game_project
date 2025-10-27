@@ -24,7 +24,7 @@ public class TagPanelUI : MonoBehaviour
         {
             int tagIndex = i + 1; // TagManager.characters[1]부터 표시
             if (slots[i].keyLabel != null)
-                slots[i].keyLabel.text = (tagIndex + 1).ToString();
+                slots[i].keyLabel.text = tagIndex .ToString();
 
             if (slots[i].tagButton != null)
                 slots[i].tagButton.onClick.AddListener(() =>

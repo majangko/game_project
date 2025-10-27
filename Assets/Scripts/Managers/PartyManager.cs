@@ -60,11 +60,18 @@ public class PartyManager : MonoBehaviour
             return;
         }
 
+        if (string.IsNullOrEmpty(data.id))
+        {
+            Debug.LogWarning("[PartyManager] 멤버 ID가 비어있습니다.");
+            return;
+        }
+
         if (data.prefab == null)
         {
             Debug.LogWarning($"[PartyManager] {data.id}의 prefab이 null입니다.");
         }
 
+        // ✅ 중복 방지
         if (currentMembers.Exists(m => m.id == data.id))
         {
             Debug.Log($"[PartyManager] 이미 존재하는 멤버 {data.id}, 추가 생략.");
@@ -72,7 +79,7 @@ public class PartyManager : MonoBehaviour
         }
 
         currentMembers.Add(data);
-        Debug.Log($"[PartyManager] {data.id} 추가됨. 현재 파티 수: {currentMembers.Count}");
+        Debug.Log($"[PartyManager] {data.id} 추가됨 ✅ (총 {currentMembers.Count}명)");
     }
 
     /// <summary>
@@ -109,28 +116,32 @@ public class PartyManager : MonoBehaviour
 
         foreach (var member in currentMembers)
         {
+            if (member == null)
+            {
+                Debug.LogWarning("[PartyManager] null 멤버가 감지되어 건너뜀.");
+                continue;
+            }
+
             if (member.prefab == null)
             {
                 Debug.LogWarning($"[PartyManager] {member.id} 프리팹이 없습니다. 건너뜀.");
                 continue;
             }
 
-            // ✅ 중복 방지: 이미 동일 이름/ID의 캐릭터가 존재한다면 추가 생략
+            // ✅ TagManager에 동일 이름의 캐릭터가 존재한다면 추가 생략
             if (tagManager.characters.Exists(c => c != null && c.name == member.prefab.name))
             {
                 Debug.Log($"[PartyManager] {member.id}는 이미 TagManager에 존재, 중복 추가 생략.");
                 continue;
             }
 
-            // 파티 구성원 프리팹을 인스턴스화하여 TagManager에 전달
+            // ✅ 프리팹 인스턴스화 및 설정
             GameObject obj = Object.Instantiate(member.prefab);
             obj.name = member.prefab.name;
-
-            // ✅ Player 태그 자동 지정 (PlayerData와 연동 위해)
             obj.tag = "Player";
             obj.SetActive(false); // 기본은 비활성 상태
 
-            // ✅ 스폰 시점 보정: PlayerSpawnPoints가 있다면 그 위치로 생성
+            // ✅ 스폰포인트 위치로 이동
             GameObject spawn = GameObject.Find("PlayerSpawnPoints");
             if (spawn != null)
             {
@@ -142,7 +153,7 @@ public class PartyManager : MonoBehaviour
             if (ctrl != null)
             {
                 tagManager.characters.Add(ctrl);
-                Debug.Log($"[PartyManager] {member.id} 전투용으로 등록됨.");
+                Debug.Log($"[PartyManager] {member.id} 전투용으로 등록됨 ✅");
             }
             else
             {
@@ -156,8 +167,5 @@ public class PartyManager : MonoBehaviour
     /// <summary>
     /// 파티 구성원 수 반환
     /// </summary>
-    public int GetCount()
-    {
-        return currentMembers.Count;
-    }
+    public int GetCount() => currentMembers.Count;
 }

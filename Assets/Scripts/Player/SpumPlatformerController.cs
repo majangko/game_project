@@ -25,7 +25,8 @@ public class SpumPlatformerController : MonoBehaviour
     [SerializeField] private float attackCooldown = 0.6f;
     [SerializeField] private float attackDamage = 10f;
     [SerializeField] private float attackKnockback = 5f;
-    [SerializeField] private LayerMask enemyMask;
+    [Header("Attack Settings")]
+    public LayerMask enemyMask;
     public LayerMask EnemyMask => enemyMask;
 
     [Header("Melee Attack Settings")]

@@ -33,9 +33,17 @@ public class TagManager : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(DelayedStart());
+    }
+
+    private IEnumerator DelayedStart()
+    {
+        // HUDController, PartyManager 초기화 대기
+        yield return null;
+        yield return null;
+
         hud = FindObjectOfType<HUDController>();
 
-        // 기본 캐릭터 등록
         var player = FindObjectOfType<SpumPlatformerController>();
         if (player != null && characters.Count == 0)
         {
@@ -45,12 +53,17 @@ public class TagManager : MonoBehaviour
         }
 
         TryConnectPartyManager();
+
+        // HUD는 약간 더 늦게 Refresh (HUDController가 초기화 끝난 후)
+        yield return null;
         RefreshHUD();
 
-        // ✅ 시작 시 카메라가 첫 캐릭터를 바라보게 설정
         var cam = FindObjectOfType<CameraFollow>();
         if (cam != null && characters.Count > 0)
             cam.target = characters[currentIndex].transform;
+
+        // ✅ 사망 이벤트 구독
+        SubscribeDeathEvents();
     }
 
     void Update()
@@ -58,13 +71,13 @@ public class TagManager : MonoBehaviour
         if (!_isLinkedToParty)
             TryConnectPartyManager();
 
-        // 쿨타임 감소
         if (tagTimer > 0)
         {
             tagTimer -= Time.deltaTime;
             OnTagCooldownUpdate?.Invoke(Mathf.Clamp01(tagTimer / tagCooldown));
         }
 
+        // 수동 태그 테스트용 키 (1키 누르면 다음 캐릭터)
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             int nextIndex = (currentIndex + 1) % characters.Count;
@@ -73,10 +86,18 @@ public class TagManager : MonoBehaviour
     }
 
     // -------------------- PartyManager 연동 --------------------
-    void TryConnectPartyManager()
+    public void TryConnectPartyManager()
     {
-        if (PartyManager.Instance == null) return;
-        if (PartyManager.Instance.GetCount() == 0) return;
+        if (PartyManager.Instance == null)
+        {
+            Debug.LogWarning("[TagManager] PartyManager가 아직 준비되지 않음.");
+            return;
+        }
+        if (PartyManager.Instance.GetCount() == 0)
+        {
+            Debug.LogWarning("[TagManager] PartyManager 멤버가 없음.");
+            return;
+        }
 
         Debug.Log("<color=orange>[TagManager] PartyManager → TagManager 연결 시도...</color>");
         PartyManager.Instance.AssignToTagManager(this, keepExisting: true);
@@ -87,27 +108,30 @@ public class TagManager : MonoBehaviour
                 characters[i].gameObject.SetActive(i == 0);
 
         currentIndex = 0;
-        RefreshHUD();
+        StartCoroutine(DelayedHUDRefresh());
+        StartCoroutine(DelayedCameraSet());
+        StartCoroutine(DelayedEnemyRegister());
+    }
 
-        // ✅ 카메라 대상 초기 설정
+    private IEnumerator DelayedHUDRefresh()
+    {
+        yield return null;
+        yield return null;
+        RefreshHUD();
+    }
+
+    private IEnumerator DelayedCameraSet()
+    {
+        yield return null;
         var cam = FindObjectOfType<CameraFollow>();
         if (cam != null && characters.Count > 0)
             cam.target = characters[currentIndex].transform;
-
-        var tagUI = FindObjectOfType<TagPanelUI>();
-        if (tagUI != null)
-            tagUI.LoadCharacterPortraits();
-
-        // 🟢 플레이어 생성 후 EnemyAI 등록 (지연 호출)
-        StartCoroutine(DelayedEnemyRegister());
-
-        Debug.Log("<color=green>[TagManager] PartyManager 연동 완료 ✅</color>");
     }
 
-    // -------------------- Enemy 등록 (딜레이 적용) --------------------
+    // -------------------- Enemy 등록 --------------------
     public IEnumerator DelayedEnemyRegister()
     {
-        yield return new WaitForSeconds(0.5f); // 몬스터 스폰 완료 대기 (시간 약간 늘림)
+        yield return new WaitForSeconds(0.5f);
         RegisterEnemiesToPlayer();
     }
 
@@ -123,7 +147,6 @@ public class TagManager : MonoBehaviour
         var playerTransform = playerObj.transform;
         int count = 0;
 
-        // 비활성화된 적도 포함해서 모두 탐색
         var enemies = FindObjectsOfType<MonoBehaviour>(true);
         foreach (var enemy in enemies)
         {
@@ -164,56 +187,43 @@ public class TagManager : MonoBehaviour
             return;
         }
 
-        // 위치 유지
         Vector3 pos = current.transform.position;
         next.transform.position = pos;
 
-        // 이펙트 출력
         if (tagEffectPrefab)
             Instantiate(tagEffectPrefab, pos, Quaternion.identity);
 
-        // 활성/비활성 전환
         current.gameObject.SetActive(false);
         next.gameObject.SetActive(true);
 
-        // ✅ 카메라 대상 갱신
         var cam = FindObjectOfType<CameraFollow>();
         if (cam != null)
             cam.target = next.transform;
 
-        // 무적 처리
         var dmg = next.GetComponent<Damageable>();
         if (dmg != null)
             StartCoroutine(InvincibleCoroutine(dmg));
 
-        // 인덱스 및 순서 정렬
         currentIndex = newIndex;
         RefreshCharacterOrder();
-
-        // ✅ HUD 완전 갱신
         RefreshHUD();
 
-        // 이벤트 호출 (TagPanelUI용)
         OnCharacterSwitched?.Invoke(currentIndex);
         Debug.Log($"[TagManager] 캐릭터 전환 완료 → {next.name}");
 
-        // 태그 UI 갱신
         var tagUI = FindObjectOfType<TagPanelUI>();
         if (tagUI != null)
         {
             tagUI.LoadCharacterPortraits();
-            tagUI.UpdateHighlight(0);
+            tagUI.UpdateHighlight(currentIndex);
         }
 
-        // 🟢 캐릭터 전환 후에도 적이 새 플레이어를 인식하도록 재등록
         StartCoroutine(DelayedEnemyRegister());
     }
 
-    // -------------------- 순서 정렬 --------------------
     public void RefreshCharacterOrder()
     {
         if (characters == null || characters.Count == 0) return;
-
         var current = GetCurrentCharacter();
         if (current == null) return;
 
@@ -223,7 +233,7 @@ public class TagManager : MonoBehaviour
             characters.Insert(0, current);
         }
 
-        currentIndex = 0; // 활성 캐릭터는 항상 0번
+        currentIndex = 0;
         Debug.Log($"[TagManager] RefreshCharacterOrder() 실행 → {string.Join(", ", characters.Select(c => c.name))}");
     }
 
@@ -234,7 +244,6 @@ public class TagManager : MonoBehaviour
         dmg.SetInvincible(false);
     }
 
-    // -------------------- HUD 자동 갱신 --------------------
     void RefreshHUD()
     {
         if (hud == null)
@@ -251,6 +260,57 @@ public class TagManager : MonoBehaviour
             hud.BindToPlayer(stats);
             Debug.Log($"[TagManager] HUD 갱신 완료 → {stats.name}");
         }
+    }
+
+    // -------------------- 사망 처리 --------------------
+    private void SubscribeDeathEvents()
+    {
+        foreach (var ch in characters)
+        {
+            if (ch == null) continue;
+            var stats = ch.GetComponent<PlayerStats>();
+            if (stats == null) continue;
+
+            // 중복 방지
+            stats.OnDied -= () => OnCharacterDied(ch);
+            stats.OnDied += () => OnCharacterDied(ch);
+        }
+
+        Debug.Log($"[TagManager] {characters.Count}명의 캐릭터 사망 이벤트 구독 완료 ✅");
+    }
+
+    private void OnCharacterDied(SpumPlatformerController deadChar)
+    {
+        Debug.Log($"[TagManager] 캐릭터 사망 감지 → {deadChar.name}");
+
+        // 현재 캐릭터가 죽었다면 다음 캐릭터로 자동 전환
+        if (characters[currentIndex] == deadChar)
+        {
+            int nextIndex = FindNextAliveIndex();
+            if (nextIndex >= 0)
+            {
+                Debug.Log($"[TagManager] 다음 캐릭터로 자동 전환 → {characters[nextIndex].name}");
+                TryTag(nextIndex);
+            }
+            else
+            {
+                Debug.Log("<color=red>[TagManager] 모든 캐릭터 사망 → 게임오버 처리</color>");
+                var gameFlow = FindObjectOfType<GameFlowManager>();
+                if (gameFlow != null)
+                    gameFlow.OnGameOver();
+            }
+        }
+    }
+
+    private int FindNextAliveIndex()
+    {
+        for (int i = 0; i < characters.Count; i++)
+        {
+            var stats = characters[i]?.GetComponent<PlayerStats>();
+            if (stats != null && stats.HP > 0)
+                return i;
+        }
+        return -1;
     }
 
     // -------------------- 접근자 --------------------
