@@ -9819,9 +9819,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Guma
   portrait: {fileID: 21300000, guid: 769ea8a7d5fe115459b158ed47f6e71e, type: 3}
-  maxHP: 500
+  maxHP: 50
   maxMP: 30
-  _hp: 500
+  _hp: 50
   _mp: 30
   baseAttack: 10
   attackMultiplier: 1
@@ -9843,7 +9843,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62e251957668cd4469407835137eed1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 500
+  maxHP: 50
   animator: {fileID: 8012865366963294634}
   hitTrig: 3_Damage
   dieTrig: 4_Death

@@ -76,9 +76,16 @@ public class GameManager : MonoBehaviour
     // 사망 시: 자동 저장 금지. 결과 처리/선택은 UI에서 결정.
     public void OnPlayerDeath(string cause = "")
     {
-        // 저장 X, 런도 여기서 Reset하지 않음(계속하기 가능성)
-        // 런 종료 확정은 UI(그만하기/클리어확인)에서 SaveAfterRunEnd 호출
+        Debug.Log($"[GameManager] Player Death Detected ({cause})");
+
+        // 저장은 하지 않음 (플레이어 선택에 따라 부활/포기)
+        // 단, 이후 UI/씬 전환 담당은 SceneLoader에 위임
+        if (SceneLoader.Instance != null)
+            SceneLoader.Instance.LoadGameOver();
+        else
+            SceneManager.LoadScene("GameOver");
     }
+
 
     // ---------- 메타 재화 ----------
     // 호환을 위해 gold 프로퍼티 유지(= Meta.coins 매핑). 자동 저장 없음.
@@ -175,6 +182,6 @@ public class GameManager : MonoBehaviour
         ResetRun();
 
         if (SceneLoader.Instance != null) SceneLoader.Instance.LoadStartIsland();
-        else SceneManager.LoadScene("StartIsland");
+        else SceneManager.LoadScene("StartIsland-1");
     }
 }

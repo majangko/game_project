@@ -87,16 +87,21 @@ public class GameFlowManager : MonoBehaviour
         // 시간 멈춤
         Time.timeScale = 0f;
 
-        // UI 표시
-        if (gameOverPanel != null)
+        // ✅ 게임오버 씬으로 전환
+        if (SceneLoader.Instance != null)
         {
-            gameOverPanel.SetActive(true);
+            Time.timeScale = 1f; // 씬 전환 전에 다시 시간 복구 (중요!)
+            SceneLoader.Instance.LoadGameOver();
         }
         else
         {
-            Debug.LogWarning("[GameFlowManager] gameOverPanel이 연결되지 않음. 로그로 대체.");
+            // SceneLoader가 없을 경우 대비용 (Fallback)
+            Debug.LogWarning("[GameFlowManager] SceneLoader.Instance가 없어 직접 로드 수행");
+            Time.timeScale = 1f;
+            UnityEngine.SceneManagement.SceneManager.LoadScene("GameOver");
         }
     }
+
 
     // ============================================================
     // 🔁 Retry / Quit 버튼 로직

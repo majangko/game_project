@@ -19,9 +19,8 @@ public class SceneLoader : MonoBehaviour
     }
 
     public void LoadStoryIntro() => Load("StoryIntro");
-    public void LoadStartIsland() => Load("StartIsland");
+    public void LoadStartIsland() => Load("StartIsland-1");
     public void LoadSettings() => Load("Settings");
-    public void LoadGameOver() => Load("GameOver");
     public void LoadGameOverResult() => Load("GameOverResult");
     public void LoadGameClear() => Load("GameClear");
 
@@ -87,4 +86,13 @@ public class SceneLoader : MonoBehaviour
     }
 
     public void LoadTeamSelect() => Load("TeamSelect UI");
+
+    public void LoadGameOver()
+    {
+        if (UI.FadeTransition.Instance != null)
+            UI.FadeTransition.Instance.FadeToScene("GameOver");
+        else
+            SceneManager.LoadScene("GameOver");
+    }
+
 }

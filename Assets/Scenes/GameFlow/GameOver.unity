@@ -482,7 +482,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -1096,7 +1096,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -1142,6 +1142,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 527811857}
   m_CullTransparentMesh: 1
+--- !u!1001 &584487434
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 986297372098110533, guid: 0f472f73d3e4d2e49af48eb138c965dc, type: 3}
+      propertyPath: m_Name
+      value: GoldManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4376209793642127707, guid: 0f472f73d3e4d2e49af48eb138c965dc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 731.88153
+      objectReference: {fileID: 0}
+    - target: {fileID: 4376209793642127707, guid: 0f472f73d3e4d2e49af48eb138c965dc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 836.49457
+      objectReference: {fileID: 0}
+    - target: {fileID: 4376209793642127707, guid: 0f472f73d3e4d2e49af48eb138c965dc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4376209793642127707, guid: 0f472f73d3e4d2e49af48eb138c965dc, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4376209793642127707, guid: 0f472f73d3e4d2e49af48eb138c965dc, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4376209793642127707, guid: 0f472f73d3e4d2e49af48eb138c965dc, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4376209793642127707, guid: 0f472f73d3e4d2e49af48eb138c965dc, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4376209793642127707, guid: 0f472f73d3e4d2e49af48eb138c965dc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4376209793642127707, guid: 0f472f73d3e4d2e49af48eb138c965dc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4376209793642127707, guid: 0f472f73d3e4d2e49af48eb138c965dc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0f472f73d3e4d2e49af48eb138c965dc, type: 3}
 --- !u!1 &634653726
 GameObject:
   m_ObjectHideFlags: 0
@@ -1775,6 +1832,7 @@ GameObject:
   - component: {fileID: 1295527567}
   - component: {fileID: 1295527566}
   - component: {fileID: 1295527565}
+  - component: {fileID: 1295527569}
   m_Layer: 5
   m_Name: UICanvas
   m_TagString: Untagged
@@ -1867,6 +1925,25 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1295527569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1295527564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85ca92648d682ff48a037621a4a322ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  haveValue: {fileID: 1470713044}
+  costValue: {fileID: 397077551}
+  continueButton: {fileID: 993300640}
+  quitButton: {fileID: 37308292}
+  valueNormal: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  valueBad: {r: 0.8509804, g: 0.23529412, b: 0.18039216, a: 1}
+  reviveCost: 300
 --- !u!1 &1470713042
 GameObject:
   m_ObjectHideFlags: 0
@@ -2573,3 +2650,4 @@ SceneRoots:
   - {fileID: 1215205615}
   - {fileID: 1295527568}
   - {fileID: 1493177167}
+  - {fileID: 584487434}

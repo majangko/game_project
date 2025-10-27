@@ -261,6 +261,46 @@ public class TagManager : MonoBehaviour
             Debug.Log($"[TagManager] HUD 갱신 완료 → {stats.name}");
         }
     }
+    private void OnEnable()
+    {
+        // 각 캐릭터의 PlayerStats.OnDied 이벤트 구독
+        StartCoroutine(SubscribeDeathEventsDelayed());
+    }
+
+    private IEnumerator SubscribeDeathEventsDelayed()
+    {
+        yield return new WaitForSeconds(0.5f);
+        foreach (var ch in characters)
+        {
+            if (ch == null) continue;
+            var stats = ch.GetComponent<PlayerStats>();
+            if (stats != null)
+                stats.OnDied += HandleCharacterDeath;
+        }
+    }
+
+    private void HandleCharacterDeath()
+    {
+        // 모든 캐릭터가 죽었는지 확인
+        bool allDead = true;
+        foreach (var ch in characters)
+        {
+            if (ch == null) continue;
+            var stats = ch.GetComponent<PlayerStats>();
+            if (stats != null && stats.HP > 0)
+            {
+                allDead = false;
+                break;
+            }
+        }
+
+        if (allDead)
+        {
+            Debug.Log("<color=red>[TagManager] 모든 캐릭터 사망 감지 → 게임오버</color>");
+            GameManager.Instance?.OnPlayerDeath("all_dead");
+        }
+    }
+
 
     // -------------------- 사망 처리 --------------------
     private void SubscribeDeathEvents()
@@ -279,28 +319,40 @@ public class TagManager : MonoBehaviour
         Debug.Log($"[TagManager] {characters.Count}명의 캐릭터 사망 이벤트 구독 완료 ✅");
     }
 
-    private void OnCharacterDied(SpumPlatformerController deadChar)
+    public void OnCharacterDied(SpumPlatformerController deadChar)
     {
         Debug.Log($"[TagManager] 캐릭터 사망 감지 → {deadChar.name}");
 
-        // 현재 캐릭터가 죽었다면 다음 캐릭터로 자동 전환
-        if (characters[currentIndex] == deadChar)
+        if (!characters.Contains(deadChar)) return;
+
+        // 🔹 캐릭터를 태그 리스트에서 제거
+        characters.Remove(deadChar);
+
+        // 🔹 즉시 비활성화 (물리 낙하, 애니메이션, 사운드 정지)
+        deadChar.gameObject.SetActive(false);
+
+        Debug.Log($"[TagManager] {deadChar.name} 비활성화 완료. 남은 캐릭터: {characters.Count}");
+
+        // 🔹 HUD 갱신
+        HUDController hud = FindObjectOfType<HUDController>();
+        if (hud != null)
+            hud.UpdatePartyPortraits();
+
+        // 🔹 다음 생존 캐릭터로 자동 전환
+        if (characters.Count > 0)
         {
-            int nextIndex = FindNextAliveIndex();
-            if (nextIndex >= 0)
-            {
-                Debug.Log($"[TagManager] 다음 캐릭터로 자동 전환 → {characters[nextIndex].name}");
-                TryTag(nextIndex);
-            }
-            else
-            {
-                Debug.Log("<color=red>[TagManager] 모든 캐릭터 사망 → 게임오버 처리</color>");
-                var gameFlow = FindObjectOfType<GameFlowManager>();
-                if (gameFlow != null)
-                    gameFlow.OnGameOver();
-            }
+            int nextIndex = Mathf.Clamp(currentIndex, 0, characters.Count - 1);
+            currentIndex = nextIndex;
+            SwitchCharacter(nextIndex);
+        }
+        else
+        {
+            Debug.Log("<color=red>[TagManager] 모든 캐릭터 사망 → 게임오버</color>");
+            GameManager.Instance?.OnPlayerDeath("all_dead");
+            FindObjectOfType<GameFlowManager>()?.OnGameOver();
         }
     }
+
 
     private int FindNextAliveIndex()
     {
