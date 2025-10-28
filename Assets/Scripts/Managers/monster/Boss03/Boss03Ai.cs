@@ -34,7 +34,10 @@ public class Boss03AI : MonoBehaviour
     public float auraDuration = 2f;
 
     [Header("Skill Prefabs")]
-    public GameObject lightningFieldPrefab;  // 파랑 오오라 시 번개 장판 생성용 프리팹
+    public GameObject lightningFieldPrefab;          // 파랑 오오라 스킬: 감전 장판
+    public GameObject yellowLightningBoltPrefab;     // 노랑 오오라 스킬: 번개볼트
+    public Transform boltSpawnPoint;                 // 번개볼트 발사 위치
+    public Transform lightningFieldSpawnPoint;       // ⚡ 새로 추가: 감전장판 생성 위치
 
     private bool isDead;
     private Coroutine auraRoutine;
@@ -176,12 +179,12 @@ public class Boss03AI : MonoBehaviour
         if (aura == auraBlue)
         {
             Debug.Log("⚡ 파랑 오오라 스킬 발동!");
-            CastBlueLightningSkill(); // 번개 장판 생성
+            CastBlueLightningSkill();
         }
         else if (aura == auraYellow)
         {
             Debug.Log("🟡 노랑 오오라 스킬 발동!");
-            // 나중에 노랑 오오라 스킬 추가 예정
+            StartCoroutine(CastYellowLightningSkill());
         }
     }
 
@@ -194,10 +197,39 @@ public class Boss03AI : MonoBehaviour
             return;
         }
 
-        // 보스 위치 기준 번개 장판 생성
-        Vector3 spawnPos = new Vector3(transform.position.x, transform.position.y - 0f, 0f);
+        // ⚡ Lightning Field Spawn Point 기준으로 생성
+        Vector3 spawnPos = lightningFieldSpawnPoint != null
+            ? lightningFieldSpawnPoint.position
+            : new Vector3(transform.position.x, transform.position.y - 0.5f, 0f);
+
         Instantiate(lightningFieldPrefab, spawnPos, Quaternion.identity);
         Debug.Log("⚡ 번개 장판 생성 완료!");
+    }
+
+    // -------------------- 노랑 오오라 스킬 --------------------
+    private IEnumerator CastYellowLightningSkill()
+    {
+        if (yellowLightningBoltPrefab == null)
+        {
+            Debug.LogWarning("[Boss03AI] yellowLightningBoltPrefab이 연결되지 않았습니다!");
+            yield break;
+        }
+
+        Debug.Log("⚡ 노랑 오오라 스킬 시작!");
+        for (int i = 0; i < 3; i++)
+        {
+            GameObject boltObj = Instantiate(yellowLightningBoltPrefab, boltSpawnPoint.position, Quaternion.identity);
+            YellowLightningBolt bolt = boltObj.GetComponent<YellowLightningBolt>();
+            if (bolt != null && player != null)
+            {
+                Vector2 dir = (player.position - boltSpawnPoint.position).normalized;
+                bolt.SetDirection(dir);
+            }
+
+            yield return new WaitForSeconds(0.6f); // 3회 발사 간격
+        }
+
+        Debug.Log("⚡ 노랑 오오라 스킬 종료 (3회 발사 완료)");
     }
 
     // -------------------- 데미지 / 사망 처리 --------------------
