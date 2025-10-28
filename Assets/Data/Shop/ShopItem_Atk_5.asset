@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99baa8e0db4ea444db5906c93af00608, type: 3}
+  m_Name: ShopItem_Atk_5
+  m_EditorClassIdentifier: 
+  itemRef: {fileID: 11400000, guid: dc6e68c05bfda38479fb46c2e99f4229, type: 2}
+  itemId: ATK_5
+  displayName: "\uACF5\uACA9\uB825 LV3"
+  description: "\uACF5\uACA9\uB825 \uC99D\uAC00: +5"
+  icon: {fileID: 21300000, guid: 2b78230a68da2ff47a7b6cc2a6676bcd, type: 3}
+  type: 0
+  basePrice: 400

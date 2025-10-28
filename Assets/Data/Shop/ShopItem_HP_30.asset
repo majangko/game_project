@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99baa8e0db4ea444db5906c93af00608, type: 3}
+  m_Name: ShopItem_HP_30
+  m_EditorClassIdentifier: 
+  itemRef: {fileID: 11400000, guid: ec2ed8205583ea34cb04b8d1dc93b652, type: 2}
+  itemId: HP_30
+  displayName: "\uCCB4\uB825 LV3"
+  description: "\uCCB4\uB825\uC99D\uAC00: +30"
+  icon: {fileID: 21300000, guid: 61e419bb75d4a92419b0198d96a5049e, type: 3}
+  type: 0
+  basePrice: 300

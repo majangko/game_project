@@ -15,3 +15,15 @@ MonoBehaviour:
   shopTitle: "\uC0C1\uC810"
   items:
   - {fileID: 11400000, guid: 3dca09a723d378b49b6fac1f5c8deae1, type: 2}
+  - {fileID: 11400000, guid: cc4022d9c4f58e04b9bcef17245ab5b2, type: 2}
+  - {fileID: 11400000, guid: 0dbc65a2052bd5941a02199dfe8e6741, type: 2}
+  - {fileID: 11400000, guid: e5c418132e1fcdc4c96e4eee0de8d737, type: 2}
+  - {fileID: 11400000, guid: 9dfad9a90e830314db4efe9384dc6bcf, type: 2}
+  - {fileID: 11400000, guid: 11b419b8148d73f41b75486611316ced, type: 2}
+  - {fileID: 11400000, guid: 3496ca0c5434102479ed7d41d981710b, type: 2}
+  - {fileID: 11400000, guid: 1bf48ff1af64d054a946efc760ae592d, type: 2}
+  - {fileID: 11400000, guid: 76869e213cf6c0a4fb872f50dc424391, type: 2}
+  - {fileID: 11400000, guid: ae460bb43aa088e4d9830dac8873ed6e, type: 2}
+  - {fileID: 11400000, guid: 7e2005077d584d0438e3f16faabf1ca6, type: 2}
+  - {fileID: 11400000, guid: 42638bfa1c7afb84b8e2f05585861199, type: 2}
+  - {fileID: 11400000, guid: 82566fec80eb1a74f912e2084add806b, type: 2}
