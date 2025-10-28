@@ -2969,6 +2969,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3868226461971687907, guid: 166fe5187a4f37f458918713b2a7a7f3, type: 3}
+      propertyPath: bossObjects.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3868226461971687907, guid: 166fe5187a4f37f458918713b2a7a7f3, type: 3}
+      propertyPath: stageObjects.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3368,10 +3376,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: -0.11718751
+    x: -0.33333334
     y: 0
     width: 1
-    height: 0.3333333
+    height: 0.44444445
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60

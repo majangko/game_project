@@ -24,17 +24,22 @@ public class HUDSceneLayoutRefs : MonoBehaviour
 
     void Awake()
     {
-        // 중복 제거한 전체 목록 생성
         void AddRange(GameObject[] arr)
         {
             if (arr == null) return;
             foreach (var go in arr)
-                if (go != null && !_all.Contains(go)) _all.Add(go);
+            {
+                if (go == null) continue;
+                // ✅ SkillTooltipUI는 목록 제외
+                if (go.name.Contains("SkillTooltipUI")) continue;
+                if (!_all.Contains(go)) _all.Add(go);
+            }
         }
         AddRange(startIslandObjects);
         AddRange(stageObjects);
         AddRange(bossObjects);
     }
+
 
     void OnEnable()  { SceneManager.sceneLoaded += OnSceneLoaded; }
     void OnDisable() { SceneManager.sceneLoaded -= OnSceneLoaded; }
