@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5e7e31c425664b4d9a652e3543a055f, type: 3}
+  m_Name: ATK_10
+  m_EditorClassIdentifier: 
+  <ItemId>k__BackingField: ATK_10
+  <DisplayName>k__BackingField: "\uACF5\uACA9\uB825 LV5"
+  <Icon>k__BackingField: {fileID: 21300000, guid: 4051d653076b21d4298088828033ccde, type: 3}
+  Description: "\uACF5\uACA9\uB825 \uC99D\uAC00: +10"
+  attackFlat: 10

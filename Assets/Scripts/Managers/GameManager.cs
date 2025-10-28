@@ -164,6 +164,9 @@ public class GameManager : MonoBehaviour
         // 새 게임 시작 시점에는 저장하지 않음(원하면 시작 저장 버튼으로)
         ResetRun();
 
+        PlayerInventory.Instance?.ResetAll();
+        StatusEffectManager.Instance?.ClearRunEffects();
+        
         if (SceneLoader.Instance != null) SceneLoader.Instance.LoadStoryIntro();
         else SceneManager.LoadScene("StoryIntro");
     }

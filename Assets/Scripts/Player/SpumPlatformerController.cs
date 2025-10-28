@@ -138,7 +138,12 @@ public class SpumPlatformerController : MonoBehaviour
         else if (Input.GetKey(KeyCode.RightArrow)) x = 1f;
         if (Time.time < lockUntil) x = 0f;
 
-        float speed = moveSpeed * Mathf.Max(0.1f, moveSpeedMul);
+        // ✅ [ADD] PlayerStats의 런타임 속도 배율을 곱해준다.
+        float playerSpeedMul = 1f;
+        if (stats != null)
+            playerSpeedMul = stats.CurrentSpeedMultiplier; // (= 1 + 누적 속도%)
+
+        float speed = moveSpeed * Mathf.Max(0.1f, moveSpeedMul) * playerSpeedMul; // ✅ [CHANGED]
         rb.linearVelocity = new Vector2(x * speed, rb.linearVelocity.y);
         if (Mathf.Abs(x) > 0.01f) desiredDir = x > 0 ? +1 : -1;
 

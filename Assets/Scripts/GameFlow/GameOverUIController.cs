@@ -21,6 +21,9 @@ public class GameOverUIController : MonoBehaviour
 
     void Start()
     {
+        // [ADD] GameOver 진입 시 이번 런 동안의 아이템/버프 효과 전부 제거
+        StatusEffectManager.Instance?.ClearRunEffects();
+
         Refresh();
 
         if (continueButton) continueButton.onClick.AddListener(OnContinue);

@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 99baa8e0db4ea444db5906c93af00608, type: 3}
-  m_Name: ShopItem
+  m_Name: ShopItem_SPD_3_0
   m_EditorClassIdentifier: 
-  itemId: 1
-  displayName: "\uACF5\uACA9\uB825 \uC99D\uAC00(1)"
-  description: "\uACF5\uACA9\uB825 +1"
-  icon: {fileID: 21300000, guid: e0f021576f356574eaf1b9eb3a4670e7, type: 3}
+  itemRef: {fileID: 11400000, guid: 4c61b3d353687d64bb5da2fb1a5b3afd, type: 2}
+  itemId: SPD_3_0
+  displayName: "\uC18D\uB3C4\uC99D\uAC00 LV3"
+  description: "\uC774\uB3D9\uC18D\uB3C4 \uC99D\uAC00: 3.0%"
+  icon: {fileID: 21300000, guid: 5211f9ec2ceaf54448ac89ac7dfa9287, type: 3}
   type: 0
-  basePrice: 100
+  basePrice: 500

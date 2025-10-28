@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7951595326443984320}
   - component: {fileID: 4657821834539280728}
   - component: {fileID: 7012443152418360731}
+  - component: {fileID: 124021313316895560}
   m_Layer: 16
   m_Name: Portal
   m_TagString: Untagged
@@ -152,3 +153,26 @@ MonoBehaviour:
   goToTeamSelect: 0
   playerPrefab: {fileID: 7582156980416342348, guid: 1fdad167f9429ae4291ba0596cc58d87, type: 3}
   portrait: {fileID: 21300000, guid: 769ea8a7d5fe115459b158ed47f6e71e, type: 3}
+--- !u!114 &124021313316895560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6773328075417406959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84bc0c7e96effc24db7208bb78a8de95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startIslandSceneName: StartIsland-1
+  requireSceneNameMatch: 1
+  allowEverywhereForDebug: 0
+  nextStageIndex: 1
+  isBossStage: 0
+  goToTeamSelect: 0
+  playerPrefab: {fileID: 0}
+  portrait: {fileID: 0}
+  useItemPopupPrefab: {fileID: 8146315866984586938, guid: 2aa832ab27f7f7848b8d51ee03503443, type: 3}
+  openKey: 273
+  alsoAllowWKey: 1
