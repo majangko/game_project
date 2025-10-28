@@ -644,7 +644,11 @@ RectTransform:
   - {fileID: 6743293320548046470}
   - {fileID: 5524099279448803884}
   - {fileID: 7240393521427847552}
+<<<<<<< HEAD
   - {fileID: 4285630588250578546}
+=======
+  - {fileID: 3801722428295756190}
+>>>>>>> 9d919f341519b4ef97bb9ae2dc83f8f0f627b83a
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1811,6 +1815,37 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &4049697301006995305
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7251584837754106794}
+  m_Layer: 0
+  m_Name: GoldEffectParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7251584837754106794
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4049697301006995305}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -60, y: -33, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6743293320548046470}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4734658833664703101
 GameObject:
   m_ObjectHideFlags: 0
@@ -2487,7 +2522,11 @@ MonoBehaviour:
   forceActiveInTest: 0
   onlyInStages: 0
   zeroIsUpOffset: 0
+<<<<<<< HEAD
   startFromDeg: 90
+=======
+  startFromDeg: 0
+>>>>>>> 9d919f341519b4ef97bb9ae2dc83f8f0f627b83a
   endAtDeg: 270
   invertDirection: 0
 --- !u!1 &7923719187262122032
@@ -2941,7 +2980,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+<<<<<<< HEAD
   - {fileID: 5625207824255151220}
+=======
+  - {fileID: 7251584837754106794}
+>>>>>>> 9d919f341519b4ef97bb9ae2dc83f8f0f627b83a
   m_Father: {fileID: 3750044733196312993}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -2963,7 +3006,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   goldText: {fileID: 2013477254528804940}
   gainTextPrefab: {fileID: 1631429756186026764, guid: 105b3df07f1165b45a841752060a184d, type: 3}
+<<<<<<< HEAD
   effectParent: {fileID: 5625207824255151220}
+=======
+  effectParent: {fileID: 7251584837754106794}
+>>>>>>> 9d919f341519b4ef97bb9ae2dc83f8f0f627b83a
   floatSpeed: 40
   fadeTime: 1
 --- !u!1 &8663984149616204359
@@ -3168,7 +3215,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+<<<<<<< HEAD
 --- !u!1001 &7461906354268461034
+=======
+--- !u!1001 &7509176771207213062
+>>>>>>> 9d919f341519b4ef97bb9ae2dc83f8f0f627b83a
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -3206,11 +3257,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6698992411665729944, guid: 44248fb2a3f84ba449cb1a0a63bd7606, type: 3}
       propertyPath: m_SizeDelta.x
+<<<<<<< HEAD
       value: -3451.329
       objectReference: {fileID: 0}
     - target: {fileID: 6698992411665729944, guid: 44248fb2a3f84ba449cb1a0a63bd7606, type: 3}
       propertyPath: m_SizeDelta.y
       value: -1893.7565
+=======
+      value: -1531.3291
+      objectReference: {fileID: 0}
+    - target: {fileID: 6698992411665729944, guid: 44248fb2a3f84ba449cb1a0a63bd7606, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -813.7565
+>>>>>>> 9d919f341519b4ef97bb9ae2dc83f8f0f627b83a
       objectReference: {fileID: 0}
     - target: {fileID: 6698992411665729944, guid: 44248fb2a3f84ba449cb1a0a63bd7606, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3230,6 +3289,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6698992411665729944, guid: 44248fb2a3f84ba449cb1a0a63bd7606, type: 3}
       propertyPath: m_LocalRotation.x
+<<<<<<< HEAD
       value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6698992411665729944, guid: 44248fb2a3f84ba449cb1a0a63bd7606, type: 3}
@@ -3247,6 +3307,25 @@ PrefabInstance:
     - target: {fileID: 6698992411665729944, guid: 44248fb2a3f84ba449cb1a0a63bd7606, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 257.6819
+=======
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6698992411665729944, guid: 44248fb2a3f84ba449cb1a0a63bd7606, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6698992411665729944, guid: 44248fb2a3f84ba449cb1a0a63bd7606, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6698992411665729944, guid: 44248fb2a3f84ba449cb1a0a63bd7606, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -228.11847
+      objectReference: {fileID: 0}
+    - target: {fileID: 6698992411665729944, guid: 44248fb2a3f84ba449cb1a0a63bd7606, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 296.49457
+>>>>>>> 9d919f341519b4ef97bb9ae2dc83f8f0f627b83a
       objectReference: {fileID: 0}
     - target: {fileID: 6698992411665729944, guid: 44248fb2a3f84ba449cb1a0a63bd7606, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3265,8 +3344,15 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44248fb2a3f84ba449cb1a0a63bd7606, type: 3}
+<<<<<<< HEAD
 --- !u!224 &4285630588250578546 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6698992411665729944, guid: 44248fb2a3f84ba449cb1a0a63bd7606, type: 3}
   m_PrefabInstance: {fileID: 7461906354268461034}
+=======
+--- !u!224 &3801722428295756190 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6698992411665729944, guid: 44248fb2a3f84ba449cb1a0a63bd7606, type: 3}
+  m_PrefabInstance: {fileID: 7509176771207213062}
+>>>>>>> 9d919f341519b4ef97bb9ae2dc83f8f0f627b83a
   m_PrefabAsset: {fileID: 0}

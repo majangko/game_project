@@ -2731,6 +2731,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: HUDRoot
       objectReference: {fileID: 0}
+<<<<<<< HEAD
+=======
+    - target: {fileID: 3351220247441073335, guid: 166fe5187a4f37f458918713b2a7a7f3, type: 3}
+      propertyPath: startFromDeg
+      value: 90
+      objectReference: {fileID: 0}
+>>>>>>> 9d919f341519b4ef97bb9ae2dc83f8f0f627b83a
     - target: {fileID: 3750044733196312993, guid: 166fe5187a4f37f458918713b2a7a7f3, type: 3}
       propertyPath: m_Pivot.x
       value: 0
