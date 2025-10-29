@@ -271,10 +271,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: -0.1421875
     y: 0
     width: 1
-    height: 1
+    height: 0.26666665
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -5924,6 +5924,14 @@ PrefabInstance:
       propertyPath: yellowLightningBoltPrefab
       value: 
       objectReference: {fileID: 6729486949623266940, guid: bc76909f7e478bb4b94bd3c3697f13b8, type: 3}
+    - target: {fileID: 6998814208478762614, guid: bab7e906821250f4cbfc06452ed1daee, type: 3}
+      propertyPath: isFinalBoss
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6998814208478762614, guid: bab7e906821250f4cbfc06452ed1daee, type: 3}
+      propertyPath: gameClearUIPrefab
+      value: 
+      objectReference: {fileID: 6939477944922167039, guid: 64f5def0b2567434b8d01e6f907ff510, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

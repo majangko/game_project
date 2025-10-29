@@ -67,10 +67,6 @@ public class CardView : MonoBehaviour
         Debug.Log($"[CardView] Start() called for {gameObject.name}");
     }
 
-
-    // CardView.cs 안에 추가
-
-
     // ----------------------------------------------------------
     // 캐릭터 데이터 바인딩
     // ----------------------------------------------------------
@@ -158,6 +154,7 @@ public class CardView : MonoBehaviour
 
         if (skillIconB)
             skillIconB.sprite = m.skillIconB;
+
         var prefab = m.prefab;
         if (prefab != null)
         {
@@ -169,7 +166,7 @@ public class CardView : MonoBehaviour
                 var triggerA = skillIconA.GetComponent<SkillIconTooltipTrigger>();
                 if (triggerA != null && skills.Length > 0)
                 {
-                    triggerA.skill = skills[0]; // 첫 번째 스킬 연결
+                    triggerA.skill = skills[0];
                 }
             }
 
@@ -179,7 +176,7 @@ public class CardView : MonoBehaviour
                 var triggerB = skillIconB.GetComponent<SkillIconTooltipTrigger>();
                 if (triggerB != null && skills.Length > 1)
                 {
-                    triggerB.skill = skills[1]; // 두 번째 스킬 연결
+                    triggerB.skill = skills[1];
                 }
             }
         }
@@ -189,5 +186,14 @@ public class CardView : MonoBehaviour
         // ------------------------------
         if (flip != null)
             flip.ShowFront();
+    }
+
+    // ----------------------------------------------------------
+    // 리롤 버튼 제어용 메서드
+    // ----------------------------------------------------------
+    public void SetRerollButtonInteractable(bool value)
+    {
+        if (rerollButton)
+            rerollButton.interactable = value;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿// FILE: TeamSelectController.cs
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -29,26 +30,29 @@ public class TeamSelectController : MonoBehaviour
     public bool lockSlotOnSave = false;
 
     // 내부 상태
-    HashSet<string> _alreadyChosen = new();
-    HashSet<string> _currentlyShown = new();
-    TeamMemberSO _selectedCandidate;
-    List<TeamMemberSO> _mockAll;
+    private HashSet<string> _alreadyChosen = new();
+    private HashSet<string> _currentlyShown = new();
+    private Dictionary<CardView, bool> _rerolledCards = new(); // ✅ 리롤 여부 추적
+    private TeamMemberSO _selectedCandidate;
+    private List<TeamMemberSO> _mockAll;
 
     void Start()
     {
-        // ✅ PartyManager 자동 생성
+        // ✅ PartyManager 확인 (중복 생성 방지)
         if (PartyManager.Instance == null)
         {
-            var go = new GameObject("PartyManager");
+            // DontDestroyOnLoad 오브젝트가 없는 경우에만 새로 생성
+            GameObject go = new GameObject("PartyManager");
             go.AddComponent<PartyManager>();
             go.transform.SetParent(null);
-            Debug.Log("<color=yellow>[TeamSelect] PartyManager가 없어서 자동 생성됨.</color>");
+            Debug.Log("<color=yellow>[TeamSelect] PartyManager가 없어서 새로 생성됨.</color>");
         }
         else
         {
-            Debug.Log("<color=green>[TeamSelect] PartyManager.Instance 이미 존재함.</color>");
+            Debug.Log("<color=green>[TeamSelect] PartyManager.Instance 이미 존재 → 기존 인스턴스 사용</color>");
         }
 
+        // ✅ 카드 이벤트 연결
         foreach (var c in cards)
         {
             c.OnRerollClicked += HandleRerollClicked;
@@ -56,35 +60,84 @@ public class TeamSelectController : MonoBehaviour
             c.OnInfoClicked += _ => { };
         }
 
-        if (saveButton) saveButton.onClick.AddListener(OnSaveClicked);
+        // ✅ 저장 버튼 이벤트
+        if (saveButton != null)
+            saveButton.onClick.AddListener(OnSaveClicked);
 
+        // ✅ 첫 카드 세팅
         Deal3Cards();
-        if (saveButton) saveButton.interactable = false;
+        if (saveButton != null)
+            saveButton.interactable = false;
+
+        // ✅ 현재 PartyManager 멤버 로그 출력
+        if (PartyManager.Instance != null)
+        {
+            var count = PartyManager.Instance.GetCount();
+            Debug.Log($"<color=cyan>[TeamSelect] 현재 PartyManager 멤버 수: {count}</color>");
+        }
     }
 
-    // ----------------- 카드 생성 / 선택 -----------------
+
+    // ----------------- 카드 생성 / 초기화 -----------------
     void Deal3Cards()
     {
         _currentlyShown.Clear();
+        _rerolledCards.Clear();
+
         for (int i = 0; i < cards.Length; i++)
         {
             var member = DrawUniqueMember(_alreadyChosen.Union(_currentlyShown));
             _currentlyShown.Add(member.id);
             cards[i].Bind(member);
+            _rerolledCards[cards[i]] = false; // ✅ 리롤 가능 상태로 초기화
+            cards[i].SetRerollButtonInteractable(true); // 리롤 버튼 활성화
         }
     }
 
+    // ----------------- 리롤 클릭 -----------------
     void HandleRerollClicked(CardView card)
     {
+        // ✅ 이미 리롤한 카드면 무시
+        if (_rerolledCards.TryGetValue(card, out bool alreadyRerolled) && alreadyRerolled)
+        {
+            Debug.Log($"[TeamSelect] {card.bound.displayName} 카드는 이미 리롤됨, 무시");
+            return;
+        }
+
         Debug.Log("[TeamSelect] Reroll clicked.");
 
-        var exclude = _alreadyChosen.Union(_currentlyShown.Where(id => id != card.bound.id));
+        // ✅ 중복 방지 목록 만들기 (현재 카드 포함)
+        var exclude = _alreadyChosen
+            .Union(_currentlyShown)
+            .Append(card.bound.id)
+            .ToHashSet();
+
+        // ✅ 새 멤버 뽑기
         var member = DrawUniqueMember(exclude);
+
+        // 같은 캐릭터가 나오면 다시 뽑기 (안 바뀌는 문제 방지)
+        int safety = 0;
+        while (member.id == card.bound.id && safety < 5)
+        {
+            member = DrawUniqueMember(exclude);
+            safety++;
+        }
+
         _currentlyShown.Remove(card.bound.id);
         _currentlyShown.Add(member.id);
+        _alreadyChosen.Add(member.id); // 중복 방지 목록에 추가
+
+        // 새 캐릭터 적용
         card.Bind(member);
+
+        // ✅ 리롤 완료 표시 및 버튼 비활성화
+        _rerolledCards[card] = true;
+        card.SetRerollButtonInteractable(false);
+
+        Debug.Log($"[TeamSelect] {card.bound.displayName} → {member.displayName} (리롤 완료)");
     }
 
+    // ----------------- 카드 선택 -----------------
     void HandleSelectClicked(CardView card)
     {
         _selectedCandidate = card.bound;
@@ -102,6 +155,7 @@ public class TeamSelectController : MonoBehaviour
     }
 
     // ----------------- 저장 처리 -----------------
+    // ----------------- 저장 처리 -----------------
     void OnSaveClicked()
     {
         if (_selectedCandidate == null)
@@ -116,7 +170,7 @@ public class TeamSelectController : MonoBehaviour
                 _alreadyChosen.Add(_selectedCandidate.id);
                 Debug.Log($"<color=cyan>[TeamSelect] Saved {_selectedCandidate.displayName}</color>");
 
-                // ✅ PartyManager에 캐릭터 추가 (기존 파티 유지)
+                // ✅ PartyManager에 캐릭터 추가
                 if (PartyManager.Instance != null)
                 {
                     var pm = PartyManager.Instance;
@@ -134,11 +188,20 @@ public class TeamSelectController : MonoBehaviour
                     }
                     else
                     {
+                        pm.ClearParty();     // ✅ 기존 멤버 초기화 (단일 선택 게임 구조일 경우)
                         pm.AddMember(data);
                         Debug.Log($"<color=lime>[TeamSelect] {_selectedCandidate.displayName} added to PartyManager.</color>");
                     }
 
                     Debug.Log($"[TeamSelect] 현재 파티 수: {pm.GetCount()}");
+
+                    // ✅ 추가: TagManager에도 즉시 반영 (씬 내 전투 테스트 시 필요)
+                    var tag = FindObjectOfType<TagManager>();
+                    if (tag != null)
+                    {
+                        pm.AssignToTagManager(tag, keepExisting: false);
+                        Debug.Log($"<color=orange>[TeamSelect] TagManager 동기화 완료</color>");
+                    }
                 }
 
                 saveButton.interactable = false;
@@ -147,6 +210,7 @@ public class TeamSelectController : MonoBehaviour
             onNo: () => Debug.Log("[TeamSelect] Save canceled.")
         );
     }
+
 
     // ----------------- 다음 스테이지 계산 -----------------
     System.Collections.IEnumerator LoadNextSceneWithDelay()
