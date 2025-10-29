@@ -10,6 +10,13 @@ public class PlayerInventory : MonoBehaviour
 
     void Awake()
     {
+        if (Instance != null && Instance != this)
+    {
+        Destroy(gameObject); // 씬에 새로 생긴 빈 인벤토리는 즉시 파괴
+        return;
+    }
+    Instance = this;
+    DontDestroyOnLoad(gameObject);
         if (Instance && Instance!=this){ Destroy(gameObject); return; }
         Instance=this; DontDestroyOnLoad(gameObject);
         Load();
