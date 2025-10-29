@@ -27,6 +27,11 @@ public class GameClearSceneManager : MonoBehaviour
     void Start()
     {
         Time.timeScale = 1f;
+
+        // ✅ 안전하게 씬 로드 이벤트 재등록
+        SceneManager.sceneLoaded -= HandleSceneLoaded;
+        SceneManager.sceneLoaded += HandleSceneLoaded;
+
         StartCoroutine(ShowSequence());
     }
 
@@ -85,7 +90,7 @@ public class GameClearSceneManager : MonoBehaviour
         // ✅ 마지막 스테이지만 StartIsland로 이동
         if (isFinalStage)
         {
-            SceneManager.LoadScene("StartIsland");
+            SceneManager.LoadScene("StartIsland-1");
         }
         else
         {
@@ -116,4 +121,17 @@ public class GameClearSceneManager : MonoBehaviour
         c.a = visible ? 1f : 0f;
         txt.color = c;
     }
+    private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log($"[GameClearSceneManager] 씬 전환 감지됨 → {scene.name}");
+
+        if (scene.name.StartsWith("StartIsland-1"))
+        {
+            Debug.Log("[GameClearSceneManager] StartIsland-1 진입 감지 → GameClearUI 제거 ✅");
+            Destroy(gameObject);
+        }
+    }
+
 }
+
+

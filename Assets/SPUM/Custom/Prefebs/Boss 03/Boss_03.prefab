@@ -1052,6 +1052,37 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &1267756996232195201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4258229625752289320}
+  m_Layer: 15
+  m_Name: Lightning Field Spawn Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4258229625752289320
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1267756996232195201}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.55, y: 0.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 368388336205900363}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1283070098797731921
 GameObject:
   m_ObjectHideFlags: 0
@@ -1781,7 +1812,7 @@ GameObject:
   - component: {fileID: 3621359368712012876}
   m_Layer: 15
   m_Name: Boss_03
-  m_TagString: Untagged
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1803,6 +1834,8 @@ Transform:
   - {fileID: 7980857956171516206}
   - {fileID: 6763319279952721562}
   - {fileID: 7174493950396189485}
+  - {fileID: 3768472413538475239}
+  - {fileID: 4258229625752289320}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &8350881299939432285
@@ -1882,6 +1915,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHP: 50
+  isBoss: 0
+  isFinalBoss: 1
   animator: {fileID: 8708388037778518255}
   hitTrig: 3_Damage
   dieTrig: 4_Death
@@ -1889,6 +1924,7 @@ MonoBehaviour:
   enemyAI: {fileID: 3621359368712012876}
   invincibleTime: 0.6
   hitEffect: {fileID: 0}
+  gameClearUIPrefab: {fileID: 6939477944922167039, guid: 64f5def0b2567434b8d01e6f907ff510, type: 3}
 --- !u!114 &3621359368712012876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1920,6 +1956,9 @@ MonoBehaviour:
   auraInterval: 5
   auraDuration: 2
   lightningFieldPrefab: {fileID: 5413118128321118696, guid: 4350c04e7c491254c8e3d4170f5a8106, type: 3}
+  yellowLightningBoltPrefab: {fileID: 6729486949623266940, guid: bc76909f7e478bb4b94bd3c3697f13b8, type: 3}
+  boltSpawnPoint: {fileID: 3768472413538475239}
+  lightningFieldSpawnPoint: {fileID: 4258229625752289320}
 --- !u!1 &2586709643103641874
 GameObject:
   m_ObjectHideFlags: 0
@@ -3556,7 +3595,7 @@ RectTransform:
   m_GameObject: {fileID: 4282617027770687401}
   m_LocalRotation: {x: -0, y: 0.008726557, z: -0, w: 0.9999619}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 5, y: 5, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8653732774174616025}
@@ -10049,6 +10088,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &8541287523975262262
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3768472413538475239}
+  m_Layer: 15
+  m_Name: Bolt Spawn Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3768472413538475239
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8541287523975262262}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.92, y: 7.83, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 368388336205900363}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8571364776828869775
 GameObject:
   m_ObjectHideFlags: 0

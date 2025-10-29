@@ -43,11 +43,36 @@ public class PartyManager : MonoBehaviour
     /// <summary>
     /// 파티 전체 초기화 (스테이지 전환 전 전체 삭제 등)
     /// </summary>
-    public void ClearParty()
+    /// <summary>
+    /// 파티 초기화 (단, 기본 캐릭터는 유지)
+    /// </summary>
+    /// <summary>
+    /// 파티 초기화 (단, 기본 캐릭터는 유지)
+    /// </summary>
+    public void ClearParty(bool keepDefault = true)
     {
+        if (!keepDefault)
+        {
+            currentMembers.Clear();
+            Debug.Log("[PartyManager] 파티 완전 초기화 완료 (기본 캐릭터 포함 제거)");
+            return;
+        }
+
+        // ✅ 기본 캐릭터(guma_test)만 유지
+        var baseMember = currentMembers.Find(m => m.id == "guma_test");
         currentMembers.Clear();
-        Debug.Log("[PartyManager] 파티 초기화 완료");
+
+        if (baseMember != null)
+        {
+            currentMembers.Add(baseMember);
+            Debug.Log("[PartyManager] 파티 초기화 완료 (guma_test 유지)");
+        }
+        else
+        {
+            Debug.LogWarning("[PartyManager] 기본 캐릭터(guma_test)를 찾지 못함 → 새로 추가 필요");
+        }
     }
+
 
     /// <summary>
     /// 새 멤버를 추가 (중복 방지)

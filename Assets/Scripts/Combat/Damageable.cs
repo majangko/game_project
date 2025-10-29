@@ -134,8 +134,14 @@ public class Damageable : MonoBehaviour, ICanTakeDamage
 
     private void Die()
     {
-        if (isDead) return;
+        if (isDead)
+        {
+            Debug.Log($"[Damageable] {name} 이미 사망 상태 → Die() 중복 호출 방지");
+            return;
+        }
+
         isDead = true;
+        Debug.Log($"[Damageable] {name} Die() 실행 ✅");
 
         if (animator)
             animator.SetTrigger(dieTrig);
@@ -163,37 +169,55 @@ public class Damageable : MonoBehaviour, ICanTakeDamage
             GoldManager.Instance.AddGold(goldReward);
         }
 
-        // 💀 포탈 스폰 (기존 기능)
+        // 💀 포탈 스폰
         var bossPortalSpawner = GetComponent<BossDeathPortalSpawner>();
         if (bossPortalSpawner != null)
             bossPortalSpawner.OnBossDeath();
 
         // 💀 보스 사망 시 GameClear UI 표시
-        if (isBoss && gameClearUIPrefab != null)
+        if (isBoss)
         {
-            StartCoroutine(ShowClearUIAfterDelay(1.5f)); // 약간의 여유시간 후 표시
+            if (gameClearUIPrefab != null)
+            {
+                Debug.Log($"[Damageable] {name} 보스 사망 → GameClearUI 예정 (1.5초 후)");
+                StartCoroutine(ShowClearUIAfterDelay(1f));
+            }
+            else
+            {
+                Debug.LogWarning($"[Damageable] {name} 은(는) 보스지만 gameClearUIPrefab이 설정되지 않음 ❌");
+            }
         }
 
-        // 💀 플레이어는 파괴하지 않음
+        // 💀 플레이어는 삭제하지 않음
         if (!isPlayer)
+        {
             Destroy(gameObject, 1.5f);
+        }
         else
-            Debug.Log("플레이어 사망 (게임오버 처리 필요)");
+        {
+            Debug.Log("[Damageable] 플레이어 사망 → 게임오버 처리 필요");
+        }
     }
 
-    // ✅ 이 코루틴은 Die() 바깥, Damageable 클래스 내부에 따로 둡니다
     private IEnumerator ShowClearUIAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
 
-        // Game Clear UI 프리팹 생성
+        if (gameClearUIPrefab == null)
+        {
+            Debug.LogWarning("[Damageable] GameClearUI Prefab이 비어 있음 ❌");
+            yield break;
+        }
+
         GameObject uiObj = Instantiate(gameClearUIPrefab);
+        uiObj.transform.SetParent(null);
+        DontDestroyOnLoad(uiObj);
+
         Debug.Log("[Damageable] Boss defeated → Game Clear UI displayed ✅");
 
-        // 보스 종류에 따라 이동 여부 설정
         var manager = uiObj.GetComponent<GameClearSceneManager>();
         if (manager != null)
-            manager.isFinalStage = isFinalBoss; // 마지막 보스만 StartIsland로 이동
+            manager.isFinalStage = isFinalBoss;
     }
 
 

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Boss03AI : MonoBehaviour
+public class Boss03AI : MonoBehaviour,IEnemyAIEvents
 {
     [Header("References")]
     [SerializeField] private Rigidbody2D rb;
@@ -244,16 +244,16 @@ public class Boss03AI : MonoBehaviour
         if (isDead) return;
         isDead = true;
 
+        Debug.Log($"[Boss03AI] {name} OnDie() 호출됨 ✅");
+
         animator.SetTrigger(dieTrig);
         rb.linearVelocity = Vector2.zero;
         rb.bodyType = RigidbodyType2D.Kinematic;
-
         foreach (var c in GetComponentsInChildren<Collider2D>())
             c.enabled = false;
-
         StopAllCoroutines();
         DisableAllAuras();
-
         this.enabled = false;
     }
+
 }
