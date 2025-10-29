@@ -221,7 +221,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1000
   m_TargetDisplay: 0
 --- !u!114 &1692162108540951786
 MonoBehaviour:
@@ -282,8 +282,8 @@ MonoBehaviour:
   clearBGM: {fileID: 0}
   fadeInDuration: 1.5
   fadeOutDuration: 1.2
-  textFadeDelay: 0.5
   blinkDelay: 1
+  isFinalStage: 1
 --- !u!1 &7221923256076469396
 GameObject:
   m_ObjectHideFlags: 0

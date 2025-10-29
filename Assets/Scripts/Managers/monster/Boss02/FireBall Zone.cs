@@ -35,16 +35,4 @@ public class Skill_FireballZone : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = new Color(1f, 0.4f, 0f, 0.25f);
-        Gizmos.DrawCube(transform.position, areaSize);
-
-        Gizmos.color = Color.yellow;
-        if (spawnPoints != null)
-        {
-            foreach (Transform t in spawnPoints)
-                Gizmos.DrawSphere(t.position, 0.2f);
-        }
-    }
 }

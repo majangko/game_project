@@ -65,25 +65,44 @@ public class SceneLoader : MonoBehaviour
     // -------------------- 전투씬 진입 후 파티/태그 동기화 --------------------
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded; // 한 번만 실행
+        SceneManager.sceneLoaded -= OnSceneLoaded;
 
         string name = scene.name;
-        if (name.StartsWith("Stage") || name.StartsWith("Boss"))
+        Debug.Log($"[SceneLoader] Scene Loaded: {name}");
+
+        StartCoroutine(DelayedSceneSync(name));
+    }
+
+    private IEnumerator DelayedSceneSync(string name)
+    {
+        // 씬 내 객체 초기화 완료 대기
+        yield return null;
+        yield return new WaitForSeconds(0.1f);
+
+        var party = PartyManager.Instance;
+        var tag = TagManager.Instance ?? FindObjectOfType<TagManager>();
+
+        // ✅ StartIsland로 돌아온 경우 → 파티 완전 초기화
+        if (party != null && name.StartsWith("StartIsland-1"))
         {
-            var party = PartyManager.Instance;
-            var tag = TagManager.Instance ?? FindObjectOfType<TagManager>();
+            party.ClearParty();
+            Debug.Log("<color=orange>[SceneLoader]</color> StartIsland 복귀 → 파티 초기화 완료 ✅");
+            yield break;
+        }
 
-            if (party != null && tag != null)
-            {
-                bool keepExisting = name.StartsWith("Boss");
-                // 🎯 보스 씬에서는 파티 유지 (TeamSelect 후 복귀 시 중복 방지)
-                // 일반 스테이지에서는 완전 새로 세팅
-
-                party.AssignToTagManager(tag, keepExisting);
-                Debug.Log($"[SceneLoader] {name} 진입 → 파티 동기화 완료 ✅ (keepExisting={keepExisting})");
-            }
+        // ✅ 전투 스테이지나 보스 씬이면 파티 유지한 채 동기화
+        if (party != null && tag != null && (name.StartsWith("Stage") || name.StartsWith("Boss")))
+        {
+            bool keepExisting = true;
+            party.AssignToTagManager(tag, keepExisting);
+            Debug.Log($"<color=cyan>[SceneLoader]</color> {name} 진입 → 파티 동기화 완료 (keepExisting={keepExisting}) ✅");
+        }
+        else
+        {
+            Debug.LogWarning("[SceneLoader] PartyManager 또는 TagManager가 준비되지 않음 ❌");
         }
     }
+
 
     public void LoadTeamSelect() => Load("TeamSelect UI");
 
