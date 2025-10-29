@@ -3713,6 +3713,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boss_Lance
       objectReference: {fileID: 0}
+    - target: {fileID: 3576072968347164692, guid: b3eaeca1b9aa68d4c8faeb320e7c3cfa, type: 3}
+      propertyPath: isBoss
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3576072968347164692, guid: b3eaeca1b9aa68d4c8faeb320e7c3cfa, type: 3}
+      propertyPath: gameClearUIPrefab
+      value: 
+      objectReference: {fileID: 6939477944922167039, guid: 3678da4300b7f394bac415586eed448f, type: 3}
     - target: {fileID: 5742810249456277641, guid: b3eaeca1b9aa68d4c8faeb320e7c3cfa, type: 3}
       propertyPath: m_LocalPosition.x
       value: 63.74

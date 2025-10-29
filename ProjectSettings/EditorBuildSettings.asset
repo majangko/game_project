@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Core/StoryIntro.unity
     guid: 3db0cca9ad3be674bbdf1a253257ab5e
   - enabled: 1
-    path: Assets/Scenes/GameFlow/GameClear.unity
+    path: Assets/Scenes/GameFlow/GameClearScene.unity
     guid: 40acf2f332a45004eb1683e1e0155382
   - enabled: 1
     path: Assets/Scenes/GameFlow/GameOver.unity
