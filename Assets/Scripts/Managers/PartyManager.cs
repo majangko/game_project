@@ -114,54 +114,73 @@ public class PartyManager : MonoBehaviour
             Debug.Log("[PartyManager] TagManager 캐릭터 리스트 초기화됨.");
         }
 
+        if (currentMembers == null || currentMembers.Count == 0)
+        {
+            Debug.LogWarning("[PartyManager] currentMembers가 비어 있습니다.");
+            return;
+        }
+
+        // ✅ 스폰 포인트 배열 가져오기
+        GameObject spawnRoot = GameObject.Find("PlayerSpawnPoints");
+        Transform[] spawnPoints = spawnRoot != null
+            ? spawnRoot.GetComponentsInChildren<Transform>()
+            : null;
+
+        int spawnIndex = 0;
+
         foreach (var member in currentMembers)
         {
             if (member == null)
             {
-                Debug.LogWarning("[PartyManager] null 멤버가 감지되어 건너뜀.");
+                Debug.LogWarning("[PartyManager] null 멤버 감지됨 → 건너뜀.");
                 continue;
             }
 
             if (member.prefab == null)
             {
-                Debug.LogWarning($"[PartyManager] {member.id} 프리팹이 없습니다. 건너뜀.");
+                Debug.LogWarning($"[PartyManager] {member.id} 프리팹 없음 → 건너뜀.");
                 continue;
             }
 
-            // ✅ TagManager에 동일 이름의 캐릭터가 존재한다면 추가 생략
-            if (tagManager.characters.Exists(c => c != null && c.name == member.prefab.name))
+            // ✅ ID 기준 중복 방지 (prefab.name 대신 id)
+            if (tagManager.characters.Exists(c => c != null && c.name == member.id))
             {
-                Debug.Log($"[PartyManager] {member.id}는 이미 TagManager에 존재, 중복 추가 생략.");
+                Debug.Log($"<color=orange>[PartyManager]</color> {member.id} 이미 TagManager에 존재 → 중복 추가 생략.");
                 continue;
             }
 
-            // ✅ 프리팹 인스턴스화 및 설정
+            // ✅ 프리팹 인스턴스화
             GameObject obj = Object.Instantiate(member.prefab);
-            obj.name = member.prefab.name;
+            obj.name = member.id; // 🔹 고유 ID로 이름 지정
             obj.tag = "Player";
-            obj.SetActive(false); // 기본은 비활성 상태
+            obj.SetActive(false);
 
-            // ✅ 스폰포인트 위치로 이동
-            GameObject spawn = GameObject.Find("PlayerSpawnPoints");
-            if (spawn != null)
+            // ✅ 스폰 포인트 순서대로 배치
+            if (spawnPoints != null && spawnPoints.Length > 1)
             {
-                obj.transform.position = spawn.transform.position;
-                Debug.Log($"[PartyManager] {member.id} 스폰포인트에서 생성됨 ({spawn.transform.position})");
+                spawnIndex = Mathf.Clamp(spawnIndex, 0, spawnPoints.Length - 1);
+                obj.transform.position = spawnPoints[spawnIndex].position;
+                spawnIndex++;
+            }
+            else if (spawnRoot != null)
+            {
+                obj.transform.position = spawnRoot.transform.position;
             }
 
+            // ✅ 컨트롤러 등록
             var ctrl = obj.GetComponent<SpumPlatformerController>();
             if (ctrl != null)
             {
                 tagManager.characters.Add(ctrl);
-                Debug.Log($"[PartyManager] {member.id} 전투용으로 등록됨 ✅");
+                Debug.Log($"<color=lime>[PartyManager]</color> {member.id} 전투용 등록 완료 ✅");
             }
             else
             {
-                Debug.LogWarning($"[PartyManager] {member.id} 프리팹에 SpumPlatformerController가 없습니다.");
+                Debug.LogWarning($"[PartyManager] {member.id} 프리팹에 SpumPlatformerController가 없습니다 ❌");
             }
         }
 
-        Debug.Log($"<color=cyan>[PartyManager] {currentMembers.Count}명의 멤버가 TagManager에 추가됨 (keepExisting={keepExisting})</color>");
+        Debug.Log($"<color=cyan>[PartyManager]</color> 총 {tagManager.characters.Count}명의 멤버가 TagManager에 추가됨 (keepExisting={keepExisting})");
     }
 
     /// <summary>

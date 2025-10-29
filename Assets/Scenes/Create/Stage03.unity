@@ -197,9 +197,7 @@ Tilemap:
   m_TileAssetArray:
   - m_RefCount: 3
     m_Data: {fileID: 11400000, guid: b49e2be3f806f8c4e8faf426a8852e52, type: 2}
-  m_TileSpriteArray:
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  m_TileSpriteArray: []
   m_TileMatrixArray:
   - m_RefCount: 3
     m_Data:
@@ -383,7 +381,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3044840733815402860, guid: 516fb84c808e52742a5a4bb3b3386758, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 516fb84c808e52742a5a4bb3b3386758, type: 3}
@@ -11396,10 +11395,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: -0.17604168
+    x: -0.1421875
     y: 0
     width: 1
-    height: 0.2037037
+    height: 0.6388889
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
